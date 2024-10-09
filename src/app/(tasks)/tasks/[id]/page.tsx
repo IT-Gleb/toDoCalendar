@@ -1,3 +1,4 @@
+import { ComponentWithDialog } from "@/components/dialog/componentWithDialog";
 import { AddFormContent } from "@/components/forms/addFormContent";
 import { AddTaskFormComponent } from "@/components/forms/addTaskFormComponent";
 import { ListTaskComponent } from "@/components/tasks/listTaskComponent";
@@ -34,8 +35,9 @@ export default async function TaskPage({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <section>
-        <h2 className="w-fit mx-auto mt-5">{params.id}</h2>
+      <section className="flex flex-col w-fit mx-auto items-start space-y-5">
+        <h2 className="mt-5">{params.id}</h2>
+        <ComponentWithDialog />
       </section>
       <section className="w-[96%] md:w-[60%] xl:w-[40%] mx-auto mt-5">
         <AddTaskFormComponent paramDate={id}>
