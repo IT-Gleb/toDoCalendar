@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        matrix: ["Matrix"],
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",

@@ -1,0 +1,6 @@
+@font-face {
+  font-family: "Matrix";
+  font-display: swap;
+  font-style: normal;
+  src: url("../fonts/matrix/matrix.TTF") format("truetype");
+}

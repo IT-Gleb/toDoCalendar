@@ -1,0 +1,89 @@
+@import url("matrix.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer components {
+  /* width */
+  ::-webkit-scrollbar {
+    /* width: 8px; */
+    @apply w-[6px] h-[6px];
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    /* background: #a7a7a7;
+  border-radius: 3px; */
+    @apply bg-slate-300 rounded-[4px];
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    /* background: #000;
+  border-radius: 3px; */
+    @apply bg-sky-700 rounded-[3px];
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    /* background: #afafff; */
+    @apply bg-green-500 cursor-grabbing;
+  }
+
+  body {
+    @apply min-w-[300px] overflow-x-hidden text-[1.1rem] flex flex-col;
+  }
+  main {
+    @apply min-h-[84vh] flex-auto;
+  }
+  h2 {
+    @apply text-[2.2rem] font-bold;
+  }
+
+  @keyframes animoArrow1 {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes animoBar {
+    from {
+      transform: scaleY(0);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+}
+
+@layer utilities {
+  .scroller {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(3, 105, 161) rgba(202, 202, 202, 1);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
