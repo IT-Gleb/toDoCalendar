@@ -16,6 +16,7 @@ export const BgSvgTasksComponent = () => {
     () => {
       //Получить высоту svg
       let svg_height: number = mainRef.current?.getBBox().height as number;
+      //let svg_height: number = (mainRef.current?.clientHeight as number) - 100;
       //mainRef.current?.getBBox().y as number;
       //console.log(svg_height);
       //Работа с путями установить ширину линии в половину от имеющуйся
@@ -48,10 +49,12 @@ export const BgSvgTasksComponent = () => {
                 //console.log(self.start, self.end, self.progress);
                 if (lentaTl.paused()) {
                   lentaTl.resume();
+                  // console.log("Animation run...");
                 }
               } else {
                 if (!lentaTl.paused()) {
                   lentaTl.pause();
+                  // console.log("Animation Paused");
                 }
               }
             },
@@ -107,8 +110,9 @@ export const BgSvgTasksComponent = () => {
           {
             rotate: 360,
             duration: 1,
-            ease: "power1.inOut",
+            ease: "power1.in",
             repeat: -1,
+            repeatDelay: 0.35,
             yoyo: true,
           },
           "<0.65"
@@ -121,6 +125,7 @@ export const BgSvgTasksComponent = () => {
             duration: 2.5,
             ease: "power1.out",
             repeat: -1,
+            repeatDelay: 0.4,
             yoyo: true,
           },
           0
