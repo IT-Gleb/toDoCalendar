@@ -6,9 +6,8 @@ import React, {
   useImperativeHandle,
   useRef,
 } from "react";
-import { motion, useAnimate } from "framer-motion";
-
-const t_duration: number = 0.35;
+import { motion } from "framer-motion";
+import { animate } from "framer-motion/dom";
 
 export interface IDialog {
   get isOpen(): boolean;
@@ -19,19 +18,17 @@ export interface IDialog {
 }
 
 export type TDialogProps = PropsWithChildren<{
-  title?: string;
+  //title?: string;
   paramClick?: () => void;
   //footer?: ReactNode;
 }>;
 
 export const DialogComponent = forwardRef<IDialog, TDialogProps>(
-  function Dialog({ title, paramClick, children }, ref) {
+  function Dialog({ paramClick, children }, Reference) {
     const dialogRef = useRef<HTMLDialogElement>(null);
-    const [aRef, animate] = useAnimate();
-    const TimerRef = useRef<number>();
 
     useImperativeHandle(
-      ref,
+      Reference,
       () => {
         return {
           get isOpen() {
@@ -49,76 +46,36 @@ export const DialogComponent = forwardRef<IDialog, TDialogProps>(
             //dialogRef?.current?.show();
           },
           hide() {
-            animate(
-              aRef.current,
-              { scaleX: 0, opacity: 0 },
-              { duration: t_duration, ease: "easeIn" }
-            );
-            setTimeout(() => {
-              dialogRef?.current?.close();
-            }, t_duration * 1000);
+            dialogRef?.current?.close();
           },
         } as IDialog;
       },
       []
     );
 
-    const handleCloseClick = () => {
-      animate(
-        aRef.current,
-        { scaleX: 0, opacity: 0 },
-        { duration: t_duration, ease: "easeOut" }
-      );
-      TimerRef.current = window.setTimeout(() => {
-        if (dialogRef?.current?.getAttribute("open") !== null) {
-          if (paramClick) {
-            paramClick();
-          }
-          window.clearTimeout(TimerRef.current);
-        }
-
-        //   //dialogRef.current?.close();
-      }, t_duration * 1000);
-    };
-
     return (
-      <dialog
+      <motion.dialog
         ref={dialogRef}
+        initial={{ scaleX: 0, opacity: 0 }}
+        animate={{ scaleX: [0, 1], opacity: [0, 1] }}
+        transition={{ duration: 0.35, ease: "easeIn" }}
         className=" overflow-visible bg-transparent p-0 outline-none"
-        aria-labelledby="titleId"
-        onCancel={() => {
+        onCancel={async (e) => {
+          e.preventDefault();
+          const diag = e.currentTarget as unknown as HTMLDialogElement;
+          // @ts-ignore
+          await animate(
+            diag,
+            { scaleX: [1, 0], opacity: [1, 0] },
+            { duration: 0.35, easy: "easyOut" }
+          );
           if (paramClick) {
             paramClick();
           }
         }}
       >
-        <motion.article
-          ref={aRef}
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: 1 }}
-          transition={{ duration: t_duration, ease: "easeIn" }}
-          className="w-[320px] md:w-[480px] xl:w-[640px] md:min-h-[20vh] mx-auto border-solid border-4 border-white rounded-2xl flex flex-col bg-white shadow-md shadow-slate-400 overflow-hidden"
-        >
-          <header
-            id="titleId"
-            className="bg-sky-600 text-white p-2 flex items-center justify-between uppercase"
-          >
-            {title}
-            <button
-              type="button"
-              title="Закрыть"
-              className="w-[24px] h-[24px] text-center border border-slate-100 bg-rose-400 text-white text-[0.75rem] px-1 py-[2px]   focus:border-none focus:outline-none active:scale-90"
-              onClick={handleCloseClick}
-            >
-              x
-            </button>
-          </header>
-          <section className="flex-auto p-2 bg-sky-50">{children}</section>
-          <footer className="bg-sky-500 text-[0.7rem] text-center text-white p-1">
-            programming by Gleb Torgashin &copy;
-          </footer>
-        </motion.article>
-      </dialog>
+        {children}
+      </motion.dialog>
     );
   }
 );
