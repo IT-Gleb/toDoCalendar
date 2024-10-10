@@ -52,6 +52,9 @@ body {
   body {
     @apply min-w-[300px] overflow-x-hidden text-[1.1rem] flex flex-col;
   }
+  body:has(dialog[open]) {
+    @apply overflow-hidden;
+  }
   main {
     @apply min-h-[84vh] flex-auto;
   }

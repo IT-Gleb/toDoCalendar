@@ -15,6 +15,15 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      animation: {
+        "dialog-open": "animoScaleX 0.35s linear",
+      },
+      keyframes: {
+        animoScaleX: {
+          "0%": { transform: "scaleX(0)" },
+          "100%": { transform: "scaleX(1)" },
+        },
+      },
     },
   },
   plugins: [],

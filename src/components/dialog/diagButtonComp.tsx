@@ -1,8 +1,8 @@
 // "use client";
 
-import React from "react";
+import React, { memo } from "react";
 
-export const DiagButtonComp = ({ click }: { click: () => void }) => {
+export const DiagButtonComp = memo(({ click }: { click: () => void }) => {
   const dialogClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     click();
@@ -16,4 +16,4 @@ export const DiagButtonComp = ({ click }: { click: () => void }) => {
       Dialog
     </button>
   );
-};
+});
