@@ -7,7 +7,7 @@ import React, {
   useRef,
 } from "react";
 import { motion } from "framer-motion";
-import { animate } from "framer-motion/dom";
+import { animate } from "framer-motion";
 
 export interface IDialog {
   get isOpen(): boolean;
@@ -45,10 +45,10 @@ export const DialogComponent = forwardRef<IDialog, TDialogProps>(
             dialogRef?.current?.showModal();
             //dialogRef?.current?.show();
           },
-          hide() {
+          whide() {
             dialogRef?.current?.close();
           },
-        } as IDialog;
+        } as unknown as IDialog;
       },
       []
     );

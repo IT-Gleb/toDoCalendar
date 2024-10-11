@@ -27,8 +27,8 @@ export const BgSvgTasksComponent = () => {
           paths.forEach((item: SVGPathElement) => {
             let tmpWidth: string | null = item.getAttribute("stroke-width");
             //console.log(tmpWidth);
-            if (tmpWidth && Number(tmpWidth) < 6) {
-              item.setAttribute("stroke-width", String(Number(tmpWidth) * 0.6));
+            if (tmpWidth && Number(tmpWidth) < 4) {
+              item.setAttribute("stroke-width", String(Number(tmpWidth) * 0.7));
               item.setAttribute("stroke-opacity", "0.5");
             }
           });
