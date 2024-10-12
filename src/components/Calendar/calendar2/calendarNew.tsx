@@ -71,7 +71,11 @@ export const CalendarNew = memo(
                 {DayEndYear}
               </span>
               {`-${
-                lastDidgit > 4 ? "дней" : lastDidgit === 1 ? "день" : "дня"
+                lastDidgit === 0 || lastDidgit > 4
+                  ? "дней"
+                  : lastDidgit === 1
+                  ? "день"
+                  : "дня"
               } до конца года:`}
             </span>
           </div>
