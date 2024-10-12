@@ -14,7 +14,8 @@ const ExampleDialogContent = memo(
     return (
       <motion.article
         ref={scope}
-        className="w-[320px] md:w-[480px] xl:w-[640px] bg-sky-50 flex flex-col space-y-2 items-start overflow-hidden rounded-lg border-4 border-l-sky-50 border-t-sky-50  border-r-sky-200 border-b-sky-200 shadow-md shadow-sky-600"
+        className="w-[320px] md:w-[480px] xl:w-[640px] bg-sky-50 flex flex-col space-y-2 items-start overflow-hidden 
+        rounded-lg border-4 border-l-sky-50 border-t-sky-50  border-r-sky-200 border-b-sky-200 shadow-sm shadow-sky-600"
       >
         <div
           className="w-full bg-sky-400 text-sky-800 flex space-x-2 items-center justify-between p-1"
@@ -42,13 +43,24 @@ const ExampleDialogContent = memo(
           className="w-full flex-auto p-1 bg-sky-50 text-[0.9rem]"
           aria-label="Основная часть"
         >
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi,
-            itaque distinctio tenetur aut sapiente inventore nisi laborum,
-            facilis laudantium, voluptatem cumque. Blanditiis, fugit numquam
-            sed, ab ipsum iusto at autem quidem, officia ad placeat sequi ea
-            similique ipsa non adipisci!
-          </p>
+          <ul>
+            <li>
+              <p className="indent-2">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Eligendi, itaque distinctio tenetur aut sapiente inventore nisi
+                laborum, facilis laudantium, voluptatem cumque. Blanditiis,
+                fugit numquam sed, ab ipsum iusto at autem quidem, officia ad
+                placeat sequi ea similique ipsa non adipisci!
+              </p>
+            </li>
+            <li className="mt-1">
+              <p className="indent-2">
+                Далеко-далеко за словесными горами в стране гласных и согласных,
+                живут рыбные тексты. Собрал семантика текст снова решила злых.
+                Языком, парадигматическая? Переписали ему назад оксмокс над.
+              </p>
+            </li>
+          </ul>
         </div>
         <div className="w-full bg-sky-400 p-1 text-center text-sky-800">
           footer
