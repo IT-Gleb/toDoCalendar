@@ -12,6 +12,7 @@ export const CalendarNew = memo(
   ({ paramMonth }: { paramMonth: TMonthObject }) => {
     const [strTitle, setStrTitle] = useState<string>("");
     const [DayEndYear] = useState<number>(DaysToEndOfYear());
+    const [DayOnYear] = useState(DaysInYear());
     const [lastDidgit] = useState<number>(LastDidgitInNumber(DayEndYear));
 
     useEffect(() => {
@@ -57,13 +58,13 @@ export const CalendarNew = memo(
             <span>
               Дней в году:{" "}
               <span className="text-white text-[1rem] font-bold font-mono">
-                {DaysInYear()}
+                {DayOnYear}
               </span>
             </span>
             <span>
               Дней года прошло:{" "}
               <span className="text-white text-[1rem] font-bold font-mono">
-                {DaysInYear() - DayEndYear}
+                {DayOnYear - DayEndYear}
               </span>
             </span>
             <span>
