@@ -27,6 +27,9 @@ export const AddFormContent = ({ paramDay }: { paramDay: string }) => {
   const [formStatus, setFormStatus] = useState<TFormState>(status);
 
   useEffect(() => {
+    if (status.status) {
+      formRef.current?.reset();
+    }
     setFormStatus(status);
   }, [status]);
 
