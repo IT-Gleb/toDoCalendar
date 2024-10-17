@@ -25,19 +25,11 @@ const checkSchema = z
   })
   .refine(
     (obj) => {
-      let dt1 = new Date(obj.beginD);
-      let currDate: string = StrDateFromNumbers(
-        dt1.getFullYear(),
-        dt1.getMonth() + 1,
-        dt1.getDate()
-      );
-      let dt2 = new Date(obj.currentDate);
-      let fromDate: string = StrDateFromNumbers(
-        dt2.getFullYear(),
-        dt2.getMonth() + 1,
-        dt2.getDate()
-      );
-      //console.log(currDate, fromDate);
+      let currDate = obj.beginD.split("T")[0];
+
+      let fromDate = obj.currentDate;
+
+      // console.log(obj.beginD, currDate, fromDate);
       return currDate.toLowerCase() === fromDate.toLowerCase();
     },
     {
@@ -62,24 +54,26 @@ export async function newTaskAction(
     const isCompleted: string =
       paramData.get("status")?.toString() ?? Boolean(false).toString();
 
-    const temp_date = new Date(Date.now());
+    const temp_date = new Date();
     const tCurrentDate: string =
       paramData.get("currentDate")?.toString() ??
       StrDateFromNumbers(
         temp_date.getFullYear(),
-        temp_date.getMonth() + 1,
+        temp_date.getMonth(),
         temp_date.getDate()
       );
     // console.log(tCurrentDate);
 
     let tCompleted: boolean = isCompleted === "0" ? true : false;
     //console.log(tCompleted);
-    const tBeginAt: string =
-      (paramData.get("beginTask") as unknown as string) + ":00Z" ??
+    let tBeginAt: string =
+      (paramData.get("beginTask") as unknown as string) ??
       Date.now().toString();
-    const tEndAt: string | null =
-      (paramData.get("endTask") as unknown as string) + ":00Z" ?? null;
+    let tEndAt: string | null =
+      (paramData.get("endTask") as unknown as string) ?? null;
 
+    tBeginAt = tBeginAt + ":00Z";
+    tEndAt = tEndAt + ":00Z";
     //console.log(tBeginAt, tEndAt);
     //    const check = z.string().datetime().parse(tEndAt);
     //    const check1 = z.string().datetime().parse(tBeginAt);

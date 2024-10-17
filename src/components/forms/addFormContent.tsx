@@ -31,6 +31,7 @@ export const AddFormContent = ({ paramDay }: { paramDay: string }) => {
       formRef.current?.reset();
     }
     setFormStatus(status);
+    //console.log(paramDay);
   }, [status]);
 
   return (
