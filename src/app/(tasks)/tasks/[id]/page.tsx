@@ -1,6 +1,8 @@
+import { CheckAuth } from "@/app/auth";
 import { ComponentWithDialog } from "@/components/dialog/componentWithDialog";
 import { AddFormContent } from "@/components/forms/addFormContent";
 import { AddTaskFormComponent } from "@/components/forms/addTaskFormComponent";
+import { NoAuthComponent } from "@/components/noAuthComponent";
 import { ListTaskComponent } from "@/components/tasks/listTaskComponent";
 import { Base_URL } from "@/utils/functions";
 import Link from "next/link";
@@ -29,6 +31,10 @@ async function getData(params: TTasksParams) {
 }
 
 export default async function TaskPage({ params }: { params: { id: string } }) {
+  //Авторизация
+  const isAuth: boolean = await CheckAuth();
+  if (!isAuth) return <NoAuthComponent />;
+
   const { id } = params;
   const pageParams: TTasksParams = { id, limit: 10, offset: 0 };
   const TaskData: TTaskList = await getData(pageParams);
