@@ -33,7 +33,9 @@ async function getData(params: TTasksParams) {
 export default async function TaskPage({ params }: { params: { id: string } }) {
   //Авторизация
   const isAuth: boolean = await CheckAuth();
-  if (!isAuth) return <NoAuthComponent />;
+  if (!isAuth) {
+    return <NoAuthComponent />;
+  }
 
   const { id } = params;
   const pageParams: TTasksParams = { id, limit: 10, offset: 0 };

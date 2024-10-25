@@ -20,7 +20,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   callbacks: {
     authorized: async ({ request, auth }) => {
-      if (request.nextUrl.pathname !== Base_URL) return true;
       if (
         !auth &&
         request.nextUrl.pathname !== LOGINPAGE_PATH &&
