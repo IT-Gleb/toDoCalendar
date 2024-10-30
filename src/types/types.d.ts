@@ -59,3 +59,12 @@ declare type TMonthDay = {
 };
 
 declare type TMonthDayData = Array<TMonthDay>;
+
+declare type TUser = {
+  id: number;
+  nickname: string;
+  email: string;
+  userkey: string; //Пароль
+  start_at: number;
+  update_at: number;
+};

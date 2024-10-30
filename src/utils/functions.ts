@@ -198,8 +198,8 @@ function getWeekOfYear(paramDate: number): number {
     dt.getDate()
   ).getTime();
   const pastTimeOfStartCurrentYear = currentTime - startTimeOfCurrentYear;
-  const hourOfMillisecs: number = 3600000;
-  const hoursOfWeek: number = 168;
+  const hourOfMillisecs: number = 1000 * 60 * 60; //3600000;
+  const hoursOfWeek: number = 24 * 7; //168;
   result = Math.ceil(
     pastTimeOfStartCurrentYear / hourOfMillisecs / hoursOfWeek
   );
