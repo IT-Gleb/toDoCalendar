@@ -20,13 +20,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   callbacks: {
     authorized: async ({ request, auth }) => {
-      if (
-        !auth &&
-        request.nextUrl.pathname !== LOGINPAGE_PATH &&
-        request.nextUrl.pathname !== "/"
-      ) {
+      if (!auth && request.nextUrl.pathname !== LOGINPAGE_PATH) {
         const enterUrl = new URL(LOGINPAGE_PATH, request.nextUrl.origin);
         // console.log(LOGINPAGE_PATH);
+        //console.log(enterUrl.href);
+        //redirect("/enter");
         redirect(enterUrl.pathname);
         //return false;
       } else {
