@@ -1,3 +1,5 @@
+import { auth, CheckAuth } from "@/app/auth";
+import { NoAuthComponent } from "@/components/noAuthComponent";
 import { Base_URL } from "@/utils/functions";
 import Link from "next/link";
 
@@ -41,6 +43,10 @@ function getArrayTasks(paramItem: TTask): TTaskList {
 }
 
 export default async function AllTasks() {
+  //Авторизация
+  const isAuth: boolean = await CheckAuth();
+  if (!isAuth) return <NoAuthComponent />;
+
   let tasks: TTaskList = [];
   let value = await getData();
   //console.log(value);

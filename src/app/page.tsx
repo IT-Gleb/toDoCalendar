@@ -30,7 +30,7 @@ export default async function Home() {
       <section className=" w-full p-1 md:px-8 md:w-[99%] md:mx-auto ">
         <BgSvgTasksComponent />
       </section>
-      <section className="w-full h-[30vh] md:h-[50vh] xl:h-[100vh] place-content-center relative mx-auto p-2 mt-5 bg-[url('../../assets/images/svg/bg-space_production.svg')] bg-no-repeat bg-left-top lg:bg-center bg-cover lg:bg-contain">
+      <section className="w-full h-[30vh] md:h-[50vh] xl:h-[100vh] place-content-center relative mx-auto p-2 mt-5">
         <DynamicCalendar />
       </section>
       {/* <FraseSvgComponent /> */}

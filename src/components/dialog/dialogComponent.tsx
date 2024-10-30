@@ -45,7 +45,7 @@ export const DialogComponent = forwardRef<IDialog, TDialogProps>(
             dialogRef?.current?.showModal();
             //dialogRef?.current?.show();
           },
-          whide() {
+          async hide() {
             dialogRef?.current?.close();
           },
         } as unknown as IDialog;
@@ -59,7 +59,7 @@ export const DialogComponent = forwardRef<IDialog, TDialogProps>(
         initial={{ scaleX: 0, opacity: 0 }}
         animate={{ scaleX: [0, 1], opacity: [0, 1] }}
         transition={{ duration: 0.35, ease: "easeIn" }}
-        className=" overflow-visible bg-transparent p-0 outline-none"
+        className=" overflow-visible bg-transparent p-0 outline-none sm:w-[90%] md:w-[85%] lg:w-[70%] xl:w-[60%]"
         onCancel={async (e) => {
           e.preventDefault();
           const diag = e.currentTarget as unknown as HTMLDialogElement;

@@ -1,4 +1,5 @@
-import { MatrixLineComponent } from "@/components/matrix/matrixLineComponent";
+import { CheckAuth } from "@/app/auth";
+import { NoAuthComponent } from "@/components/noAuthComponent";
 import { DaysInYear, DaysToEndOfYear } from "@/utils/functions";
 import Link from "next/link";
 //import localFont from "next/font/local";
@@ -13,6 +14,10 @@ import Link from "next/link";
 // });
 
 export default async function CalendarItem() {
+  //Авторизация
+  const isAuth: boolean = await CheckAuth();
+  if (!isAuth) return <NoAuthComponent />;
+
   return (
     <>
       <section className="w-fit mx-auto">
