@@ -30,13 +30,16 @@ export const AuthPasswordComponent = () => {
   };
 
   return (
-    <label className="flex flex-col space-y-2 relative">
+    <label
+      className="flex flex-col space-y-1 relative"
+      aria-labelledby="u-pass"
+    >
       <span
         className={`text-[0.8rem] ${
-          isActive ? "animate-bounce text-sky-700" : "text-black"
+          isActive ? "animate-bounce text-sky-700" : "text-inherit"
         }`}
       >
-        Пароль:
+        Пароль (обязательно):
       </span>
       <input
         ref={inputRef}
@@ -63,7 +66,7 @@ export const AuthPasswordComponent = () => {
         type="button"
         onClick={handleShowPass}
         title={isOpen ? "Скрыть" : "Показать"}
-        className="w-[22px] h-[16px] text-slate-500 text-[0.75rem] absolute right-1 md:right-[40%] top-10"
+        className="w-[22px] h-[16px] text-slate-500 text-[0.75rem] absolute right-1 md:right-[40%] top-8"
       >
         {isOpen ? <SVG_Eye /> : <SVG_Eye_Closed />}
       </button>

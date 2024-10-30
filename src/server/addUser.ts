@@ -2,6 +2,7 @@
 
 import sql from "@/clientdb/connectdb";
 import { z, ZodError } from "zod";
+import bcrypt from "bcrypt";
 
 const userSchema = z.object({
   nickname: z
@@ -14,6 +15,8 @@ const userSchema = z.object({
     .trim()
     .min(8, { message: "Длина пароля не менее 8-ми символов." }),
 });
+
+const SaltHash: number = 11;
 
 export async function AddUser(
   paramInitState: string,
@@ -36,10 +39,16 @@ export async function AddUser(
     });
 
     //Hash password
+    const hash_p = bcrypt.hashSync(UPass, SaltHash);
+
+    //Check password
+    //const match_p: boolean = await bcrypt.compare("11111111", hash_p);
+    //console.log("Pass compared: ", match_p);
+    //---------------------------
 
     //Insert data into db
     try {
-      await sql`INSERT INTO tblusers (nickname, email, userkey) VALUES(${UName}, ${UEmail}, ${UPass});`;
+      await sql`INSERT INTO tblusers (nickname, email, userkey) VALUES(${UName}, ${UEmail}, ${hash_p});`;
     } catch (err) {
       result = "Ошибка ввода данных в таблицу - " + (err as Error).message;
       return result;

@@ -29,13 +29,16 @@ export const AuthNickNameComponent = () => {
   };
 
   return (
-    <label className="flex flex-col space-y-1 relative">
+    <label
+      className="flex flex-col space-y-1 relative"
+      aria-labelledby="u-nickname"
+    >
       <span
         className={`text-[0.8rem] ${
-          isActive ? "animate-bounce text-sky-700" : "text-black`"
+          isActive ? "animate-bounce text-sky-700" : "text-inherit`"
         }`}
       >
-        Ваше имя:
+        Ваше имя (обязательно):
       </span>
       <input
         ref={nickRef}

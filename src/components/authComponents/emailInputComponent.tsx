@@ -29,13 +29,13 @@ export const EmailInputComponent = () => {
   };
 
   return (
-    <label className="flex flex-col relative">
+    <label className="flex flex-col relative" aria-labelledby="u-email">
       <span
         className={`text-[0.8rem] ${
           isActive ? "animate-bounce text-sky-700" : "text-inherit"
         }`}
       >
-        Ваш email:
+        Ваш email (обязательно):
       </span>
       <input
         ref={emailRef}
@@ -64,7 +64,9 @@ export const EmailInputComponent = () => {
       <span className="text-slate-500 text-[0.7rem]">
         {" "}
         {`Введено ${strLength} из (${MINLENGTH}-${MAXLENGTH}) `}
-        {strLength >= MINLENGTH && emailRef.current?.value.includes("@") ? (
+        {strLength >= MINLENGTH &&
+        emailRef.current?.value.includes("@") &&
+        emailRef.current?.value.includes(".") ? (
           <span className="text-[1rem]">📧</span>
         ) : null}
       </span>
