@@ -35,6 +35,8 @@ export async function AddUser(
       userkey: UPass,
     });
 
+    //Hash password
+
     //Insert data into db
     try {
       await sql`INSERT INTO tblusers (nickname, email, userkey) VALUES(${UName}, ${UEmail}, ${UPass});`;
