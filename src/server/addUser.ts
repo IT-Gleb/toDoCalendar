@@ -4,7 +4,7 @@ import sql from "@/clientdb/connectdb";
 import { z, ZodError } from "zod";
 import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
-import { cryptId, decryptId } from "@/utils/functions";
+import { cryptId, decryptId, CookieUserId } from "@/utils/functions";
 
 const userSchema = z.object({
   nickname: z
@@ -19,15 +19,16 @@ const userSchema = z.object({
 });
 
 const SaltHash: number = 11;
-const CName: string = "u_value";
 
 export async function SetCookies(paramUserId: string) {
   const theCookie = await cookies();
-  if (theCookie.has(CName)) {
-    (await cookies()).delete(CName);
+  if (theCookie.has(CookieUserId)) {
+    (await cookies()).delete(CookieUserId);
   }
   const Id_crypted: string = cryptId(paramUserId);
-  (await cookies()).set(CName, Id_crypted, { maxAge: 4 * 6.75 * 60 * 60 }); //На сутки начиная с текущего
+  (await cookies()).set(CookieUserId, Id_crypted, {
+    maxAge: 4 * 6.75 * 60 * 60,
+  }); //На сутки начиная с текущего часа
 }
 
 export async function AddUser(
