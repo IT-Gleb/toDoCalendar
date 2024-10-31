@@ -473,17 +473,14 @@ export function randomInteger(min: number, max: number): number {
   let rand: number = min + Math.random() * (max + 1 - min);
   return Math.floor(rand);
 }
+
 //Простое шифрование id userа для cookie
-const shifr_str: string = "fvrtW54bnmAsd09e1Qwcvfr=](345Zera";
+const shifr_str: string = "f7v)34r0t(W5b8n8mA)4s7d09/3e1Q6w5cvLfr=](45Zer)9aK";
 const step: number = 4;
 
 export function cryptId(paramId: number | string): string {
   let result: string = "";
-  if (Number.isInteger(paramId)) {
-    result = paramId.toString();
-  } else {
-    result = paramId as string;
-  }
+  result = Number.isInteger(paramId) ? paramId.toString() : (paramId as string);
 
   let s_str: string = "";
   for (let i: number = 0; i < result.length; i++) {

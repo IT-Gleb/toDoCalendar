@@ -26,7 +26,8 @@ export async function SetCookies(paramUserId: string) {
   if (theCookie.has(CName)) {
     (await cookies()).delete(CName);
   }
-  (await cookies()).set(CName, paramUserId, { maxAge: 4 * 60 * 60 }); //На час начиная с текущего
+  const Id_crypted: string = cryptId(paramUserId);
+  (await cookies()).set(CName, Id_crypted, { maxAge: 4 * 6.75 * 60 * 60 }); //На сутки начиная с текущего
 }
 
 export async function AddUser(
@@ -64,21 +65,20 @@ export async function AddUser(
       const { id } = get_id[0];
       //Set cookies
       //console.log("User id= ", id);
+      //let tmpId: string = cryptId(id as string);
       await SetCookies(id as string);
-      let tmp: string = cryptId(id);
 
-      console.log(id, " = ", tmp);
-      console.log(decryptId(tmp));
+      //console.log(id, " = ", tmpId);
+      //console.log(decryptId(tmpId));
 
       //Set result
       result = "success";
+      return result;
     } catch (err) {
       result =
         "error ###Ошибка ввода данных в таблицу - " + (err as Error).message;
       return result;
     }
-
-    return result;
   } catch (e) {
     result = "error: ";
     (e as ZodError).issues.forEach(
