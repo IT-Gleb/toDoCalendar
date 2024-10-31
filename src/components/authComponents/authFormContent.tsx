@@ -5,6 +5,7 @@ import AuthPasswordComponent from "./authPasswordComponent";
 import AuthNickNameComponent from "./authNickNameComponent";
 import EmailInputComponent from "./emailInputComponent";
 import { useRouter } from "next/navigation";
+import { Base_URL } from "@/utils/functions";
 
 interface AuthFormContentProps {
   paramClick(): void;
@@ -23,14 +24,22 @@ const AuthFormContent: React.FunctionComponent<AuthFormContentProps> = ({
 
   useEffect(() => {
     //console.log(state);
-    if (state.includes("success")) {
-      formRef.current?.reset();
-      //console.log("Перенаправление!!!");
-      paramClick();
-      setTimeout(() => {
-        router.replace("/", { scroll: false });
-      }, 800);
+    let isSubscribed: boolean = true;
+
+    async function onSuccess() {
+      if (state.includes("success")) {
+        formRef.current?.reset();
+        //console.log("Перенаправление!!!");
+        router.push("/");
+        //paramClick();
+      }
     }
+    if (isSubscribed) {
+      onSuccess();
+    }
+    return () => {
+      isSubscribed = false;
+    };
   }, [state]);
 
   return (

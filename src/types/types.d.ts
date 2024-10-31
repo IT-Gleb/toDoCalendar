@@ -65,6 +65,6 @@ declare type TUser = {
   nickname: string;
   email: string;
   userkey: string; //Пароль
-  start_at: number;
+  create_at: number;
   update_at: number;
 };

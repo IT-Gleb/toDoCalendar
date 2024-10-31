@@ -4,7 +4,8 @@ import sql from "@/clientdb/connectdb";
 import { z, ZodError } from "zod";
 import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
-import { cryptId, decryptId, CookieUserId } from "@/utils/functions";
+import { cryptId, decryptId, CookieUserId, Base_URL } from "@/utils/functions";
+import { redirect } from "next/navigation";
 
 const userSchema = z.object({
   nickname: z
@@ -31,11 +32,24 @@ export async function SetCookies(paramUserId: string) {
   }); //На сутки начиная с текущего часа
 }
 
+export async function GetCookieId(): Promise<string> {
+  let result: string = "";
+
+  result = (await cookies()).get(CookieUserId)?.value ?? "";
+  if (result) {
+    result = decryptId(result);
+  }
+  //console.log(result);
+
+  return result;
+}
+
 export async function AddUser(
   paramInitState: string,
   paramData: FormData
 ): Promise<string> {
   let result: string = paramInitState;
+
   try {
     //Get data
     const UName: string = paramData.get("u-nickname")?.toString() ?? "";
@@ -69,15 +83,14 @@ export async function AddUser(
       //let tmpId: string = cryptId(id as string);
       await SetCookies(id as string);
 
-      //console.log(id, " = ", tmpId);
-      //console.log(decryptId(tmpId));
-
       //Set result
       result = "success";
+
       return result;
     } catch (err) {
       result =
         "error ###Ошибка ввода данных в таблицу - " + (err as Error).message;
+
       return result;
     }
   } catch (e) {
