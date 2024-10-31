@@ -3,6 +3,8 @@
 import sql from "@/clientdb/connectdb";
 import { z, ZodError } from "zod";
 import bcrypt from "bcrypt";
+import { cookies } from "next/headers";
+import { cryptId, decryptId } from "@/utils/functions";
 
 const userSchema = z.object({
   nickname: z
@@ -17,6 +19,15 @@ const userSchema = z.object({
 });
 
 const SaltHash: number = 11;
+const CName: string = "u_value";
+
+export async function SetCookies(paramUserId: string) {
+  const theCookie = await cookies();
+  if (theCookie.has(CName)) {
+    (await cookies()).delete(CName);
+  }
+  (await cookies()).set(CName, paramUserId, { maxAge: 4 * 60 * 60 }); //На час начиная с текущего
+}
 
 export async function AddUser(
   paramInitState: string,
@@ -46,15 +57,27 @@ export async function AddUser(
     //console.log("Pass compared: ", match_p);
     //---------------------------
 
-    //Insert data into db
+    //Insert data into db get user id
     try {
-      await sql`INSERT INTO tblusers (nickname, email, userkey) VALUES(${UName}, ${UEmail}, ${hash_p});`;
+      const get_id =
+        await sql`INSERT INTO tblusers (nickname, email, userkey) VALUES(${UName}, ${UEmail}, ${hash_p}) RETURNING id;`;
+      const { id } = get_id[0];
+      //Set cookies
+      //console.log("User id= ", id);
+      await SetCookies(id as string);
+      let tmp: string = cryptId(id);
+
+      console.log(id, " = ", tmp);
+      console.log(decryptId(tmp));
+
+      //Set result
+      result = "success";
     } catch (err) {
-      result = "Ошибка ввода данных в таблицу - " + (err as Error).message;
+      result =
+        "error ###Ошибка ввода данных в таблицу - " + (err as Error).message;
       return result;
     }
-    //Set result
-    result = "success";
+
     return result;
   } catch (e) {
     result = "error: ";

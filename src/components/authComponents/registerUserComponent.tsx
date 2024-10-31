@@ -11,6 +11,7 @@ const RegisterUserComponent: React.FunctionComponent<
   RegisterComponentProps
 > = () => {
   const [isShow, setIsShow] = useState<boolean>(false);
+
   const timerRef = useRef<number>(-1);
   const diagRef = useRef<IDialog>(null);
   const [divRef, animate] = useAnimate();

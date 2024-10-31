@@ -473,3 +473,50 @@ export function randomInteger(min: number, max: number): number {
   let rand: number = min + Math.random() * (max + 1 - min);
   return Math.floor(rand);
 }
+//Простое шифрование id userа для cookie
+const shifr_str: string = "fvrtW54bnmAsd09e1Qwcvfr=](345Zera";
+const step: number = 4;
+
+export function cryptId(paramId: number | string): string {
+  let result: string = "";
+  if (Number.isInteger(paramId)) {
+    result = paramId.toString();
+  } else {
+    result = paramId as string;
+  }
+
+  let s_str: string = "";
+  for (let i: number = 0; i < result.length; i++) {
+    let tmp: string = "";
+    while (tmp.length < step) {
+      tmp = tmp + shifr_str[randomInteger(0, shifr_str.length - 1)];
+    }
+    s_str += tmp + (Number(result[i]) ^ 1);
+  }
+  //Добавить символы в конец
+  let tmp: string = "";
+  while (tmp.length < Math.floor(step / randomInteger(1, step - 1))) {
+    tmp = tmp + shifr_str[randomInteger(0, shifr_str.length - 1)];
+  }
+  s_str += tmp;
+  //---------------------
+  result = s_str;
+
+  return result;
+}
+
+export function decryptId(paramShifr: string): string {
+  let result: string = "";
+
+  const tmp_a = paramShifr.split("");
+  while (tmp_a.length > 0) {
+    tmp_a.splice(0, step);
+    if (tmp_a[0]) {
+      result += Number(tmp_a[0]) ^ 1;
+    }
+    tmp_a.splice(0, 1);
+  }
+
+  return result;
+}
+//----------Простое шифрование----------------

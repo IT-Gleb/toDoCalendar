@@ -4,6 +4,7 @@ import { useFormState } from "react-dom";
 import AuthPasswordComponent from "./authPasswordComponent";
 import AuthNickNameComponent from "./authNickNameComponent";
 import EmailInputComponent from "./emailInputComponent";
+import { useRouter } from "next/navigation";
 
 interface AuthFormContentProps {
   paramClick(): void;
@@ -18,12 +19,17 @@ const AuthFormContent: React.FunctionComponent<AuthFormContentProps> = ({
 }) => {
   const [state, actionForm] = useFormState(AddUser, InitState);
   const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     //console.log(state);
     if (state.includes("success")) {
       formRef.current?.reset();
+      //console.log("Перенаправление!!!");
       paramClick();
+      setTimeout(() => {
+        router.replace("/", { scroll: false });
+      }, 800);
     }
   }, [state]);
 
@@ -79,7 +85,7 @@ const AuthFormContent: React.FunctionComponent<AuthFormContentProps> = ({
           </button>
           <button
             type="submit"
-            className="w-[100px] h-[36px] rounded-xl transition-all border border-slate-300 bg-slate-400 text-[0.8rem] p-1 active:scale-90 hover:border-yellow-200 hover:bg-green-600 hover:text-yellow-200"
+            className="w-[100px] h-[36px] rounded-xl border border-slate-300 bg-slate-400 text-[0.8rem] p-1 active:scale-90 hover:border-yellow-200 hover:bg-green-600 hover:text-yellow-200"
           >
             Добавить
           </button>
