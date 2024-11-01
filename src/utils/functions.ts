@@ -475,13 +475,15 @@ export function randomInteger(min: number, max: number): number {
   return Math.floor(rand);
 }
 
-//Простое шифрование id userа для cookie
+//Простое шифрование id userа для cookie---------
 const shifr_str: string = "f7v)34r0t(W5b8n8mA)4s7d09/3e1Q6w5cvLfr=](45Zer)9aK";
 const step: number = 4;
+const step_shift: number = 1;
 
 export function cryptId(paramId: number | string): string {
-  let result: string = "";
-  result = Number.isInteger(paramId) ? paramId.toString() : (paramId as string);
+  let result: string = Number.isInteger(paramId)
+    ? paramId.toString()
+    : (paramId as string);
 
   let s_str: string = "";
   for (let i: number = 0; i < result.length; i++) {
@@ -489,7 +491,7 @@ export function cryptId(paramId: number | string): string {
     while (tmp.length < step) {
       tmp = tmp + shifr_str[randomInteger(0, shifr_str.length - 1)];
     }
-    s_str += tmp + (Number(result[i]) ^ 1);
+    s_str += tmp + (Number(result[i]) ^ step_shift);
   }
   //Добавить символы в конец
   let tmp: string = "";
@@ -506,13 +508,15 @@ export function cryptId(paramId: number | string): string {
 export function decryptId(paramShifr: string): string {
   let result: string = "";
 
-  const tmp_a = paramShifr.split("");
-  while (tmp_a.length > 0) {
-    tmp_a.splice(0, step);
-    if (tmp_a[0]) {
-      result += Number(tmp_a[0]) ^ 1;
+  let ind: number = step;
+
+  while (ind < paramShifr.length) {
+    let tmp: string | undefined = paramShifr.slice(ind, ind + 1)[0];
+
+    if (tmp) {
+      result += Number(tmp) ^ step_shift;
     }
-    tmp_a.splice(0, 1);
+    ind += step + 1;
   }
 
   return result;

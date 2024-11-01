@@ -8,7 +8,7 @@ export const LOGINPAGE_PATH: string = "/enter";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
-      credentials: { email: {}, password: {} },
+      credentials: { nickname: {}, email: {}, password: {} },
       authorize: async (credentials) => {
         let user = null;
         return user;
