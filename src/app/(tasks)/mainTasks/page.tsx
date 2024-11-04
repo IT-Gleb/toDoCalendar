@@ -1,4 +1,4 @@
-import { auth, CheckAuth } from "@/app/auth";
+import { auth, CheckAuth } from "@/auth";
 import { NoAuthComponent } from "@/components/noAuthComponent";
 import { Base_URL } from "@/utils/functions";
 import Link from "next/link";

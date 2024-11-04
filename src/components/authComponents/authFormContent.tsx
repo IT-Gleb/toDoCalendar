@@ -7,6 +7,8 @@ import EmailInputComponent from "./emailInputComponent";
 import { useRouter } from "next/navigation";
 import { Base_URL } from "@/utils/functions";
 
+import { signUser } from "@/app/api/actions";
+
 interface AuthFormContentProps {
   paramClick(): void;
 }
@@ -18,7 +20,8 @@ const AuthFormContent: React.FunctionComponent<AuthFormContentProps> = ({
 }: {
   paramClick(): void;
 }) => {
-  const [state, actionForm] = useFormState(AddUser, InitState);
+  //const [state, actionForm] = useFormState(AddUser, InitState);
+  const [state, actionForm] = useFormState(signUser, InitState);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
 

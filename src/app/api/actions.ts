@@ -4,6 +4,7 @@ import { z, ZodError } from "zod";
 import sql from "@/clientdb/connectdb";
 import { revalidateTag } from "next/cache";
 import { StrDateFromNumbers } from "@/utils/functions";
+import { signIn } from "@/auth";
 
 const checkSchema = z
   .object({
@@ -122,4 +123,80 @@ export async function newTaskAction(
 
     return initialState;
   }
+}
+
+//Get user from DB by id
+export async function getUserFromDbId(
+  paramId: number | string
+): Promise<TUser | null> {
+  let userTemp: TPartUser = {};
+  let user: TUser;
+  try {
+    const userId = paramId as string;
+    if (!userId) {
+      throw new Error("No id");
+    }
+    const userData =
+      await sql`SELECT id, nickname, email, userkey, create_at, update_at FROM tblusers WHERE id=${userId.trim()};`;
+    if (userData && userData.length) {
+      const { id, nickname, email, userkey, create_at, update_at } =
+        userData[0];
+      userTemp.id = id;
+      userTemp.nickname = nickname;
+      userTemp.email = email;
+      userTemp.userkey = userkey;
+      userTemp.create_at = create_at;
+      userTemp.update_at = update_at;
+
+      user = Object.assign({}, userTemp as TUser);
+      return user;
+    } else {
+      return null;
+    }
+  } catch (err) {
+    console.log((err as Error).message);
+    return null;
+  }
+}
+
+//Get user data from DB nickname and email and password hash
+export async function GetUserFromDbCredential(
+  paramNickName: string,
+  paramEmail: string,
+  paramHwPass: string
+): Promise<TUser | null> {
+  let user: TPartUser = {};
+  try {
+    const UserData =
+      await sql`SELECT id, nickname, email, userkey, create_at, update_at FROM tblusers WHERE nickname=${paramNickName} AND email=${paramEmail} AND userkey=${paramHwPass};`;
+    if (UserData && UserData.length) {
+      const { id, nickname, email, userkey, create_at, update_at } =
+        UserData[0];
+      user.id = id;
+      user.nickname = nickname;
+      user.email = email;
+      user.userkey = userkey;
+      user.create_at = create_at;
+      user.update_at = update_at;
+      return user as TUser;
+    } else {
+      return null;
+    }
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function signUser(
+  paramState: string,
+  paramData: FormData
+): Promise<string> {
+  const name = paramData.get("u-nickname");
+  const email = paramData.get("u-email");
+  const id = paramData.get("u-pass");
+  const role = "userPuser";
+  //console.log(name, email, id, role);
+  await signIn("credentials", { name, email, id, role });
+  paramState = "success";
+  return paramState;
 }

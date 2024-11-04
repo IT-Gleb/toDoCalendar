@@ -1,4 +1,4 @@
-import { CheckAuth } from "@/app/auth";
+import { CheckAuth } from "@/auth";
 import { NewTaskFormComponent } from "@/components/forms/newTaskFormComponent";
 import { NoAuthComponent } from "@/components/noAuthComponent";
 

@@ -68,3 +68,5 @@ declare type TUser = {
   create_at: number;
   update_at: number;
 };
+
+declare type TPartUser = Partial<TUser>;
