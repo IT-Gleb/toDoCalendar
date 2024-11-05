@@ -7,7 +7,7 @@ import { Date2Component } from "./addFormComponents/date2Component";
 import { StatusComponent } from "./addFormComponents/statusComponent";
 import { FormSubmitButtonComponent } from "../buttons/formSubmitButtonComponent";
 import { useFormState } from "react-dom";
-import { newTaskAction } from "@/app/api/actions";
+import { newTaskAction } from "@/server/actions";
 
 const InitialState: TFormState = {
   status: false,

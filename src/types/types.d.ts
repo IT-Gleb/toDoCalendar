@@ -70,3 +70,5 @@ declare type TUser = {
 };
 
 declare type TPartUser = Partial<TUser>;
+
+declare type TUserRole = "user" | "admin";

@@ -3,7 +3,7 @@ import sql from "@/clientdb/connectdb";
 import { GetCookieId } from "@/server/addUser";
 import { Base_URL } from "@/utils/functions";
 import { NextRequest, NextResponse } from "next/server";
-import { getUserFromDbId } from "../actions";
+import { getUserFromDbId } from "../../../server/actions";
 
 export async function GET(req: NextRequest) {
   const userId = (await GetCookieId()) ?? "";

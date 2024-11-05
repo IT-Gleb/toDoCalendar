@@ -4,7 +4,11 @@ import { useState, useRef } from "react";
 const MINLENGTH: number = 8;
 const MAXLENGTH: number = 12;
 
-export const AuthPasswordComponent = () => {
+export const AuthPasswordComponent = ({
+  paramNameId,
+}: {
+  paramNameId: string;
+}) => {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [currLength, setCurrLength] = useState<number>(0);
@@ -44,8 +48,8 @@ export const AuthPasswordComponent = () => {
       <input
         ref={inputRef}
         type={isOpen ? "text" : "password"}
-        name="u-pass"
-        id="u-pass"
+        name={paramNameId}
+        id={paramNameId}
         required
         minLength={MINLENGTH}
         maxLength={MAXLENGTH}

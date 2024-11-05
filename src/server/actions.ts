@@ -193,10 +193,10 @@ export async function signUser(
 ): Promise<string> {
   const name = paramData.get("u-nickname");
   const email = paramData.get("u-email");
-  const id = paramData.get("u-pass");
-  const role = "userPuser";
+  const userId = paramData.get("u-pass1");
+  const role: TUserRole = "user";
   //console.log(name, email, id, role);
-  await signIn("credentials", { name, email, id, role });
+  await signIn("credentials", { name, email, userId, role });
   paramState = "success";
   return paramState;
 }

@@ -2,7 +2,7 @@
 
 import React, { FocusEvent, useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { newTaskAction } from "@/app/api/actions";
+import { newTaskAction } from "@/server/actions";
 import { CurrentDateToInput, DateAddMinutesToInput } from "@/utils/functions";
 import { FormSubmitButtonComponent } from "../buttons/formSubmitButtonComponent";
 import { useFormState } from "react-dom";

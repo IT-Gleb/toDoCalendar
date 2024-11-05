@@ -5,9 +5,6 @@ import AuthPasswordComponent from "./authPasswordComponent";
 import AuthNickNameComponent from "./authNickNameComponent";
 import EmailInputComponent from "./emailInputComponent";
 import { useRouter } from "next/navigation";
-import { Base_URL } from "@/utils/functions";
-
-import { signUser } from "@/app/api/actions";
 
 interface AuthFormContentProps {
   paramClick(): void;
@@ -20,30 +17,21 @@ const AuthFormContent: React.FunctionComponent<AuthFormContentProps> = ({
 }: {
   paramClick(): void;
 }) => {
-  //const [state, actionForm] = useFormState(AddUser, InitState);
-  const [state, actionForm] = useFormState(signUser, InitState);
+  const [formState, actionForm] = useFormState(AddUser, InitState);
+  //const [state, actionForm] = useFormState(signUser, InitState);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
 
   useEffect(() => {
-    //console.log(state);
-    let isSubscribed: boolean = true;
+    console.log(formState);
 
-    async function onSuccess() {
-      if (state.includes("success")) {
-        formRef.current?.reset();
-        //console.log("Перенаправление!!!");
-        router.push("/");
-        //paramClick();
-      }
+    if (formState.includes("good")) {
+      //formRef.current?.reset();
+      console.log("Перенаправление!!!");
+      router.replace("/calendar");
+      //paramClick();
     }
-    if (isSubscribed) {
-      onSuccess();
-    }
-    return () => {
-      isSubscribed = false;
-    };
-  }, [state]);
+  }, [formState]);
 
   return (
     <section
@@ -64,7 +52,7 @@ const AuthFormContent: React.FunctionComponent<AuthFormContentProps> = ({
         </button>
       </div>
 
-      <div className="hidden sm:block object-cover object-center mt-2 text-[0.6rem] w-fit absolute z-0 -right-[30%] sm:-right-[18%] top-10 -scale-x-[1] scale-y-[1.2]">
+      <div className="hidden sm:block object-cover object-center mt-2 text-[0.6rem] w-fit absolute z-0 -right-[30%] sm:-right-[18%] top-[5rem] -scale-x-[1] scale-y-[1.5]">
         <picture>
           <source srcSet={"/images/svg/icon1.svg"} />
           <img src={"/images/svg/icon1.svg"} alt="Ввод данных" />
@@ -74,17 +62,18 @@ const AuthFormContent: React.FunctionComponent<AuthFormContentProps> = ({
         <fieldset className="flex flex-col space-y-2 p-4">
           <AuthNickNameComponent />
           <EmailInputComponent />
-          <AuthPasswordComponent />
+          <AuthPasswordComponent paramNameId="u-pass1" />
+          <AuthPasswordComponent paramNameId="u-pass2" />
           <div
             className={`my-2 p-2 uppercase text-white ${
-              state.includes("error")
+              formState.includes("error")
                 ? "bg-red-600"
-                : state.includes("success")
+                : formState.includes("good")
                 ? "bg-green-600"
                 : "bg-inherit"
             }`}
           >
-            {state}
+            {formState}
           </div>
         </fieldset>
         <section className="w-full bg-slate-600 text-white p-2 flex space-x-2 items-center justify-center">
