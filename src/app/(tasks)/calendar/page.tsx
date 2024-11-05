@@ -15,11 +15,15 @@ export default function CalendarItem() {
   //if (!isAuth) return <NoAuthComponent />;
 
   useEffect(() => {
-    console.log(session, status);
+    //console.log(session, status);
     if (!session) {
       router.replace(LOGINPAGE_PATH);
     }
   }, [session]);
+
+  if (status === "loading" || status === "unauthenticated") {
+    return <section className="w-fit mx-auto mt-19">Loading...</section>;
+  }
 
   return (
     <section className="w-fit mx-auto">
@@ -38,10 +42,12 @@ export default function CalendarItem() {
         </Link>
       </section>
       <section className="mt-10 w-fit mx-auto">
-        <div>{session?.user?.userId}</div>
-        <div>{session?.user?.role}</div>
-        <div>{session?.user?.name}</div>
-        <div>{session?.user?.email}</div>
+        {session?.user &&
+          Object.entries(session.user).map((item, index) => (
+            <div key={index}>
+              {item[0]} = {item[1]}
+            </div>
+          ))}
       </section>
     </section>
   );
