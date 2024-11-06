@@ -1,5 +1,4 @@
 import RegisterUserComponent from "@/components/authComponents/registerUserComponent";
-import Link from "next/link";
 
 //bg-[url('../../assets/images/svg/bg-space_production.svg')]
 export default async function LoginPage() {

@@ -476,6 +476,7 @@ export function randomInteger(min: number, max: number): number {
 }
 
 //Простое шифрование id userа для cookie---------
+//ВНИМАНИЕ - только цифры
 const shifr_str: string = "f7v)34r0t(W5b8n8mA)4s7d09/3e1Q6w5cvLfr=](45Zer)9aK";
 const step: number = 4;
 const step_shift: number = 1;
@@ -505,6 +506,7 @@ export function cryptId(paramId: number | string): string {
   return result;
 }
 
+//ВНИМАНИЕ - только цифры
 export function decryptId(paramShifr: string): string {
   let result: string = "";
 
@@ -522,3 +524,4 @@ export function decryptId(paramShifr: string): string {
   return result;
 }
 //----------Простое шифрование----------------
+//----ВНИМАНИЕ - только цифры----

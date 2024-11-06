@@ -4,8 +4,9 @@ import sql from "@/clientdb/connectdb";
 import { z, ZodError } from "zod";
 import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
-import { cryptId, decryptId, CookieUserId, Base_URL } from "@/utils/functions";
+import { cryptId, decryptId, CookieUserId } from "@/utils/functions";
 import { signIn } from "@/auth";
+import { TFormAddUserState } from "@/components/authComponents/authFormContent";
 
 const userSchema = z
   .object({
@@ -56,11 +57,9 @@ export async function GetCookieId(): Promise<string> {
 }
 
 export async function AddUser(
-  paramInitState: string,
+  paramInitState: TFormAddUserState,
   paramData: FormData
-): Promise<string> {
-  let result: string = paramInitState;
-
+): Promise<TFormAddUserState> {
   try {
     //Get data
     const UName: string = paramData.get("u-nickname")?.toString() ?? "";
@@ -99,26 +98,35 @@ export async function AddUser(
         email: UEmail,
         userId: id as string,
         role: "user",
+        userkey: UPass1,
       });
 
       //Set result
-      result = "good";
-      paramInitState = result;
-      return paramInitState;
+      paramInitState.status = true;
+      paramInitState.message = "success";
     } catch (err) {
-      result =
+      paramInitState.message =
         "error ###Ошибка ввода данных в таблицу - " + (err as Error).message;
-
-      return result;
+      paramInitState.status = false;
+      return paramInitState;
     }
     //Set result
-    result = "success";
-    return result;
+
+    paramInitState.status = true;
+    paramInitState.message = "success";
+    console.log(paramInitState);
   } catch (e) {
-    result = "error: ";
+    paramInitState.message = "error: ";
     (e as ZodError).issues.forEach(
-      (item) => (result = result + "###" + item.message)
+      (item) =>
+        (paramInitState.message = paramInitState.message + "###" + item.message)
     );
-    return result;
+    paramInitState.status = false;
+    return paramInitState;
   }
+  //Вернуть результат
+  paramInitState.message = "success";
+  paramInitState.status = true;
+  //console.log(paramInitState);
+  return paramInitState;
 }

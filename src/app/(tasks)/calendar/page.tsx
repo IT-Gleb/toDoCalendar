@@ -42,14 +42,6 @@ export default function CalendarItem() {
           Вернуться
         </Link>
       </section>
-      <section className="mt-10 w-fit mx-auto">
-        {session?.user &&
-          Object.entries(session.user).map(([key, value], index) => (
-            <div key={index}>
-              {key} = {value}
-            </div>
-          ))}
-      </section>
     </section>
   );
 }

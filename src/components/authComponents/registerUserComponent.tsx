@@ -4,14 +4,21 @@ import { useState, useRef, useEffect } from "react";
 import { DialogComponent, type IDialog } from "../dialog/dialogComponent";
 import AuthFormContent from "./authFormContent";
 import { useAnimate, motion } from "framer-motion";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 interface RegisterComponentProps {}
 
 const RegisterUserComponent: React.FunctionComponent<
   RegisterComponentProps
 > = () => {
+  //Авторизован или нет
+  const { status } = useSession();
+  if (status === "authenticated") {
+    redirect("/member");
+  }
+  //------------------------------
   const [isShow, setIsShow] = useState<boolean>(false);
-
   const timerRef = useRef<number>(-1);
   const diagRef = useRef<IDialog>(null);
   const [divRef, animate] = useAnimate();

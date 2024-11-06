@@ -1,37 +1,29 @@
 import { AddUser } from "@/server/addUser";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useFormState } from "react-dom";
 import AuthPasswordComponent from "./authPasswordComponent";
 import AuthNickNameComponent from "./authNickNameComponent";
 import EmailInputComponent from "./emailInputComponent";
-import { useRouter } from "next/navigation";
 
 interface AuthFormContentProps {
   paramClick(): void;
 }
+export type TFormAddUserState = {
+  status: boolean;
+  message: string;
+};
 
-let InitState: string = "";
+let InitState: TFormAddUserState = { status: false, message: "" };
 
 const AuthFormContent: React.FunctionComponent<AuthFormContentProps> = ({
   paramClick,
 }: {
   paramClick(): void;
 }) => {
-  const [formState, actionForm] = useFormState(AddUser, InitState);
+  const [formState, actionForm, isPending] = useFormState(AddUser, InitState);
+
   //const [state, actionForm] = useFormState(signUser, InitState);
   const formRef = useRef<HTMLFormElement>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    console.log(formState);
-
-    if (formState.includes("good")) {
-      //formRef.current?.reset();
-      console.log("Перенаправление!!!");
-      router.replace("/calendar");
-      //paramClick();
-    }
-  }, [formState]);
 
   return (
     <section
@@ -66,14 +58,14 @@ const AuthFormContent: React.FunctionComponent<AuthFormContentProps> = ({
           <AuthPasswordComponent paramNameId="u-pass2" />
           <div
             className={`my-2 p-2 uppercase text-white ${
-              formState.includes("error")
+              formState.message.includes("error")
                 ? "bg-red-600"
-                : formState.includes("good")
+                : formState.message.includes("success")
                 ? "bg-green-600"
                 : "bg-inherit"
             }`}
           >
-            {formState}
+            {formState.message}
           </div>
         </fieldset>
         <section className="w-full bg-slate-600 text-white p-2 flex space-x-2 items-center justify-center">
@@ -86,6 +78,7 @@ const AuthFormContent: React.FunctionComponent<AuthFormContentProps> = ({
           </button>
           <button
             type="submit"
+            disabled={isPending}
             className="w-[100px] h-[36px] rounded-xl border border-slate-300 bg-slate-400 text-[0.8rem] p-1 active:scale-90 hover:border-yellow-200 hover:bg-green-600 hover:text-yellow-200"
           >
             Добавить

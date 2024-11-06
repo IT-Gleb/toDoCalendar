@@ -1,5 +1,5 @@
 import { LoaderCalendarComponent } from "@/components/loader/loaderCalendarComponent";
-import { GetCookieId } from "@/server/addUser";
+
 import { BgSvgTasksComponent } from "@/svg_components/bgSvgTasksComponent";
 
 // import { LoaderFormComponent } from "@/components/loader/loaderFormComponent";
@@ -8,7 +8,6 @@ import { BgSvgTasksComponent } from "@/svg_components/bgSvgTasksComponent";
 // import { EmptySvgComponent } from "@/svg_components/emptySvgComponent";
 // import { MordaSvgComponent } from "@/svg_components/mordaSvgComponent";
 // import dynamic from "next/dynamic";
-import { redirect } from "next/navigation";
 
 // const DynamicCalendar = dynamic(
 //   () =>

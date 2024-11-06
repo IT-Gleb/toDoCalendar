@@ -1,4 +1,4 @@
-import { LOGINPAGE_PATH, auth as middleware } from "@/app/auth";
+import { LOGINPAGE_PATH, auth as middleware } from "@/auth";
 
 // export default middleware((req) => {
 //   if (!req.auth && req.nextUrl.pathname !== LOGINPAGE_PATH) {

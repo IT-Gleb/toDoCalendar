@@ -40,6 +40,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           ...session.user,
           role: (token.user as User).role,
           userId: (token.user as User).userId,
+          userkey: (token.user as User).userkey,
         },
       };
     },
@@ -48,19 +49,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        name: { label: "Name", type: "name" },
+        name: { label: "Name", type: "text" },
         email: { label: "Email", type: "email" },
         role: { label: "Role", type: "text" },
-        userId: { label: "Id", type: "text" },
+        userId: { label: "UserId", type: "text" },
+        userkey: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const { name, email, role, userId } = credentials;
+        const { name, email, role, userId, userkey } = credentials;
 
         const myUser: User = {
           name: name as string,
           email: email as string,
           role: role as string,
           userId: userId as string,
+          userkey: userkey as string,
         };
 
         if (myUser) {
@@ -75,7 +78,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
 export async function CheckAuth(): Promise<boolean> {
   const session = await auth();
-  console.log(session);
+  //console.log(session);
   if (session !== null) {
     return true;
   }
