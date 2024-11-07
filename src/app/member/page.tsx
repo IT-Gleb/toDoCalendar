@@ -1,6 +1,5 @@
 "use client";
 
-import { decryptId } from "@/utils/functions";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 

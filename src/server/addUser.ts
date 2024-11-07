@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
 import { cryptId, decryptId, CookieUserId } from "@/utils/functions";
 import { signIn } from "@/auth";
-import { TFormAddUserState } from "@/components/authComponents/authFormContent";
+import { type TFormAddUserState } from "@/components/authComponents/authFormContent";
 
 const userSchema = z
   .object({
@@ -114,7 +114,7 @@ export async function AddUser(
 
     paramInitState.status = true;
     paramInitState.message = "success";
-    console.log(paramInitState);
+    //console.log(paramInitState);
   } catch (e) {
     paramInitState.message = "error: ";
     (e as ZodError).issues.forEach(
