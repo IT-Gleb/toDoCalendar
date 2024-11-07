@@ -10,12 +10,12 @@ export default function MemeberPage() {
 
   if (status === "loading" || status === "unauthenticated") {
     return (
-      <section className="w-fit mx-auto mt-10">
-        <h4>Loading...</h4>
+      <section className="w-fit mx-auto mt-10 flex flex-col space-y-10">
+        <h4>Вы не авторизованы...</h4>
         <Link
           href={"/enter"}
           scroll={false}
-          className="w-[100px] h-[32px] rounded-md bg-sky-500 text-white text-[0.8rem] mt-5 cursor-pointer p-2"
+          className="max-w-[200px] h-[32px] text-center overflow-hidden rounded-md bg-sky-500 text-white text-[0.8rem] cursor-pointer p-2"
         >
           Авторизоваться
         </Link>
