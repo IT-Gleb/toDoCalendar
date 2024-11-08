@@ -1,4 +1,4 @@
-import { CheckAuth } from "@/app/auth";
+import { CheckAuth } from "@/auth";
 import { ComponentWithDialog } from "@/components/dialog/componentWithDialog";
 import { AddFormContent } from "@/components/forms/addFormContent";
 import { AddTaskFormComponent } from "@/components/forms/addTaskFormComponent";
@@ -17,7 +17,7 @@ type TTasksParams = {
 
 async function getData(params: TTasksParams) {
   const result = await fetch(
-    `${Base_URL}/api/tasks/?day=${params.id}&limit=${params.limit}&offset=${params.offset}`,
+    `${Base_URL}api/tasks/?day=${params.id}&limit=${params.limit}&offset=${params.offset}`,
     {
       headers: { "Content-Type": "application/json" },
       next: { tags: [`task-${params.id}`], revalidate: 2 },

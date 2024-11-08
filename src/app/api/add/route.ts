@@ -15,6 +15,7 @@ export async function GET() {
     begin_at: Date.now() + 1200,
     end_at: Date.now() + 2400,
     items: [],
+    level: 0,
   };
   const task2: TTask = {
     id: nanoid(),
@@ -25,6 +26,7 @@ export async function GET() {
     begin_at: Date.now() + 30,
     end_at: Date.now() + 50,
     items: [],
+    level: 1,
   };
   const task1: TTask = {
     id: rId,
@@ -35,6 +37,7 @@ export async function GET() {
     begin_at: Date.now() + 60,
     end_at: Date.now() + 120,
     items: [task2, task3],
+    level: 0,
   };
   let AddTask =
     await sql`INSERT INTO tasks(name, completed, items) VALUES(${name}, ${false}, ${[

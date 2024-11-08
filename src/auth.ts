@@ -22,11 +22,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return !!auth;
       }
     },
-    //Передать данные userа в token, а потом в session
+    //Передать данные access_token & userа в token, а потом в session
     jwt: async ({ token, user }) => {
       if (user) {
-        return { ...token, user: { ...user } };
+        return {
+          ...token,
+          user: { ...user },
+        };
       }
+
       return token;
     },
 
@@ -36,6 +40,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       return {
         ...session,
+        accessToken: token.accessToken,
         user: {
           ...session.user,
           role: (token.user as User).role,
