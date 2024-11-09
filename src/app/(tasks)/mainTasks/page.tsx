@@ -1,10 +1,9 @@
 "use client";
 
-import { auth } from "@/auth";
 import { NoAuthComponent } from "@/components/noAuthComponent";
 import { Base_URL } from "@/utils/functions";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
+
 import { useState, useEffect } from "react";
 
 type TNotAuth = {
@@ -66,41 +65,91 @@ export default function AllTasks() {
   //Авторизация
   const { data: session, status } = useSession();
   if (status === "loading" || status === "unauthenticated") {
-    return <NoAuthComponent></NoAuthComponent>;
+    return <NoAuthComponent />;
   }
   //---------------------------
-  const [data, setData] = useState<TNotAuth | null>(null);
+  const [data, setData] = useState<TTaskList | TNotAuth | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [tasks, setTasks] = useState<TTaskList>([]);
   useEffect(() => {
     let isSubscribed: boolean = true;
     if (isSubscribed) {
-      (async () => {
-        const res = await fetch("/api/items", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user: session?.user.name,
-            role: session?.user.role,
-            id: session?.user.userId,
-          }),
-          next: { tags: ["tasks"] },
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setData(data as TNotAuth);
-        } else {
-          setData({ message: "Error!!!", status: 404 });
+      (async function (param: (p: boolean) => void) {
+        param(true);
+        try {
+          const res = await fetch("/api/items", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              user: session?.user.name,
+              role: session?.user.role,
+              id: session?.user.userId,
+            }),
+            next: { tags: ["tasks"] },
+          });
+          if (res.ok) {
+            const data = await res.json();
+            setData(data as TTask[]);
+          } else {
+            setData({ message: "Error!!!", status: 404 });
+          }
+        } catch (err) {
+          setData({ message: (err as Error).message, status: 404 });
+        } finally {
+          param(false);
         }
-      })();
+      })(setIsLoading);
     }
     return () => {
       isSubscribed = false;
     };
   }, []);
 
+  useEffect(() => {
+    if (data && Array.isArray(data) && data.length > 0) {
+      console.log(data);
+      const ttask: TTaskList = [];
+      data.forEach((item) => {
+        const dt = { ...item };
+        getArrayTasks(dt as TTask).forEach((task) => ttask.push(task));
+      });
+      if (ttask.length > 0) {
+        setTasks(ttask);
+      }
+    }
+  }, [data]);
+
+  if (isLoading) {
+    return (
+      <section className="w-fit mx-auto mt-10">
+        <h4 className="text-[1.8rem] font-semibold">Идет загрузка данных...</h4>
+      </section>
+    );
+  }
+
   return (
     <div className="w-fit mx-auto mt-10">
-      <h2>{data?.status}</h2>
-      <p>{data?.message}</p>
+      {data && typeof data === "object" && "status" in data && (
+        <div>
+          <h2>{(data as TNotAuth).status}</h2>
+          <p>{(data as TNotAuth).message}</p>
+        </div>
+      )}
+      {data && Array.isArray(data) && data.length < 1 && <h2>Нет данных</h2>}
+      {tasks &&
+        tasks.length > 0 &&
+        tasks.map((item) => (
+          <div
+            key={item.id}
+            className="w-fit mx-auto mt-1 flex space-x-4 items-start justify-start p-2 odd:bg-slate-100"
+          >
+            <div>{item.id}</div>
+            <div>{item.parent_id !== null ? item.parent_id : "00"}</div>
+            <div>{item.userId}</div>
+            <div>{item.name}</div>
+            <div>{item.completed ? "Завершена" : "Не завершена"}</div>
+          </div>
+        ))}
     </div>
   );
 

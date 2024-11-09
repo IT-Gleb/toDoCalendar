@@ -64,9 +64,42 @@ export const handler = auth(async function POST(req) {
     if (req.body) {
       data = await req.json();
     }
-    const { user, id, role } = data;
+    if (data) {
+      const { user, id, role } = data;
+      const items = await sql`SELECT * FROM tasks WHERE userid=${
+        id as string
+      } and isdeleted=false ORDER BY begin_at desc LIMIT 10 OFFSET 0;`;
+      const task = {
+        id: 23,
+        parent_id: null,
+        userId: id,
+        name: "Задача 1",
+        completed: false,
+        isdeleted: false,
+        items: [
+          {
+            id: 26,
+            parent_id: 23,
+            userId: id,
+            name: "Подзадача 1",
+            completed: false,
+            isdeleted: false,
+            items: [],
+            create_at: Date.now(),
+            begin_at: Date.now(),
+            end_at: Date.now(),
+          },
+        ],
+        create_at: Date.now(),
+        begin_at: Date.now(),
+        end_at: Date.now(),
+      };
+      items.push(task);
+      return NextResponse.json(items);
+    }
+    data = await req.text();
     return NextResponse.json({
-      message: `${user} is auth with role = ${role} and ID=${id}`,
+      message: data as string,
       status: 200,
     });
   }
