@@ -11,6 +11,15 @@ type TNotAuth = {
   message: string;
 };
 
+function isNoAuthType(param: any): boolean {
+  if (typeof param === "object") {
+    if ("status" in param && "message" in param) {
+      return true;
+    }
+  }
+  return false;
+}
+
 async function getData(paramToken: string) {
   const url: string = Base_URL + "api/items";
 
@@ -89,7 +98,7 @@ export default function AllTasks() {
           });
           if (res.ok) {
             const data = await res.json();
-            setData(data as TTask[]);
+            setData(data as TTaskList);
           } else {
             setData({ message: "Error!!!", status: 404 });
           }
@@ -106,8 +115,9 @@ export default function AllTasks() {
   }, []);
 
   useEffect(() => {
+    setIsLoading(true);
     if (data && Array.isArray(data) && data.length > 0) {
-      console.log(data);
+      //console.log(data);
       const ttask: TTaskList = [];
       data.forEach((item) => {
         const dt = { ...item };
@@ -117,6 +127,7 @@ export default function AllTasks() {
         setTasks(ttask);
       }
     }
+    setIsLoading(false);
   }, [data]);
 
   if (isLoading) {
@@ -129,7 +140,7 @@ export default function AllTasks() {
 
   return (
     <div className="w-fit mx-auto mt-10">
-      {data && typeof data === "object" && "status" in data && (
+      {data && isNoAuthType(data) && (
         <div>
           <h2>{(data as TNotAuth).status}</h2>
           <p>{(data as TNotAuth).message}</p>
@@ -141,13 +152,19 @@ export default function AllTasks() {
         tasks.map((item) => (
           <div
             key={item.id}
-            className="w-fit mx-auto mt-1 flex space-x-4 items-start justify-start p-2 odd:bg-slate-100"
+            className=" mt-1 text-[0.8rem] text-left bg-slate-400 rounded-md flex gap-x-1 items-start p-1"
           >
-            <div>{item.id}</div>
-            <div>{item.parent_id !== null ? item.parent_id : "00"}</div>
-            <div>{item.userId}</div>
-            <div>{item.name}</div>
-            <div>{item.completed ? "Завершена" : "Не завершена"}</div>
+            <div className="w-[30px] bg-slate-50 p-2">{item.id}</div>
+            <div className="w-[30px] bg-slate-50 p-2">
+              {item.parent_id !== null ? item.parent_id : "0"}
+            </div>
+            <div className="w-[30px] bg-slate-50 p-2">{item.userId}</div>
+            <div className="w-[200px]  overflow-hidden text-left bg-slate-50 p-2 whitespace-nowrap">
+              {item.name}
+            </div>
+            <div className="w-[100px] overflow-hidden text-left bg-slate-50 p-2 whitespace-nowrap">
+              {item.completed ? "Завершена" : "Не завершена"}
+            </div>
           </div>
         ))}
     </div>
