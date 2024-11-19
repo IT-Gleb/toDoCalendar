@@ -115,7 +115,7 @@ export default function AllTasks() {
   }, []);
 
   useEffect(() => {
-    setIsLoading(true);
+    //setIsLoading(true);
     if (data && Array.isArray(data) && data.length > 0) {
       //console.log(data);
       const ttask: TTaskList = [];
@@ -127,13 +127,15 @@ export default function AllTasks() {
         setTasks(ttask);
       }
     }
-    setIsLoading(false);
+    //setIsLoading(false);
   }, [data]);
 
   if (isLoading) {
     return (
       <section className="w-fit mx-auto mt-10">
-        <h4 className="text-[1.8rem] font-semibold">Идет загрузка данных...</h4>
+        <h4 className="text-[1.8rem] font-semibold">
+          Идет загрузка и обработка данных...
+        </h4>
       </section>
     );
   }
@@ -147,26 +149,51 @@ export default function AllTasks() {
         </div>
       )}
       {data && Array.isArray(data) && data.length < 1 && <h2>Нет данных</h2>}
-      {tasks &&
-        tasks.length > 0 &&
-        tasks.map((item) => (
-          <div
-            key={item.id}
-            className=" mt-1 text-[0.8rem] text-left bg-slate-400 rounded-md flex gap-x-1 items-start p-1"
-          >
-            <div className="w-[30px] bg-slate-50 p-2">{item.id}</div>
-            <div className="w-[30px] bg-slate-50 p-2">
-              {item.parent_id !== null ? item.parent_id : "0"}
+      <div className="relative rounded-md bg-gradient-to-b from-slate-300 via-transparent to-slate-300 overflow-y-auto">
+        {/* Заголовок таблицы */}
+        {tasks && tasks.length > 0 && (
+          <div className=" sticky top-0.5 left-0 bg-slate-600 rounded-md text-center flex gap-x-1 items-center p-1 font-semibold text-[0.7rem] uppercase">
+            <div className="w-[30px] p-2 bg-slate-400 text-white overflow-hidden">
+              id
             </div>
-            <div className="w-[30px] bg-slate-50 p-2">{item.userId}</div>
-            <div className="w-[200px]  overflow-hidden text-left bg-slate-50 p-2 whitespace-nowrap">
-              {item.name}
+            <div className="w-[30px] p-2 bg-slate-400 text-white overflow-hidden whitespace-nowrap">
+              p_id
             </div>
-            <div className="w-[100px] overflow-hidden text-left bg-slate-50 p-2 whitespace-nowrap">
-              {item.completed ? "Завершена" : "Не завершена"}
+            <div className="w-[30px] p-2 bg-slate-400 text-white overflow-hidden whitespace-nowrap">
+              u-id
+            </div>
+            <div className="w-[200px] p-2 bg-slate-400 text-white overflow-hidden">
+              наименование
+            </div>
+            <div className="w-[100px] p-2 bg-slate-400 text-white overflow-hidden">
+              статус
             </div>
           </div>
-        ))}
+        )}
+        {/* Данные по задачам */}
+        {tasks &&
+          tasks.length > 0 &&
+          tasks.map((item, index) => (
+            <div
+              key={item.id}
+              className={`${
+                index === 0 ? "mt-2" : "mt-1"
+              } text-[0.8rem] text-left bg-slate-400 rounded-md flex gap-x-1 items-start p-1`}
+            >
+              <div className="w-[30px] bg-slate-50 p-2">{item.id}</div>
+              <div className="w-[30px] bg-slate-50 p-2">
+                {item.parent_id !== null ? item.parent_id : "0"}
+              </div>
+              <div className="w-[30px] bg-slate-50 p-2">{item.userId}</div>
+              <div className="w-[200px]  overflow-hidden text-left bg-slate-50 p-2 whitespace-nowrap">
+                {item.name}
+              </div>
+              <div className="w-[100px] overflow-hidden text-left bg-slate-50 p-2 whitespace-nowrap">
+                {item.completed ? "Завершена" : "Не завершена"}
+              </div>
+            </div>
+          ))}
+      </div>
     </div>
   );
 

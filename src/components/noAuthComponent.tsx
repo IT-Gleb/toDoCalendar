@@ -1,7 +1,6 @@
-import { auth } from "@/app/auth";
 import Link from "next/link";
 
-export const NoAuthComponent = async () => {
+export const NoAuthComponent = () => {
   return (
     <section className="mt-5">
       <h2 className="w-fit mx-auto mt-2">Пользователь не авторизован...</h2>
