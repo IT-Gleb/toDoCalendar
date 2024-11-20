@@ -13,16 +13,20 @@ const userSchema = z
     nickname: z
       .string()
       .trim()
-      .min(4, { message: "Имя должно быть больше 3-x символов" }),
+      .min(4, { message: "Имя должно быть больше 3-x символов" })
+      .max(32, { message: "Имя не больше 32-х символов" }),
+
     email: z.string().trim().email({ message: "Введите корректный e-mail" }),
     userkey: z
       .string()
       .trim()
-      .min(8, { message: "Длина пароля не менее 8-ми символов." }),
+      .min(8, { message: "Длина пароля не менее 8-ми символов." })
+      .max(32, { message: "Длина пароля не более 32-х символов" }),
     checkkey: z
       .string()
       .trim()
-      .min(8, { message: "Длина пароля не менее 8 символов!" }),
+      .min(8, { message: "Длина пароля не менее 8 символов!" })
+      .max(32, { message: "Длина пароля не более 32-х символов" }),
   })
   .refine(
     (obj) => {
@@ -41,7 +45,7 @@ export async function SetCookies(paramUserId: string) {
   const Id_crypted: string = cryptId(paramUserId);
   (await cookies()).set(CookieUserId, Id_crypted, {
     maxAge: 4 * 6.75 * 60 * 60,
-  }); //На сутки начиная с текущего часа
+  }); //На 12 часов начиная с текущего часа
 }
 
 export async function GetCookieId(): Promise<string> {

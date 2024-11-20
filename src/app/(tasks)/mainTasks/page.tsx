@@ -80,11 +80,12 @@ export default function AllTasks() {
   const [data, setData] = useState<TTaskList | TNotAuth | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [tasks, setTasks] = useState<TTaskList>([]);
+
   useEffect(() => {
     let isSubscribed: boolean = true;
     if (isSubscribed) {
-      (async function (param: (p: boolean) => void) {
-        param(true);
+      (async function (paramIsLoad: (p: boolean) => void) {
+        paramIsLoad(true);
         try {
           const res = await fetch("/api/items", {
             method: "POST",
@@ -105,7 +106,7 @@ export default function AllTasks() {
         } catch (err) {
           setData({ message: (err as Error).message, status: 404 });
         } finally {
-          param(false);
+          paramIsLoad(false);
         }
       })(setIsLoading);
     }
@@ -149,7 +150,7 @@ export default function AllTasks() {
         </div>
       )}
       {data && Array.isArray(data) && data.length < 1 && <h2>Нет данных</h2>}
-      <div className="relative rounded-md bg-gradient-to-b from-slate-300 via-transparent to-slate-300 overflow-y-auto">
+      <div className="relative max-h-[75vh] rounded-md bg-gradient-to-b from-slate-300 via-transparent to-slate-300 overflow-y-auto">
         {/* Заголовок таблицы */}
         {tasks && tasks.length > 0 && (
           <div className=" sticky top-0.5 left-0 bg-slate-600 rounded-md text-center flex gap-x-1 items-center p-1 font-semibold text-[0.7rem] uppercase">
@@ -196,119 +197,4 @@ export default function AllTasks() {
       </div>
     </div>
   );
-
-  //Авторизация
-  //const session = await auth();
-  //if (!session) return <NoAuthComponent />;
-  // let tasks: TTaskList = [];
-  // let errData: TNotAuth = { status: 0, message: "" };
-  // let data: any = null;
-  //let value = await getData(session?.user.userId as string);
-  // //Если ошибка
-  // if (!Array.isArray(value)) {
-  //   errData = { ...value };
-  // }
-  //--------------------
-  // if (value && value.length > 0) {
-  //   value.forEach((item: TTask) => {
-  //     data = { ...item };
-  //     getArrayTasks(data).forEach((item) => tasks.push(item));
-  //   });
-  //   value = null;
-  // } else {
-  //   return (
-  //     <section className="w-fit mx-auto mt-5">
-  //       <h2>Нет данных</h2>
-  //       {errData.status > 0 && (
-  //         <div className="mt-10 w-fit mx-auto">
-  //           <h3 className=" font-semibold text-[1.6rem]">
-  //             Ошибка получения данных
-  //           </h3>
-  //           <p className="mt-5">
-  //             {errData.message}. Статус: {errData.status}
-  //           </p>
-  //         </div>
-  //       )}
-  //     </section>
-  //   );
-  // }
-  //   return (
-  //     <>
-  //       <section>
-  //         <h2 className="w-fit mx-auto mt-5 uppercase">задачи</h2>
-  //       </section>
-  //       {/* <section className="w-fit mx-auto mt-5 flex gap-x-2">
-  //       {data &&
-  //         Object.keys(data).map((item, index) => (
-  //           <div key={index}>
-  //             {`${item} : ${data[item as keyof typeof data]}`}
-  //           </div>
-  //         ))}
-  //     </section> */}
-  //       <section className="mt-5">
-  //         <div className="w-fit mx-auto grid grid-cols-[80px_140px_200px_100px_150px_150px_150px] gap-x-4 bg-sky-700 text-white text-[0.7rem] uppercase font-bold p-2">
-  //           <div>
-  //             <span>id </span>
-  //           </div>
-  //           <div>
-  //             <span>parent_id </span>
-  //           </div>
-  //           <div>
-  //             <span>Наименование </span>
-  //           </div>
-  //           <div>
-  //             <span>Завершена </span>
-  //           </div>
-  //           <div>
-  //             <span>Создана </span>
-  //           </div>
-  //           <div>
-  //             <span>Начата </span>
-  //           </div>
-  //           <div>
-  //             <span>Закончена </span>
-  //           </div>
-  //         </div>
-  //         {tasks &&
-  //           tasks.length > 0 &&
-  //           tasks.map((item) => (
-  //             <div
-  //               key={item.id}
-  //               className="w-fit mx-auto grid grid-cols-[80px_140px_200px_100px_150px_150px_150px] gap-x-4 px-4 odd:bg-slate-100 text-[0.8rem] p-1"
-  //             >
-  //               <div className=" grid grid-cols-1 overflow-hidden">{item.id}</div>
-  //               <div className=" grid grid-cols-1 overflow-hidden">
-  //                 {item.parent_id}
-  //               </div>
-  //               <div className=" grid grid-cols-1 ">{item.name}</div>
-  //               <div className=" grid grid-cols-1 ">
-  //                 {item.completed ? "Да" : "Нет"}
-  //               </div>
-  //               <div className=" grid grid-cols-1 ">
-  //                 {new Date(item.create_at as number).toString()}
-  //               </div>
-  //               <div className=" grid grid-cols-1 ">
-  //                 {item.begin_at !== null
-  //                   ? new Date(item.begin_at as number).toString()
-  //                   : "Нет данных"}
-  //               </div>
-  //               <div className=" grid grid-cols-1 ">
-  //                 {item.end_at !== null
-  //                   ? new Date(item.end_at as number).toString()
-  //                   : "Нет данных"}
-  //               </div>
-  //             </div>
-  //           ))}
-  //       </section>
-  //       <section className="w-full p-2 mt-5 flex items-center justify-center">
-  //         <Link
-  //           href="/"
-  //           scroll={false}
-  //           className="w-[120px] min-h-[20px] p-1 bg-slate-500 text-white text-center rounded-sm"
-  //         >
-  //           Вернуться
-  //         </Link>
-  //       </section>
-  //     </>
-  //   );
 }
