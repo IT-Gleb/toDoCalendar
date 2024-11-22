@@ -48,6 +48,11 @@ export const CheckDialog = () => {
 
   const handleCloseClick = () => {
     setShowDialog(false);
+    //console.log(checkRef.current?.isOpen);
+    //Закрыть диалог
+    if (checkRef.current?.isOpen) {
+      checkRef.current?.hide();
+    }
   };
 
   useEffect(() => {
