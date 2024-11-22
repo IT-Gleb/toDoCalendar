@@ -1,3 +1,4 @@
+import { CheckDialog } from "@/components/checkForm/checkDialog";
 import { LoaderCalendarComponent } from "@/components/loader/loaderCalendarComponent";
 
 import { BgSvgTasksComponent } from "@/svg_components/bgSvgTasksComponent";
@@ -27,7 +28,8 @@ export default async function Home() {
 
   return (
     <>
-      <section className=" w-full p-1 md:px-8 md:w-[99%] md:mx-auto relative">
+      <section className=" w-full md:px-8 md:w-[99%] md:mx-auto relative">
+        <CheckDialog />
         <BgSvgTasksComponent />
       </section>
     </>

@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 
 const MINLENGTH: number = 8;
-const MAXLENGTH: number = 100;
+const MAXLENGTH: number = 32;
 
 export const EmailInputComponent = () => {
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -32,7 +32,7 @@ export const EmailInputComponent = () => {
     <label className="flex flex-col relative" aria-labelledby="u-email">
       <span
         className={`text-[0.8rem] ${
-          isActive ? "animate-bounce text-sky-700" : "text-inherit"
+          isActive ? "animate-bounce text-sky-800" : "text-inherit"
         }`}
       >
         Ваш email (обязательно):

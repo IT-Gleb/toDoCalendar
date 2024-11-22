@@ -157,10 +157,10 @@ export default function AllTasks() {
             <div className="w-[30px] p-2 bg-slate-400 text-white overflow-hidden">
               id
             </div>
-            <div className="w-[30px] p-2 bg-slate-400 text-white overflow-hidden whitespace-nowrap">
+            <div className="w-[40px] p-2 bg-slate-400 text-white overflow-hidden whitespace-nowrap">
               p_id
             </div>
-            <div className="w-[30px] p-2 bg-slate-400 text-white overflow-hidden whitespace-nowrap">
+            <div className="w-[40px] p-2 bg-slate-400 text-white overflow-hidden whitespace-nowrap">
               u-id
             </div>
             <div className="w-[200px] p-2 bg-slate-400 text-white overflow-hidden">
@@ -182,10 +182,10 @@ export default function AllTasks() {
               } text-[0.8rem] text-left bg-slate-400 rounded-md flex gap-x-1 items-start p-1`}
             >
               <div className="w-[30px] bg-slate-50 p-2">{item.id}</div>
-              <div className="w-[30px] bg-slate-50 p-2">
+              <div className="w-[40px] bg-slate-50 p-2">
                 {item.parent_id !== null ? item.parent_id : "0"}
               </div>
-              <div className="w-[30px] bg-slate-50 p-2">{item.userId}</div>
+              <div className="w-[40px] bg-slate-50 p-2">{item.userId}</div>
               <div className="w-[200px]  overflow-hidden text-left bg-slate-50 p-2 whitespace-nowrap">
                 {item.name}
               </div>

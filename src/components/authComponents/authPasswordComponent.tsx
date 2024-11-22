@@ -40,7 +40,7 @@ export const AuthPasswordComponent = ({
     >
       <span
         className={`text-[0.8rem] ${
-          isActive ? "animate-bounce text-sky-700" : "text-inherit"
+          isActive ? "animate-bounce text-sky-800" : "text-inherit"
         }`}
       >
         Пароль (обязательно):
@@ -70,6 +70,7 @@ export const AuthPasswordComponent = ({
         type="button"
         onClick={handleShowPass}
         title={isOpen ? "Скрыть" : "Показать"}
+        tabIndex={-1}
         className="w-[22px] h-[16px] text-slate-500 text-[0.75rem] absolute right-1 md:right-[40%] top-8"
       >
         {isOpen ? <SVG_Eye /> : <SVG_Eye_Closed />}

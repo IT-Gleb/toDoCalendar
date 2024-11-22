@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 
 const MINLENGTH: number = 4;
-const MAXLENGTH: number = 100;
+const MAXLENGTH: number = 32;
 
 export const AuthNickNameComponent = () => {
   const [strLength, setStrLength] = useState<number>(0);
@@ -35,7 +35,7 @@ export const AuthNickNameComponent = () => {
     >
       <span
         className={`text-[0.8rem] ${
-          isActive ? "animate-bounce text-sky-700" : "text-inherit`"
+          isActive ? "animate-bounce text-sky-800" : "text-inherit`"
         }`}
       >
         Ваше имя (обязательно):
@@ -66,6 +66,7 @@ export const AuthNickNameComponent = () => {
           type="button"
           title="Oчистить"
           onClick={handleClearClick}
+          tabIndex={-1}
           className="w-[16px] h-[14px] text-black bg-slate-300 px-1 text-[0.6rem] active:scale-90 absolute right-1 md:right-[20%] top-8"
         >
           x
