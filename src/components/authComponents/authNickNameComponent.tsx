@@ -1,12 +1,13 @@
-import { useState, useRef } from "react";
+import { NICKNAME } from "@/utils/data";
+import { useState, useRef, forwardRef } from "react";
 
 const MINLENGTH: number = 4;
 const MAXLENGTH: number = 32;
 
-export const AuthNickNameComponent = () => {
+export const AuthNickNameComponent = forwardRef((_, paramRef: any) => {
   const [strLength, setStrLength] = useState<number>(0);
   const [isActive, setIsActive] = useState<boolean>(false);
-  const nickRef = useRef<HTMLInputElement>(null);
+  //const nickRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setStrLength(event.currentTarget.value.length);
@@ -21,11 +22,11 @@ export const AuthNickNameComponent = () => {
 
   const handleClearClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (nickRef.current) {
-      nickRef.current.value = "";
+    if (paramRef.current) {
+      paramRef.current.value = "";
       setStrLength(0);
     }
-    nickRef.current?.focus();
+    paramRef.current?.focus();
   };
 
   return (
@@ -41,10 +42,10 @@ export const AuthNickNameComponent = () => {
         Ваше имя (обязательно):
       </span>
       <input
-        ref={nickRef}
+        ref={paramRef}
         type="text"
-        name="u-nickname"
-        id="u-nickname"
+        name={NICKNAME}
+        id={NICKNAME}
         required
         autoComplete="off"
         maxLength={MAXLENGTH}
@@ -74,6 +75,6 @@ export const AuthNickNameComponent = () => {
       )}
     </label>
   );
-};
+});
 
 export default AuthNickNameComponent;

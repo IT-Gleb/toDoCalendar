@@ -7,6 +7,12 @@ export const MainMenu: TMainMenu[] = [
   { id: nanoid(), title: "Календарь", href: "/calendar", slug: "/calendar" },
 ];
 
+export const NICKNAME: string = "u-nickname";
+export const UEMAIL: string = "u-email";
+export const UKEY: string = "u-key";
+export const UPASS1: string = "u-pass1";
+export const UPASS2: string = "u-pass2";
+
 export const Mounths: string[] = [
   "Январь",
   "Февраль",

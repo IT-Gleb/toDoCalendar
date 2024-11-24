@@ -5,6 +5,7 @@ import sql from "@/clientdb/connectdb";
 import { revalidateTag } from "next/cache";
 import { StrDateFromNumbers } from "@/utils/functions";
 import { signIn } from "@/auth";
+import { NICKNAME, UEMAIL, UPASS1 } from "@/utils/data";
 
 const checkSchema = z
   .object({
@@ -191,12 +192,22 @@ export async function signUser(
   paramState: string,
   paramData: FormData
 ): Promise<string> {
-  const name = paramData.get("u-nickname");
-  const email = paramData.get("u-email");
-  const userId = paramData.get("u-pass1");
+  const name = paramData.get(NICKNAME);
+  const email = paramData.get(UEMAIL);
+  const userId = paramData.get(UPASS1);
   const role: TUserRole = "user";
   //console.log(name, email, id, role);
   await signIn("credentials", { name, email, userId, role });
   paramState = "success";
   return paramState;
+}
+
+export async function checkUser(
+  paramState: TFormStateAndStatus,
+  paramData: FormData
+): Promise<TFormStateAndStatus> {
+  return {
+    status: "error",
+    message: "Error!!! Dont give up !!!",
+  } as TFormStateAndStatus;
 }

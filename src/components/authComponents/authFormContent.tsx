@@ -4,6 +4,7 @@ import { useFormState } from "react-dom";
 import AuthPasswordComponent from "./authPasswordComponent";
 import AuthNickNameComponent from "./authNickNameComponent";
 import EmailInputComponent from "./emailInputComponent";
+import { UPASS1, UPASS2 } from "@/utils/data";
 
 interface AuthFormContentProps {
   paramClick(): void;
@@ -54,8 +55,8 @@ const AuthFormContent: React.FunctionComponent<AuthFormContentProps> = ({
         <fieldset className="flex flex-col space-y-2 p-4">
           <AuthNickNameComponent />
           <EmailInputComponent />
-          <AuthPasswordComponent paramNameId="u-pass1" />
-          <AuthPasswordComponent paramNameId="u-pass2" />
+          <AuthPasswordComponent paramNameId={UPASS1} />
+          <AuthPasswordComponent paramNameId={UPASS2} />
           <div
             className={`my-2 p-2 uppercase text-white ${
               formState.message.includes("error")

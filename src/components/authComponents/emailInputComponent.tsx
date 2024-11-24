@@ -1,12 +1,13 @@
-import { useState, useRef } from "react";
+import { UEMAIL } from "@/utils/data";
+import { useState, useRef, forwardRef } from "react";
 
 const MINLENGTH: number = 8;
 const MAXLENGTH: number = 32;
 
-export const EmailInputComponent = () => {
+export const EmailInputComponent = forwardRef((_, paramRef: any) => {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [strLength, setStrLength] = useState<number>(0);
-  const emailRef = useRef<HTMLInputElement>(null);
+  //const emailRef = useRef<HTMLInputElement>(null);
 
   const handleFocus = () => {
     setIsActive(true);
@@ -21,11 +22,11 @@ export const EmailInputComponent = () => {
 
   const handleClearClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (emailRef.current) {
-      emailRef.current.value = "";
+    if (paramRef.current) {
+      paramRef.current.value = "";
       setStrLength(0);
     }
-    emailRef.current?.focus();
+    paramRef.current?.focus();
   };
 
   return (
@@ -38,10 +39,10 @@ export const EmailInputComponent = () => {
         Ваш email (обязательно):
       </span>
       <input
-        ref={emailRef}
+        ref={paramRef}
         type="email"
-        name="u-email"
-        id="u-email"
+        name={UEMAIL}
+        id={UEMAIL}
         required
         placeholder="temp@thesite.primer.com"
         minLength={MINLENGTH}
@@ -65,13 +66,13 @@ export const EmailInputComponent = () => {
         {" "}
         {`Введено ${strLength} из (${MINLENGTH}-${MAXLENGTH}) `}
         {strLength >= MINLENGTH &&
-        emailRef.current?.value.includes("@") &&
-        emailRef.current?.value.includes(".") ? (
+        paramRef.current?.value.includes("@") &&
+        paramRef.current?.value.includes(".") ? (
           <span className="text-[1rem]">📧</span>
         ) : null}
       </span>
     </label>
   );
-};
+});
 
 export default EmailInputComponent;

@@ -32,6 +32,13 @@ declare type TFormState = {
   };
 };
 
+declare type TFormStateAndStatus = {
+  status: TFormInitState;
+  message: string;
+};
+
+declare type TFormInitState = "init" | "success" | "error";
+
 declare type TCalendarData = {
   id: string;
   day: number;

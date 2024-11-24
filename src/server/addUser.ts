@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 import { cryptId, decryptId, CookieUserId } from "@/utils/functions";
 import { signIn } from "@/auth";
 import { type TFormAddUserState } from "@/components/authComponents/authFormContent";
+import { NICKNAME, UEMAIL, UPASS1, UPASS2 } from "@/utils/data";
 
 const userSchema = z
   .object({
@@ -66,23 +67,23 @@ export async function AddUser(
 ): Promise<TFormAddUserState> {
   try {
     //Get data
-    const UName: string = paramData.get("u-nickname")?.toString() ?? "";
-    const UEmail: string = paramData.get("u-email")?.toString() ?? "";
-    const UPass1: string = paramData.get("u-pass1")?.toString() ?? "";
-    const UPass2: string = paramData.get("u-pass2")?.toString() ?? "";
+    const _UName: string = paramData.get(NICKNAME)?.toString() ?? "";
+    const _UEmail: string = paramData.get(UEMAIL)?.toString() ?? "";
+    const _UPass1: string = paramData.get(UPASS1)?.toString() ?? "";
+    const _UPass2: string = paramData.get(UPASS2)?.toString() ?? "";
 
     //console.log("Данные: ", UName, UEmail, UPass);
 
     //Check data
     await userSchema.parseAsync({
-      nickname: UName,
-      email: UEmail,
-      userkey: UPass1,
-      checkkey: UPass2,
+      nickname: _UName,
+      email: _UEmail,
+      userkey: _UPass1,
+      checkkey: _UPass2,
     });
 
     //Hash password
-    const hash_p = bcrypt.hashSync(UPass1, SaltHash);
+    const hash_p = bcrypt.hashSync(_UPass1, SaltHash);
 
     //Check password
     //const match_p: boolean = await bcrypt.compare("11111111", hash_p);
@@ -92,17 +93,17 @@ export async function AddUser(
     //Insert data into db get user id
     try {
       const get_id =
-        await sql`INSERT INTO tblusers (nickname, email, userkey) VALUES(${UName}, ${UEmail}, ${hash_p}) RETURNING id;`;
+        await sql`INSERT INTO tblusers (nickname, email, userkey) VALUES(${_UName}, ${_UEmail}, ${hash_p}) RETURNING id;`;
       const { id } = get_id[0];
 
       //Register user
       //console.log(id);
       await signIn("credentials", {
-        name: UName,
-        email: UEmail,
+        name: _UName,
+        email: _UEmail,
         userId: id as string,
         role: "user",
-        userkey: UPass1,
+        userkey: _UPass1,
       });
 
       //Set result
