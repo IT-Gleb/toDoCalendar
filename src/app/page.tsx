@@ -1,6 +1,6 @@
 import AuthProvider from "@/components/authComponents/authProviderComponent";
 import { CheckDialog } from "@/components/checkForm/checkDialog";
-import { LoaderCalendarComponent } from "@/components/loader/loaderCalendarComponent";
+//import { LoaderCalendarComponent } from "@/components/loader/loaderCalendarComponent";
 
 import { BgSvgTasksComponent } from "@/svg_components/bgSvgTasksComponent";
 

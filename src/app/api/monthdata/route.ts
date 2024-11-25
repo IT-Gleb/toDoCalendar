@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   let data: TMonthDayData = [];
 
   data =
-    await sql`WITH month_data AS(SELECT id, begin_at::date as _day, COUNT(id) OVER(PARTITION BY begin_at::date) as num FROM tasks WHERE begin_at::date BETWEEN ${start_day} AND ${end_day} GROUP BY id) SELECT DISTINCT _day, num as t_count FROM month_data ORDER BY _day;`;
+    await sql`WITH month_data AS(SELECT id, begin_at::date as _day, COUNT(id) OVER(PARTITION BY begin_at::date) as num FROM tasks WHERE isdeleted=false AND begin_at::date BETWEEN ${start_day} AND ${end_day} GROUP BY id) SELECT DISTINCT _day, num as t_count FROM month_data ORDER BY _day;`;
 
   //console.log(data);
 

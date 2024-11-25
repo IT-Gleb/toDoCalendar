@@ -54,7 +54,7 @@ export const CalendarNew = memo(
               </div>
             );
           })}
-          <div className="w-full mt-1 bg-sky-400 text-slate-700 text-[0.6rem] p-1 text-center flex justify-evenly">
+          <div className="w-full mt-3 bg-sky-400 text-slate-700 text-[0.6rem] p-1 text-center flex justify-evenly">
             <span>
               Дней в году:{" "}
               <span className="text-white text-[1rem] font-bold font-mono">

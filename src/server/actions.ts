@@ -212,34 +212,48 @@ export async function checkUser(
       userkey: _Pass,
       checkkey: _Pass,
     });
-    //Получить данные пользователя из базы данных
-    const user: TUser | null = await GetUserFromDb(_UName, _UEmail);
-    if (user) {
-      //Проверить пароль
-      const isPassed: boolean = await bcrypt.compare(_Pass, user.userkey);
-      if (isPassed) {
-        //Зарегистрировать сеанс пользователя
-        await signIn("credentials", {
-          name: user.nickname,
-          email: user.email,
-          userId: user.id,
-          role: "user",
-        });
-        return { status: "success", message: "Успех!" } as TFormStateAndStatus;
-      }
-      return {
-        status: "error",
-        message: "Пароль не верен",
-      } as TFormStateAndStatus;
-    }
+  } catch (err) {
+    let msg: string = "";
+    (err as ZodError).issues.forEach((item) => {
+      msg += "#" + item.message;
+      return msg;
+    });
     return {
       status: "error",
-      message: "Error!!! User not found !!! Register!",
+      message: msg + "  Error!!! Dont give up !!! Register!",
     } as TFormStateAndStatus;
+  }
+  //Получить данные пользователя из базы данных
+  let user: TUser | null = null;
+  try {
+    user = await GetUserFromDb(_UName, _UEmail);
   } catch (err) {
     return {
       status: "error",
-      message: "Error!!! Dont give up !!! Register!",
+      message: "Немогу найти пользователя! " + (err as Error).message,
     } as TFormStateAndStatus;
   }
+  //Зарегистрироваить сеанс пользователя
+  if (user) {
+    //Проверить пароль
+    const isPassed: boolean = await bcrypt.compare(_Pass, user.userkey);
+    if (isPassed) {
+      //Зарегистрировать сеанс пользователя
+      await signIn("credentials", {
+        name: user.nickname,
+        email: user.email,
+        userId: user.id,
+        role: "user",
+      });
+      return { status: "success", message: "Успех!" } as TFormStateAndStatus;
+    }
+    return {
+      status: "error",
+      message: "Пароль не верен",
+    } as TFormStateAndStatus;
+  }
+  return {
+    status: "error",
+    message: "Error!!! User not found !!! Register!",
+  } as TFormStateAndStatus;
 }

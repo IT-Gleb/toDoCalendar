@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   let data: any = {};
   try {
     data =
-      await sql`SELECT id, parent_id, name, completed, begin_at, end_at, items FROM tasks WHERE begin_at::date=${date_day} ORDER BY begin_at LIMIT ${limit} OFFSET ${offset}`;
+      await sql`SELECT id, parent_id, name, completed, begin_at, end_at, items FROM tasks WHERE begin_at::date=${date_day} AND isdeleted=false ORDER BY begin_at LIMIT ${limit} OFFSET ${offset}`;
   } catch (err) {
     data = { status: false, message: (err as Error).message };
   }
