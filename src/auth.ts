@@ -7,7 +7,7 @@ export const LOGINPAGE_PATH: string = "/enter";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: process.env.AUTH_SECRET,
-  session: { strategy: "jwt", maxAge: 60 * 60 * 4 }, //Сессия на 4 часа
+  session: { strategy: "jwt", maxAge: 60 * 60 * 7 }, //Сессия на 4 часа
 
   pages: {
     signIn: LOGINPAGE_PATH,
@@ -45,7 +45,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           ...session.user,
           role: (token.user as User).role,
           userId: (token.user as User).userId,
-          userkey: (token.user as User).userkey,
+          //userkey: (token.user as User).userkey,
         },
       };
     },

@@ -25,6 +25,10 @@ const AuthFormContent: React.FunctionComponent<AuthFormContentProps> = ({
 
   //const [state, actionForm] = useFormState(signUser, InitState);
   const formRef = useRef<HTMLFormElement>(null);
+  const nickRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const pass1Ref = useRef<HTMLInputElement>(null);
+  const pass2Ref = useRef<HTMLInputElement>(null);
 
   return (
     <section
@@ -53,10 +57,10 @@ const AuthFormContent: React.FunctionComponent<AuthFormContentProps> = ({
       </div>
       <form ref={formRef} className="relative mt-4 z-[2]" action={actionForm}>
         <fieldset className="flex flex-col space-y-2 p-4">
-          <AuthNickNameComponent />
-          <EmailInputComponent />
-          <AuthPasswordComponent paramNameId={UPASS1} />
-          <AuthPasswordComponent paramNameId={UPASS2} />
+          <AuthNickNameComponent ref={nickRef} />
+          <EmailInputComponent ref={emailRef} />
+          <AuthPasswordComponent paramNameId={UPASS1} ref={pass1Ref} />
+          <AuthPasswordComponent paramNameId={UPASS2} ref={pass2Ref} />
           <div
             className={`my-2 p-2 uppercase text-white ${
               formState.message.includes("error")

@@ -9,7 +9,8 @@ import Link from "next/link";
 import { useFormState } from "react-dom";
 import { checkUser } from "@/server/actions";
 import { useRouter } from "next/navigation";
-import { NICKNAME, UKEY } from "@/utils/data";
+import { UKEY } from "@/utils/data";
+import { useSession } from "next-auth/react";
 
 const initFormState: TFormStateAndStatus = {
   status: "init",
@@ -32,16 +33,6 @@ const CheckFormContent = ({
   const timerRef = useRef<number>(-1);
 
   useEffect(() => {
-    if (state.status === "success") {
-      router.push("/member");
-    }
-    if (state.status === "error") {
-      setIsOk(false);
-      console.log("false");
-    }
-  }, [state.status]);
-
-  useEffect(() => {
     timerRef.current = window.setInterval(() => {
       if (
         nickRef.current &&
@@ -51,7 +42,9 @@ const CheckFormContent = ({
         emailRef.current.value.trim().length > 7 &&
         passRef.current.value.trim().length > 7
       ) {
-        setIsOk(true);
+        if (!isOk) {
+          setIsOk(true);
+        }
       } else {
         if (isOk) {
           setIsOk(false);
@@ -135,6 +128,22 @@ const CheckFormContent = ({
 };
 
 export const CheckDialog = () => {
+  //Авторизация
+  const { status } = useSession();
+  const router = useRouter();
+
+  if (status === "loading") {
+    return <div className="mt-5 w-fit mx-auto uppercase">Загрузка...</div>;
+  }
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/member");
+    }
+  }, [status]);
+
+  //--------------
+
   const checkRef = useRef<IDialog>(null);
   const [showDialog, setShowDialog] = useState<boolean>(true);
 

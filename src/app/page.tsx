@@ -1,3 +1,4 @@
+import AuthProvider from "@/components/authComponents/authProviderComponent";
 import { CheckDialog } from "@/components/checkForm/checkDialog";
 import { LoaderCalendarComponent } from "@/components/loader/loaderCalendarComponent";
 
@@ -29,7 +30,10 @@ export default async function Home() {
   return (
     <>
       <section className=" w-full md:px-8 md:w-[99%] md:mx-auto relative">
-        <CheckDialog />
+        <AuthProvider>
+          <CheckDialog />
+        </AuthProvider>
+
         <BgSvgTasksComponent />
       </section>
     </>

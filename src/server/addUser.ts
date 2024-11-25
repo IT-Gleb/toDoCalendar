@@ -8,33 +8,7 @@ import { cryptId, decryptId, CookieUserId } from "@/utils/functions";
 import { signIn } from "@/auth";
 import { type TFormAddUserState } from "@/components/authComponents/authFormContent";
 import { NICKNAME, UEMAIL, UPASS1, UPASS2 } from "@/utils/data";
-
-const userSchema = z
-  .object({
-    nickname: z
-      .string()
-      .trim()
-      .min(4, { message: "Имя должно быть больше 3-x символов" })
-      .max(32, { message: "Имя не больше 32-х символов" }),
-
-    email: z.string().trim().email({ message: "Введите корректный e-mail" }),
-    userkey: z
-      .string()
-      .trim()
-      .min(8, { message: "Длина пароля не менее 8-ми символов." })
-      .max(32, { message: "Длина пароля не более 32-х символов" }),
-    checkkey: z
-      .string()
-      .trim()
-      .min(8, { message: "Длина пароля не менее 8 символов!" })
-      .max(32, { message: "Длина пароля не более 32-х символов" }),
-  })
-  .refine(
-    (obj) => {
-      return obj.userkey.toLowerCase() === obj.checkkey.toLowerCase();
-    },
-    { message: "Проверочный пароль и пароль должны совпадать!" }
-  );
+import { userSchema } from "@/zodSchemas/zSchema";
 
 const SaltHash: number = 8;
 
@@ -103,7 +77,7 @@ export async function AddUser(
         email: _UEmail,
         userId: id as string,
         role: "user",
-        userkey: _UPass1,
+        // userkey: _UPass1,
       });
 
       //Set result

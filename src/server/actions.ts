@@ -1,49 +1,13 @@
 "use server";
 
 import { z, ZodError } from "zod";
+import bcrypt from "bcrypt";
 import sql from "@/clientdb/connectdb";
 import { revalidateTag } from "next/cache";
 import { StrDateFromNumbers } from "@/utils/functions";
 import { signIn } from "@/auth";
-import { NICKNAME, UEMAIL, UPASS1 } from "@/utils/data";
-
-const checkSchema = z
-  .object({
-    name: z
-      .string({
-        required_error: "Имя не должно быть пустым",
-        invalid_type_error: "Это должно быть строкой.",
-      })
-      .trim()
-      .min(5, { message: "Имя должно быть 5 или больше символов." }),
-    completed: z.boolean({ message: "Булево значение" }),
-    currentDate: z.string().date(),
-    beginD: z.string().datetime({
-      message: "Не верный формат даты или времени",
-    }),
-    endD: z.string().datetime({
-      message: "Неверный формат даты или времени",
-    }),
-  })
-  .refine(
-    (obj) => {
-      let currDate = obj.beginD.split("T")[0];
-
-      let fromDate = obj.currentDate;
-
-      // console.log(obj.beginD, currDate, fromDate);
-      return currDate.toLowerCase() === fromDate.toLowerCase();
-    },
-    {
-      message: "Дата начала не может быть меньше или больше текущей!",
-    }
-  )
-  .refine(
-    (obj) => new Date(obj.endD).getTime() > new Date(obj.beginD).getTime(),
-    {
-      message: "Дата окончания должна быть больше Даты начала",
-    }
-  );
+import { NICKNAME, UEMAIL, UKEY, UPASS1 } from "@/utils/data";
+import { userSchema, checkSchema } from "@/zodSchemas/zSchema";
 
 export async function newTaskAction(
   initialState: TFormState,
@@ -202,12 +166,80 @@ export async function signUser(
   return paramState;
 }
 
+//Get user data from DB nickname and email
+export async function GetUserFromDb(
+  paramNickName: string,
+  paramEmail: string
+): Promise<TUser | null> {
+  let user: TPartUser = {};
+  try {
+    const UserData =
+      await sql`SELECT id, nickname, email, userkey, create_at, update_at FROM tblusers WHERE nickname=${paramNickName} AND email=${paramEmail};`;
+    if (UserData && UserData.length) {
+      const { id, nickname, email, userkey, create_at, update_at } =
+        UserData[0];
+      user.id = id;
+      user.nickname = nickname;
+      user.email = email;
+      user.userkey = userkey;
+      user.create_at = create_at;
+      user.update_at = update_at;
+      return user as TUser;
+    } else {
+      return null;
+    }
+  } catch (err) {
+    return null;
+  }
+}
+
 export async function checkUser(
   paramState: TFormStateAndStatus,
   paramData: FormData
 ): Promise<TFormStateAndStatus> {
-  return {
-    status: "error",
-    message: "Error!!! Dont give up !!!",
-  } as TFormStateAndStatus;
+  // for (const [key, val] of paramData.entries()) {
+  //   console.log(`${key} : ${val}`);
+  // }
+  //Получить данные
+  const _UName: string = paramData.get(NICKNAME)?.toString() ?? "";
+  const _UEmail: string = paramData.get(UEMAIL)?.toString() ?? "";
+  const _Pass: string = paramData.get(UKEY)?.toString() ?? "";
+  try {
+    //Проверить данные на корректность ввода
+    await userSchema.parseAsync({
+      nickname: _UName,
+      email: _UEmail,
+      userkey: _Pass,
+      checkkey: _Pass,
+    });
+    //Получить данные пользователя из базы данных
+    const user: TUser | null = await GetUserFromDb(_UName, _UEmail);
+    if (user) {
+      //Проверить пароль
+      const isPassed: boolean = await bcrypt.compare(_Pass, user.userkey);
+      if (isPassed) {
+        //Зарегистрировать сеанс пользователя
+        await signIn("credentials", {
+          name: user.nickname,
+          email: user.email,
+          userId: user.id,
+          role: "user",
+        });
+        return { status: "success", message: "Успех!" } as TFormStateAndStatus;
+      }
+      return {
+        status: "error",
+        message: "Пароль не верен",
+      } as TFormStateAndStatus;
+    }
+    return {
+      status: "error",
+      message: "Error!!! User not found !!! Register!",
+    } as TFormStateAndStatus;
+  } catch (err) {
+    return {
+      status: "error",
+      message: "Error!!! Dont give up !!! Register!",
+    } as TFormStateAndStatus;
+  }
 }
