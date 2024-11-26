@@ -29,7 +29,7 @@ export const CalendarNew = memo(
     }, [paramMonth]);
 
     return (
-      <section className="w-fit mx-auto mt-5 p-3 overflow-hidden">
+      <section className="w-fit mx-auto p-3 overflow-hidden">
         <div
           title={strTitle}
           className=" pt-4 pb-0 border border-slate-400 shadow-md shadow-slate-500 relative before:content-[attr(title)] before:bg-white before:text-[1.2rem] before:uppercase before:font-bold before:px-2 before:absolute before:right-10 before:-top-3"
@@ -54,30 +54,30 @@ export const CalendarNew = memo(
               </div>
             );
           })}
-          <div className="w-full mt-3 bg-sky-400 text-slate-700 text-[0.6rem] p-1 text-center flex justify-evenly">
+          <div className="w-full mt-3 bg-sky-500 text-slate-50 text-[0.6rem] p-1 text-center flex justify-evenly">
             <span>
               Дней в году:{" "}
-              <span className="text-white text-[1rem] font-bold font-mono">
+              <span className="text-yellow-100 text-[1rem] font-bold font-mono">
                 {DaysInYear_var}
               </span>
             </span>
             <span>
               Дней года прошло:{" "}
-              <span className="text-white text-[1rem] font-bold font-mono">
+              <span className="text-yellow-100 text-[1rem] font-bold font-mono">
                 {DaysInYear_var - DayEndYear}
               </span>
             </span>
             <span>
-              <span className="text-white text-[1rem] font-bold font-mono">
-                {DayEndYear}
-              </span>
-              {`-${
+              {`До конца года ${
                 lastDidgit === 0 || lastDidgit > 4
                   ? "дней"
                   : lastDidgit === 1
                   ? "день"
                   : "дня"
-              } до конца года:`}
+              } : `}
+              <span className="text-yellow-100 text-[1rem] font-bold font-mono">
+                {DayEndYear}
+              </span>
             </span>
           </div>
           {/* //Footer Calendar */}

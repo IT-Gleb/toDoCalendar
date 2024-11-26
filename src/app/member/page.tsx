@@ -35,19 +35,20 @@ export default function MemeberPage() {
   }
 
   return (
-    <section className="min-h-[80vh]">
-      <section className="w-full p-2 flex items-center justify-center flex-wrap space-x-3">
-        <div className="text-[1.2rem] text-sky-600 uppercase flex items-center gap-x-4">
-          <span className="text-black text-[0.8rem] normal-case">Привет!</span>
-          {session?.user.name}
+    <section>
+      <section className="w-full bg-sky-400 p-2 text-slate-200">
+        <div className="flex items-center justify-center flex-wrap space-x-3 text-[0.8rem]">
+          <div>почта: {session?.user.email}</div>
+          <div>права: {session?.user.role}</div>
         </div>
-        <div>почта: {session?.user.email}</div>
-        <div>права: {session?.user.role}</div>
       </section>
 
       {/* Календарь с задачами */}
-      <section className="p-2 grid grid-cols-2 ">
-        <DynamicCalendar />
+      <section className="p-0 md:p-2 grid grid-cols-1 auto-rows-auto lg:grid-cols-2 gap-2 min-h-[60vh] mt-5">
+        <div className="lg:border-r border-b border-slate-400 lg:p-2">
+          <DynamicCalendar />
+        </div>
+        <div className="border-t lg:border-t-0 lg:border-l lg:border-b border-slate-400 p-2"></div>
       </section>
 
       <span className="w-fit mx-auto mt-5 block">

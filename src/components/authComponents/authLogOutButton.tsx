@@ -16,10 +16,10 @@ export default function AuthLogOutButton() {
     <button
       type="button"
       onClick={handleClick}
-      title="Выйти из системы"
-      className="max-w-[200px] h-[32px] overflow-hidden rounded-md bg-sky-600 text-white text-[0.8rem] p-2 active:scale-90"
+      title="Разрегистрироваться"
+      className="max-w-[200px] h-[32px] overflow-hidden rounded-md bg-sky-600 text-white text-[0.8rem] p-2 active:scale-90 whitespace-nowrap"
     >
-      Разрегистрироваться
+      Выйти из системы
     </button>
   );
 }
