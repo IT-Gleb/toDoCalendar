@@ -362,7 +362,8 @@ export async function getArrayMonthData(
 
 //Получить дни в которых есть задачи
 export const fetcherSelectedDaysInMonth = async (
-  paramDate: number
+  paramDate: number,
+  paramUserId: string
 ): Promise<TMonthDayData> => {
   let result: TMonthDayData = [];
 
@@ -382,7 +383,9 @@ export const fetcherSelectedDaysInMonth = async (
     dt.getDate()
   );
 
-  const url: string = `${MounthData_url}?startDay=${startDay}&endDay=${endDay}`;
+  //console.log("User id: ", paramUserId);
+
+  const url: string = `${MounthData_url}?startDay=${startDay}&endDay=${endDay}&key=${paramUserId}`;
 
   await fetch(url, {
     headers: { "Content-Type": "application/json" },

@@ -10,7 +10,8 @@ import { setup, assign, fromPromise } from "xstate";
 export const calendarMachine = setup({
   types: {} as {
     context: {
-      current: number;
+      current: number; //Date now
+      userId: string; //User Id
       retryCount: number;
       currDates: TCalendarItems;
       selInMonth: TMonthDayData;
@@ -20,12 +21,16 @@ export const calendarMachine = setup({
       | { type: "today"; data: number }
       | { type: "next" }
       | { type: "previos" }
-      | { type: "RETRY" };
+      | { type: "RETRY" }
+      | {
+          type: "user";
+          userId: string;
+        };
   },
   actors: {
     fetchSelected: fromPromise(
-      ({ input }: { input: { paramDate: number } }) => {
-        return fetcherSelectedDaysInMonth(input.paramDate);
+      ({ input }: { input: { paramDate: number; paramUserId: string } }) => {
+        return fetcherSelectedDaysInMonth(input.paramDate, input.paramUserId);
       }
     ),
   },
@@ -36,6 +41,7 @@ export const calendarMachine = setup({
   id: "calendarMonth",
   context: {
     current: 0, //Date.now(),
+    userId: "-1", //User Id
     retryCount: 0,
     currDates: [],
     selInMonth: [],
@@ -61,7 +67,10 @@ export const calendarMachine = setup({
 
       invoke: {
         src: "fetchSelected",
-        input: ({ context }) => ({ paramDate: context.current }),
+        input: ({ context }) => ({
+          paramDate: context.current,
+          paramUserId: context.userId,
+        }),
         onDone: {
           target: "idle",
           actions: [
@@ -98,6 +107,13 @@ export const calendarMachine = setup({
         },
       }),
       target: ".loading",
+    },
+    user: {
+      actions: assign({
+        userId: ({ event }) => {
+          return event.userId;
+        },
+      }),
     },
     next: {
       actions: assign({

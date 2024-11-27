@@ -9,17 +9,33 @@ import { useShallow } from "zustand/shallow";
 import { Next_SVG, Previos_SVG } from "@/utils/svg-icons";
 import { AnimatePresence, motion, useAnimate } from "framer-motion";
 import { LoaderCalendarComponent } from "@/components/loader/loaderCalendarComponent";
+import { useSession } from "next-auth/react";
+import { cryptId } from "@/utils/functions";
 
 export const CalendarWithMashine = memo(() => {
+  const { data: session } = useSession();
+  const curr_Date = useDateSelect(useShallow((state) => state.current_date));
   const [state, send] = useMachine(calendarMachine);
   const [month, setMonth] = useState<TMonthObject>(state.context.currMonth);
-  const curr_Date = useDateSelect(useShallow((state) => state.current_date));
+
   const [animRef, animate] = useAnimate();
 
   useEffect(() => {
     let isSubscribed: boolean = true;
 
+    //Проинициализировать данные
     if (isSubscribed) {
+      state.context.userId =
+        session !== null && session !== undefined
+          ? cryptId(session.user.userId as string)
+          : "-1";
+      // send({
+      //   type: "user",
+      //   userId:
+      //     session !== null && session !== undefined
+      //       ? Number(session.user.userId)
+      //       : -1,
+      // });
       send({ type: "today", data: curr_Date });
     }
 
@@ -27,6 +43,7 @@ export const CalendarWithMashine = memo(() => {
       isSubscribed = false;
     };
   }, []);
+  //--------------------------------
 
   useEffect(() => {
     let isSubscribed: boolean = true;
