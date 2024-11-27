@@ -99,7 +99,13 @@ export default function AllTasks() {
           });
           if (res.ok) {
             const data = await res.json();
-            setData(data as TTaskList);
+            const tt: TTaskList = [];
+            data.forEach((item: any) => {
+              const temp: Partial<TTask> = { ...item };
+              temp.userId = item.userid;
+              tt.push(temp);
+            });
+            setData(tt);
           } else {
             setData({ message: "Error!!!", status: 404 });
           }

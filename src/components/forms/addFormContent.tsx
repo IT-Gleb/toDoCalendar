@@ -8,6 +8,7 @@ import { StatusComponent } from "./addFormComponents/statusComponent";
 import { FormSubmitButtonComponent } from "../buttons/formSubmitButtonComponent";
 import { useFormState } from "react-dom";
 import { newTaskAction } from "@/server/actions";
+import { useSession } from "next-auth/react";
 
 const InitialState: TFormState = {
   status: false,
@@ -17,11 +18,12 @@ const InitialState: TFormState = {
     endDate: "",
     completed: "",
     status: "",
-    succes: "",
+    success: "",
   },
 };
 
 export const AddFormContent = ({ paramDay }: { paramDay: string }) => {
+  const { data: session } = useSession();
   const [status, formAction] = useFormState(newTaskAction, InitialState);
   const formRef = useRef<HTMLFormElement>(null);
   const [formStatus, setFormStatus] = useState<TFormState>(status);
@@ -56,6 +58,11 @@ export const AddFormContent = ({ paramDay }: { paramDay: string }) => {
       <fieldset className=" w-full p-4 flex flex-col gap-y-6 mb-10 border border-slate-300">
         <legend className="uppercase my-2 p-1">Задача верхнего уровня</legend>
         <input type="hidden" name="currentDate" defaultValue={paramDay} />
+        <input
+          type="hidden"
+          name="key"
+          defaultValue={session?.user.userId as string}
+        />
         <NameInputComponent />
         {!formStatus.status && formStatus.messages["name"].length > 0 && (
           <div className={"text-[0.8rem] bg-red-500 text-white p-2"}>
@@ -82,7 +89,7 @@ export const AddFormContent = ({ paramDay }: { paramDay: string }) => {
         )}
         {formStatus.status && (
           <div className={"text-[0.8rem] bg-green-500 text-white p-2"}>
-            {formStatus.messages["succes"]}
+            {formStatus.messages["success"]}
           </div>
         )}
       </fieldset>

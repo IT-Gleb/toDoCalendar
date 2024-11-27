@@ -1,4 +1,4 @@
-import { CheckAuth } from "@/auth";
+import { auth } from "@/auth";
 import { ComponentWithDialog } from "@/components/dialog/componentWithDialog";
 import { AddFormContent } from "@/components/forms/addFormContent";
 import { AddTaskFormComponent } from "@/components/forms/addTaskFormComponent";
@@ -15,9 +15,9 @@ type TTasksParams = {
   offset: number;
 };
 
-async function getData(params: TTasksParams) {
+async function getData(params: TTasksParams, paramUserId: string) {
   const result = await fetch(
-    `${Base_URL}api/tasks/?day=${params.id}&limit=${params.limit}&offset=${params.offset}`,
+    `${Base_URL}api/tasks/?day=${params.id}&limit=${params.limit}&offset=${params.offset}&key=${paramUserId}`,
     {
       headers: { "Content-Type": "application/json" },
       next: { tags: [`task-${params.id}`], revalidate: 2 },
@@ -26,20 +26,22 @@ async function getData(params: TTasksParams) {
 
   if (result.ok) {
     const res = await result.json();
+    console.log(res);
     return res;
   }
 }
 
 export default async function TaskPage({ params }: { params: { id: string } }) {
   //Авторизация
-  const isAuth: boolean = await CheckAuth();
-  if (!isAuth) {
+  const session = await auth();
+  if (!session) {
     return <NoAuthComponent />;
   }
 
   const { id } = params;
   const pageParams: TTasksParams = { id, limit: 10, offset: 0 };
-  const TaskData: TTaskList = await getData(pageParams);
+  let uId: string = session.user.userId as string;
+  const TaskData: TTaskList = await getData(pageParams, uId);
 
   return (
     <>

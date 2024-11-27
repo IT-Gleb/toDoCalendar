@@ -2,6 +2,7 @@ import NextAuth, { type User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { redirect } from "next/navigation";
 import authConfig from "./auth.config";
+import { cryptId } from "./utils/functions";
 
 export const LOGINPAGE_PATH: string = "/enter";
 
@@ -67,7 +68,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           name: name as string,
           email: email as string,
           role: role as string,
-          userId: userId as string,
+          userId: cryptId(userId as string),
           userkey: userkey as string,
         };
 

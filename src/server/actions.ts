@@ -4,7 +4,7 @@ import { z, ZodError } from "zod";
 import bcrypt from "bcrypt";
 import sql from "@/clientdb/connectdb";
 import { revalidateTag } from "next/cache";
-import { StrDateFromNumbers } from "@/utils/functions";
+import { decryptId, StrDateFromNumbers } from "@/utils/functions";
 import { signIn } from "@/auth";
 import { NICKNAME, UEMAIL, UKEY, UPASS1 } from "@/utils/data";
 import { userSchema, checkSchema } from "@/zodSchemas/zSchema";
@@ -19,6 +19,11 @@ export async function newTaskAction(
 
     const isCompleted: string =
       paramData.get("status")?.toString() ?? Boolean(false).toString();
+
+    let userId = paramData.get("key")?.toString() ?? "";
+    if (userId !== "" && userId.trim().length > 5) {
+      userId = decryptId(userId as string);
+    }
 
     const temp_date = new Date();
     const tCurrentDate: string =
@@ -55,11 +60,11 @@ export async function newTaskAction(
 
     //throw new Error("Не могу добавить данные!!!");
 
-    await sql`INSERT INTO tasks(name, completed, begin_at, end_at, items) VALUES(${tName}, ${tCompleted}, ${tBeginAt}, ${tEndAt}, ${[]}::jsonb)`;
+    await sql`INSERT INTO tasks(userid, name, completed, begin_at, end_at, items) VALUES(${userId}, ${tName}, ${tCompleted}, ${tBeginAt}, ${tEndAt}, ${[]}::jsonb)`;
 
     initialState.status = true;
     Object.values(initialState.messages).forEach((item) => (item = ""));
-    initialState.messages["succes"] = "Данные добавлены!";
+    initialState.messages["success"] = "Данные добавлены!";
 
     revalidateTag("task-" + tBeginAt.split("T")[0]);
 

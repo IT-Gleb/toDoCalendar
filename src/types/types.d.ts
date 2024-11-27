@@ -28,7 +28,7 @@ declare type TFormState = {
     endDate: string;
     completed: string;
     status: string;
-    succes: string;
+    success: string;
   };
 };
 

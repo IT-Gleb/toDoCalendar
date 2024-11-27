@@ -5,7 +5,8 @@ import { ChildTask } from "./childTask";
 export const ListTaskComponent = ({ paramList }: { paramList: TTaskList }) => {
   return (
     <div className="xl:grid xl:grid-cols-5 gap-y-2 gap-x-2">
-      {paramList.length &&
+      {paramList &&
+        paramList.length &&
         paramList.map((item) => {
           const isParent: boolean =
             Array.isArray(item.items) && item.items.length > 0;

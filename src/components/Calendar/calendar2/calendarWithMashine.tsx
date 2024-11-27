@@ -10,7 +10,6 @@ import { Next_SVG, Previos_SVG } from "@/utils/svg-icons";
 import { AnimatePresence, motion, useAnimate } from "framer-motion";
 import { LoaderCalendarComponent } from "@/components/loader/loaderCalendarComponent";
 import { useSession } from "next-auth/react";
-import { cryptId } from "@/utils/functions";
 
 export const CalendarWithMashine = memo(() => {
   const { data: session } = useSession();
@@ -27,7 +26,7 @@ export const CalendarWithMashine = memo(() => {
     if (isSubscribed) {
       state.context.userId =
         session !== null && session !== undefined
-          ? cryptId(session.user.userId as string)
+          ? (session.user.userId as string)
           : "-1";
       // send({
       //   type: "user",
