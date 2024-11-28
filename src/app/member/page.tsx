@@ -35,7 +35,7 @@ export default function MemeberPage() {
   }
 
   return (
-    <section>
+    <section className="bg-[radial-gradient(circle_at_top,theme(colors.white),theme(colors.slate.50),theme(colors.sky.50),theme(colors.sky.100))]">
       <section className="w-full bg-sky-400 p-2 text-slate-200">
         <div className="flex items-center justify-center flex-wrap space-x-3 text-[0.8rem]">
           <div>почта: {session?.user.email}</div>
