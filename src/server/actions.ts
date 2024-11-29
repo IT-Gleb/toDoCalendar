@@ -107,7 +107,7 @@ export async function getUserFromDbId(
       throw new Error("No id");
     }
     const userData =
-      await sql`SELECT id, nickname, email, userkey, create_at, update_at FROM tblusers WHERE id=${userId.trim()};`;
+      await sql`SELECT id, nickname, email, userkey, create_at, update_at FROM tblusers WHERE id=${userId.trim()} AND isdeleted=false;`;
     if (userData && userData.length) {
       const { id, nickname, email, userkey, create_at, update_at } =
         userData[0];
@@ -138,7 +138,7 @@ export async function GetUserFromDbCredential(
   let user: TPartUser = {};
   try {
     const UserData =
-      await sql`SELECT id, nickname, email, userkey, create_at, update_at FROM tblusers WHERE nickname=${paramNickName} AND email=${paramEmail} AND userkey=${paramHwPass};`;
+      await sql`SELECT id, nickname, email, userkey, create_at, update_at FROM tblusers WHERE nickname=${paramNickName} AND email=${paramEmail} AND userkey=${paramHwPass} AND isdeleted=false;`;
     if (UserData && UserData.length) {
       const { id, nickname, email, userkey, create_at, update_at } =
         UserData[0];
@@ -179,7 +179,7 @@ export async function GetUserFromDb(
   let user: TPartUser = {};
   try {
     const UserData =
-      await sql`SELECT id, nickname, email, userkey, create_at, update_at FROM tblusers WHERE nickname=${paramNickName} AND email=${paramEmail};`;
+      await sql`SELECT id, nickname, email, userkey, create_at, update_at FROM tblusers WHERE nickname=${paramNickName} AND email=${paramEmail} AND isdeleted=false;`;
     if (UserData && UserData.length) {
       const { id, nickname, email, userkey, create_at, update_at } =
         UserData[0];

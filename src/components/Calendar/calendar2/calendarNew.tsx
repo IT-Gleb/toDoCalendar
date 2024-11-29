@@ -11,6 +11,7 @@ import {
 export const CalendarNew = memo(
   ({ paramMonth }: { paramMonth: TMonthObject }) => {
     const [strTitle, setStrTitle] = useState<string>("");
+    const [strYear, setStrYear] = useState<string>("2025");
     const [DayEndYear] = useState<number>(DaysToEndOfYear());
     const [DaysInYear_var] = useState(DaysInYear());
     const [lastDidgit] = useState<number>(LastDidgitInNumber(DayEndYear));
@@ -18,11 +19,13 @@ export const CalendarNew = memo(
     useEffect(() => {
       for (const key of Object.keys(paramMonth)) {
         if (paramMonth[key] !== undefined) {
+          const last = paramMonth[key].length - 1;
           setStrTitle(
-            ((paramMonth[key][6].mounth_str as string) +
+            ((paramMonth[key][last].mounth_str as string) +
               " " +
-              paramMonth[key][6].year) as string
+              paramMonth[key][last].year) as string
           );
+          setStrYear(paramMonth[key][last].year as unknown as string);
           break;
         }
       }
@@ -32,7 +35,7 @@ export const CalendarNew = memo(
       <section className="w-fit mx-auto p-3 overflow-hidden">
         <div
           title={strTitle}
-          className=" pt-4 pb-0 border border-slate-400 shadow-md shadow-slate-500 relative before:content-[attr(title)] before:bg-white before:text-[1.2rem] before:uppercase before:font-bold before:px-2 before:absolute before:right-10 before:-top-3"
+          className=" pt-4 pb-0 border border-slate-400 shadow-md shadow-slate-500 relative before:content-[attr(title)] before:bg-white before:border before:border-slate-300 before:rounded-md before:font-stroke-1 before:text-white before:text-[1.2rem] before:uppercase before:font-bold before:px-2 before:absolute before:right-10 before:-top-3"
         >
           {/* Заголовок */}
           <ShortWeekDayComponent />
@@ -54,7 +57,15 @@ export const CalendarNew = memo(
               </div>
             );
           })}
-          <div className="w-full mt-3 bg-sky-500 text-slate-50 text-[0.6rem] p-1 text-center flex justify-evenly">
+          <div className="relative w-full mt-4 bg-sky-500 text-slate-50 text-[0.6rem] p-1 text-center flex justify-evenly">
+            <div className=" absolute w-fit left-[44%] -top-1 translate-y-[-44%] font-bold text-[1.6rem]">
+              {/* <span className="bg-clip-text text-transparent bg-[linear-gradient(to_bottom,theme(colors.sky.800),theme(colors.sky.200),theme(colors.yellow.300))]">
+                {strYear}
+              </span> */}
+              <span className="font-stroke-1 text-yellow-50 font-bold">
+                {strYear}
+              </span>
+            </div>
             <span>
               Дней в году:{" "}
               <span className="text-yellow-100 text-[1rem] font-bold font-mono">

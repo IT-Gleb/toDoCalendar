@@ -15,6 +15,16 @@ const DynamicCalendar = dynamic(
   }
 );
 
+const DynamicTasksExists = dynamic(
+  () =>
+    import("@/components/tasks/tasksExists").then(
+      (component) => component.default
+    ),
+  {
+    loading: () => <LoaderCalendarComponent />,
+  }
+);
+
 export default function MemeberPage() {
   // console.log(params);
   const { data: session, status } = useSession();
@@ -48,7 +58,9 @@ export default function MemeberPage() {
         <div className="lg:border-r border-b border-slate-400 lg:p-2">
           <DynamicCalendar />
         </div>
-        <div className="border-t lg:border-t-0 lg:border-l lg:border-b border-slate-400 p-2"></div>
+        <div className="border-t lg:border-t-0 lg:border-l lg:border-b border-slate-400 p-2">
+          <DynamicTasksExists />
+        </div>
       </section>
 
       <span className="w-fit mx-auto mt-5 block">
