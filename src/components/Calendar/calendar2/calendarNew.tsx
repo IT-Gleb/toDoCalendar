@@ -35,7 +35,7 @@ export const CalendarNew = memo(
       <section className="w-fit mx-auto p-3 overflow-hidden">
         <div
           title={strTitle}
-          className=" pt-4 pb-0 border border-slate-400 shadow-md shadow-slate-500 relative before:content-[attr(title)] before:bg-white before:border before:border-slate-300 before:rounded-md before:font-stroke-1 before:text-white before:text-[1.2rem] before:uppercase before:font-bold before:px-2 before:absolute before:right-10 before:-top-3"
+          className=" pt-4 pb-0 border border-slate-400 shadow-md shadow-slate-500 relative before:content-[attr(title)] before:bg-white before:border before:border-slate-300 before:rounded-md before:text-slate-700 before:text-[1.2rem] before:uppercase before:font-bold before:px-2 before:absolute before:right-10 before:-top-3"
         >
           {/* Заголовок */}
           <ShortWeekDayComponent />

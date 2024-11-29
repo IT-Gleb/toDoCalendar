@@ -528,3 +528,99 @@ export function decryptId(paramShifr: string): string {
 }
 //----------Простое шифрование----------------
 //----ВНИМАНИЕ - только цифры----
+
+//Функция рассчитывает прозрачность для массива и возвращает по индексу
+export function CalculateOpacity(
+  paramIndex: number,
+  paramArrayLength: number
+): number {
+  const maxOpacity: number = 1;
+  const minOpacity: number = 0.1;
+  let result: number = maxOpacity;
+
+  if (paramArrayLength < 4) {
+    return maxOpacity;
+  }
+
+  let stepOpacity: number = (maxOpacity - minOpacity) / paramArrayLength;
+  const arrayOpacity: number[] = [];
+  let stepO: number = maxOpacity;
+  for (let i: number = 0; i < paramArrayLength; i++) {
+    arrayOpacity[i] = Number(stepO.toFixed(3));
+    stepO -= stepOpacity;
+    if (stepO < minOpacity) {
+      stepO = minOpacity;
+    }
+  }
+  if (paramIndex >= 0 && paramIndex < paramArrayLength) {
+    result = arrayOpacity[paramIndex];
+  }
+  return result;
+}
+//-----------------------------------
+function ZeroToNumber(param: number): number | string {
+  return param < 10 ? "0" + param : param;
+}
+
+//Конвертировать дату и время из формата Timezone в строку для вывода
+export function TimeZoneDateToString(paramDate: string): string {
+  let result: string = paramDate;
+  const dt = new Date(result);
+
+  let hours: string | number = dt.getHours();
+  hours = ZeroToNumber(hours);
+  let min: string | number = dt.getMinutes();
+  min = ZeroToNumber(min);
+
+  let day: string | number = dt.getDate();
+  day = ZeroToNumber(day);
+  let month: string | number = dt.getMonth() + 1;
+  month = ZeroToNumber(month);
+  const year = dt.getFullYear();
+
+  result = day + "-" + month + "-" + year + " " + hours + ":" + min;
+  return result;
+}
+//------------------------------------------------------------------
+//Функция прибавляет и удаляет дни возвращает результат в виде строки
+export function CalculateDate(paramDate: string, paramStepDay: number): string {
+  let result: string = "";
+  const dateArray: string[] = paramDate.split("-");
+  const dt = new Date(
+    Number(dateArray[2]),
+    Number(dateArray[1]),
+    Number(dateArray[0])
+  );
+
+  dt.setDate(dt.getDate() + paramStepDay);
+  let month: string | number = dt.getMonth();
+
+  month = ZeroToNumber(month);
+  let day: number = dt.getDate();
+  let strDay = ZeroToNumber(day);
+  result = strDay + "-" + month + "-" + dt.getFullYear();
+
+  return result;
+}
+//-------------------------------------------------------------------
+export function getDateWithMonthStr(paramDate: string): string {
+  let result: string = "";
+  const dateArray: string[] = paramDate.split("-");
+  dateArray[1] = Mounths[Number(dateArray[1])];
+  result = dateArray.join("-");
+
+  return result;
+}
+//Возвращает текущую дату в формате day-month-year
+export function getNowDateStr(): string {
+  let result: string = "";
+  const dt = new Date();
+  let day: string | number = dt.getDate();
+  day = ZeroToNumber(day);
+  let month: string | number = dt.getMonth();
+  month = ZeroToNumber(month);
+
+  result = day + "-" + month + "-" + dt.getFullYear();
+  return result;
+}
+//-------------------------------------------------
