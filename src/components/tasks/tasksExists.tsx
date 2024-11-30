@@ -1,43 +1,112 @@
 "use client";
 
-import { CalculateOpacity, TimeZoneDateToString } from "@/utils/functions";
+import { useTrackerDate } from "@/store/trackerStore";
+import {
+  CalculateOpacity,
+  ChangeDateItems,
+  TimeZoneDateToString,
+} from "@/utils/functions";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import TrackerDay from "./trackerDay";
+import React, { useEffect, useState, memo } from "react";
+import { useShallow } from "zustand/shallow";
 
 type TResponseError = {
   status: string;
   message: string;
 };
 
+const MobileTaskTblTop = memo(function MobileTaskTblTop({
+  paramWorkDate,
+}: {
+  paramWorkDate: string;
+}): React.JSX.Element {
+  return (
+    <div className="sm:hidden sticky left-0 z-[2] grid grid-cols-[25px_60px] auto-rows-[35px] bg-sky-600 uppercase text-slate-200">
+      <div className=" row-span-4 text-slate-100 vertical-text text-center text-[0.75rem] font-bold py-2 px-1 bg-sky-400 scale-x-180">
+        Текущие задачи
+      </div>
+      <div className="p-1 text-slate-100 overflow-hidden text-[0.6rem] font-bold ">
+        N/N
+      </div>
+      <div className="p-1 text-slate-100 overflow-hidden text-[0.6rem] font-bold">
+        Наимен...
+      </div>
+      <div className="p-1 text-slate-100 overflow-hidden text-[0.6rem] font-bold">
+        Старт
+      </div>
+      <div className="p-1 text-slate-100 overflow-hidden text-[0.6rem] font-bold">
+        Финиш
+      </div>
+    </div>
+  );
+});
+
+const TaskTblTop = memo(function TaskTblTop({
+  paramWorkDate,
+}: {
+  paramWorkDate: string;
+}): React.JSX.Element {
+  return (
+    <div className="hidden sticky top-0 z-[2] sm:grid grid-cols-[25px_200px_120px_120px] gap-x-2 uppercase text-[0.75rem] text-slate-500 font-bold text-center bg-gradient-to-b from-sky-300 to-sky-100">
+      <div className=" col-span-4 p-1 flex flex-wrap items-center justify-center gap-x-2">
+        Текущие задачи, от даты:{" "}
+        <span className="text-[1rem] text-slate-700">{paramWorkDate}</span>
+      </div>
+      <div className="p-1 text-slate-600 whitespace-nowrap overflow-hidden">
+        N/N
+      </div>
+      <div className="p-1 text-slate-600 overflow-hidden">Наименование</div>
+      <div className="p-1 text-slate-600 overflow-hidden">Начинается</div>
+      <div className="p-1 text-slate-600 overflow-hidden">Заканчивается</div>
+    </div>
+  );
+});
+
 export default function TasksExists() {
   const { data: session } = useSession();
   const [tasks, setTasks] = useState<TTaskList | TResponseError>([]);
-  const [day, setDay] = useState<string>("2024-11-29");
+  const WorkDate = useTrackerDate(useShallow((state) => state.trackerDateDb));
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  //console.log(WorkDate);
 
   //Запрос на задачи
   useEffect(() => {
-    (async function getExistsTasks() {
-      const url: string = "/api/checklast10";
-      const result = await fetch(url, {
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-        body: JSON.stringify({
-          id: session?.user.userId,
-          day,
-          limit: 15,
-        }),
-        next: { revalidate: 5 },
-      });
-      if (result.ok) {
-        const existsTasks = await result.json();
-        if (existsTasks) {
-          setTasks(existsTasks);
+    let isSubscribed: boolean = true;
+    if (isSubscribed) {
+      (async function getExistsTasks() {
+        const url: string = "/api/checklast10";
+        setIsLoading(true);
+        try {
+          const result = await fetch(url, {
+            headers: { "Content-Type": "application/json" },
+            method: "POST",
+            body: JSON.stringify({
+              id: session?.user.userId,
+              day: WorkDate,
+              limit: 15,
+            }),
+            next: { revalidate: 5 },
+          });
+          if (result.ok) {
+            const existsTasks = await result.json();
+            if (existsTasks) {
+              setTasks(existsTasks);
+            }
+          }
+        } finally {
+          setIsLoading(false);
         }
-      }
-    })();
-  }, [day]);
+      })();
+    }
+    return () => {
+      isSubscribed = false;
+    };
+  }, [WorkDate]);
+
+  if (isLoading) {
+    return <div className="w-fit mt-5 mx-auto">Идет загрузка данных...</div>;
+  }
 
   if ("status" in tasks) {
     return (
@@ -50,35 +119,96 @@ export default function TasksExists() {
 
   return (
     <section className="w-fit mx-auto relative overflow-hidden">
-      <TrackerDay />
-      <div className=" overflow-y-auto max-h-[55vh]">
-        {/* "Заголовок таблицы" */}
-        <div className="sticky top-0 z-[2] grid grid-cols-[20px_200px_120px_120px] gap-x-2 uppercase text-[0.75rem] text-slate-500 font-bold text-center bg-gradient-to-b from-sky-300 to-sky-100">
-          <div className=" col-span-4 p-1 flex flex-wrap items-center justify-center gap-x-2">
-            Задачи на выполнение, от даты:{" "}
-            <span className="text-[1rem] text-slate-700">{day}</span>
-          </div>
-          <div className="p-1 text-slate-600">N/N</div>
-          <div className="p-1 text-slate-600 overflow-hidden">Наименование</div>
-          <div className="p-1 text-slate-600 overflow-hidden">Начинается</div>
-          <div className="p-1 text-slate-600 overflow-hidden">
-            Заканчивается
-          </div>
-        </div>
+      <div className="sm:hidden flex items-start w-[350px] mx-auto overflow-y-hidden overflow-x-auto">
+        <MobileTaskTblTop paramWorkDate={WorkDate} />
+
+        {tasks.map((item, index) => {
+          //Сформировать дату и время
+          let b_date = TimeZoneDateToString(
+            item.begin_at as unknown as string
+          ).split(" ")[0];
+          let t_date = TimeZoneDateToString(
+            item.begin_at as unknown as string
+          ).split(" ")[1];
+
+          let e_date = TimeZoneDateToString(
+            item.end_at as unknown as string
+          ).split(" ")[0];
+          let et_date = TimeZoneDateToString(
+            item.end_at as unknown as string
+          ).split(" ")[1];
+
+          //Через группу
+          const odd: boolean = index % 2 === 0;
+
+          //Сформировать ссылку
+          let aHref: string =
+            "/tasks/" +
+            ChangeDateItems(
+              TimeZoneDateToString(item.begin_at as unknown as string).split(
+                " "
+              )[0]
+            );
+          return (
+            <div
+              className={`grid grid-cols-[100px] auto-rows-[35px] text-[0.7rem] border-b-4 border-b-transparent ${
+                !odd ? "bg-sky-100" : "bg-slate-50"
+              }`}
+              key={index}
+            >
+              <div className="overflow-hidden p-1 text-center align-middle">
+                {index + 1}.
+              </div>
+              <div className="overflow-hidden p-1 align-middle hover:underline">
+                <Link href={aHref} scroll={false}>
+                  {item.name}
+                </Link>
+              </div>
+              <div className="overflow-hidden p-1 align-middle">
+                {b_date}{" "}
+                <span className="text-[0.8rem] text-blue-900 font-bold">
+                  {t_date}
+                </span>
+              </div>
+              <div className="overflow-hidden p-1 align-middle">
+                {e_date}{" "}
+                <span className="text-[0.8rem] text-blue-900 font-bold">
+                  {et_date}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="hidden sm:block overflow-y-auto overflow-x-hidden max-h-[53vh]">
+        {/* Заголовок таблицы */}
+        <TaskTblTop paramWorkDate={WorkDate} />
         <ul className="p-2 text-[0.7rem]">
           {tasks.map((item, index, array) => {
             let transp: number = 1;
-
+            //Прозрачность позиции
             transp = CalculateOpacity(index, array.length);
+            //Сформировать ссылку
+            let aHref: string =
+              "/tasks/" +
+              ChangeDateItems(
+                TimeZoneDateToString(item.begin_at as unknown as string).split(
+                  " "
+                )[0]
+              );
 
             return (
               <li
                 key={index}
-                className="p-1 grid grid-cols-[20px_200px_120px_120px] gap-x-2 text-[0.8rem]"
+                className="p-1 grid grid-cols-[25px_200px_120px_120px] gap-x-2 text-[0.8rem] odd:bg-sky-100"
                 style={{ opacity: transp }}
               >
                 {index + 1}.
-                <Link href={"/"} scroll={false} className="hover:underline">
+                <Link
+                  href={aHref}
+                  scroll={false}
+                  className="hover:underline whitespace-nowrap overflow-hidden"
+                >
                   {item.name}
                 </Link>
                 <div className="text-sky-800 text-[0.7rem] uppercase flex items-center gap-x-1">
@@ -87,7 +217,7 @@ export default function TasksExists() {
                       item.begin_at as unknown as string
                     ).split(" ")[0]
                   }
-                  <span className="text-[0.9rem] text-blue-900 font-bold">
+                  <span className="text-[0.75rem] text-blue-900 font-bold">
                     {
                       TimeZoneDateToString(
                         item.begin_at as unknown as string
@@ -101,7 +231,7 @@ export default function TasksExists() {
                       item.end_at as unknown as string
                     ).split(" ")[0]
                   }
-                  <span className="text-[0.9rem] text-blue-900 font-bold">
+                  <span className="text-[0.75rem] text-blue-900 font-bold">
                     {
                       TimeZoneDateToString(
                         item.end_at as unknown as string

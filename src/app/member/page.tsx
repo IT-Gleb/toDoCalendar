@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { LoaderCalendarComponent } from "@/components/loader/loaderCalendarComponent";
 import dynamic from "next/dynamic";
+import TrackerDay from "@/components/tasks/trackerDay";
 
 const DynamicCalendar = dynamic(
   () =>
@@ -59,6 +60,7 @@ export default function MemeberPage() {
           <DynamicCalendar />
         </div>
         <div className="border-t lg:border-t-0 lg:border-l lg:border-b border-slate-400 p-2">
+          <TrackerDay />
           <DynamicTasksExists />
         </div>
       </section>

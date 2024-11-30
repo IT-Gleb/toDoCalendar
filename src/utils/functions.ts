@@ -624,3 +624,29 @@ export function getNowDateStr(): string {
   return result;
 }
 //-------------------------------------------------
+//Принять строку типа day-month-year Поменять местами год и день,
+// увеличить месяц на еденицу (для базы данных) вернуть строку типа year-month-day
+export function ChangeDateItemsMonthAdd(param: string): string {
+  let result: string = param;
+  const arrayDate: string[] = result.split("-");
+  let tmp: string = arrayDate[0];
+  arrayDate[0] = arrayDate[2];
+  arrayDate[1] = ZeroToNumber(Number(arrayDate[1]) + 1) as string;
+  arrayDate[2] = tmp;
+  result = arrayDate.join("-");
+  return result;
+}
+//---------------------------------------------------------------------------------------------
+//Принять строку типа day-month-year Поменять местами год и день,
+// вернуть строку типа year-month-day
+export function ChangeDateItems(param: string): string {
+  let result: string = param;
+  const arrayDate: string[] = result.split("-");
+  let tmp: string = arrayDate[0];
+  arrayDate[0] = arrayDate[2];
+
+  arrayDate[2] = tmp;
+  result = arrayDate.join("-");
+  return result;
+}
+//---------------------------------------------------------------------------------------------

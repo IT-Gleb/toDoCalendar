@@ -35,6 +35,10 @@ body {
   .font-stroke-4 {
     -webkit-text-stroke: 4px black;
   }
+  .vertical-text {
+    writing-mode: vertical-rl;
+    text-orientation: sideways;
+  }
 }
 
 @layer components {
