@@ -4,6 +4,7 @@ import { useTrackerDate } from "@/store/trackerStore";
 import {
   CalculateOpacity,
   ChangeDateItems,
+  pipe,
   TimeZoneDateToString,
 } from "@/utils/functions";
 import { useSession } from "next-auth/react";
@@ -149,6 +150,7 @@ export default function TasksExists() {
                 " "
               )[0]
             );
+
           return (
             <div
               className={`grid grid-cols-[100px] auto-rows-[35px] text-[0.7rem] border-b-4 border-b-transparent ${

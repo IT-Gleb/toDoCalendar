@@ -640,8 +640,13 @@ export function ChangeDateItemsMonthAdd(param: string): string {
 //Принять строку типа day-month-year Поменять местами год и день,
 // вернуть строку типа year-month-day
 export function ChangeDateItems(param: string): string {
+  const MaxLength: number = 3;
+
   let result: string = param;
   const arrayDate: string[] = result.split("-");
+  if (arrayDate.length < MaxLength || arrayDate.length > MaxLength) {
+    return "Error param dateTime";
+  }
   let tmp: string = arrayDate[0];
   arrayDate[0] = arrayDate[2];
 
@@ -650,3 +655,9 @@ export function ChangeDateItems(param: string): string {
   return result;
 }
 //---------------------------------------------------------------------------------------------
+//Реализация pipe
+export const pipe =
+  (...fns: any[]) =>
+  (x: any) =>
+    fns.reduce((v, f) => f(v), x);
+//----------------------------
