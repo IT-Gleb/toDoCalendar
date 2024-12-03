@@ -37,6 +37,11 @@ declare type TFormStateAndStatus = {
   message: string;
 };
 
+declare type TFormShirtState = {
+  status: boolean;
+  message: string;
+};
+
 declare type TFormInitState = "init" | "success" | "error";
 
 declare type TCalendarData = {

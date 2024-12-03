@@ -24,7 +24,17 @@ const formItems: TFormItems = [
   { title: "Статус завершения", name: "status", active: false },
 ];
 
-const InitialState: TFormState = { status: false, message: "" };
+const InitialState: TFormState = {
+  status: false,
+  messages: {
+    name: "",
+    beginDate: "",
+    endDate: "",
+    completed: "",
+    status: "",
+    success: "",
+  },
+};
 
 export const NewTaskFormComponent = () => {
   const [isActive, setIsActive] = useState<boolean[]>([]);
@@ -36,6 +46,7 @@ export const NewTaskFormComponent = () => {
   );
   const [date1, setDate1] = useState<string>(CurrentDateToInput());
   const formRef = useRef<HTMLFormElement>(null);
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
   const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
     const isActived: boolean[] = formItems.reduce((acc: boolean[], curr) => {
@@ -72,11 +83,18 @@ export const NewTaskFormComponent = () => {
         formRef.current?.reset();
         thisrouter.push(MainMenu[1].href, { scroll: false });
       }
+      if (!state.status) {
+        let msg: string = "Error: ";
+        Object.values(state.messages).forEach((item: string) => {
+          msg += item + "#";
+        });
+        setErrorMsg(msg);
+      }
     }
     return () => {
       isSubscribed = false;
     };
-  }, [state]);
+  }, [state.status]);
 
   return (
     <form ref={formRef} action={formAction} className="w-full mt-5">
@@ -189,7 +207,7 @@ export const NewTaskFormComponent = () => {
             state.status ? "bg-green-600" : "bg-red-600"
           }  text-white first-letter:uppercase indent-4`}
         >
-          {state.message}
+          {state.status ? state.messages["success"] : errorMsg}
         </div>
         <div className="mt-5 flex items-end justify-end flex-wrap gap-x-4 gap-y-4">
           <button

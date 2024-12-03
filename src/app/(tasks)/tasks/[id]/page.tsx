@@ -26,7 +26,7 @@ async function getData(params: TTasksParams, paramUserId: string) {
 
   if (result.ok) {
     const res = await result.json();
-    console.log(res);
+    //console.log(res);
     return res;
   }
 }

@@ -4,7 +4,6 @@ import { useTrackerDate } from "@/store/trackerStore";
 import {
   CalculateOpacity,
   ChangeDateItems,
-  pipe,
   TimeZoneDateToString,
 } from "@/utils/functions";
 import { useSession } from "next-auth/react";
@@ -25,18 +24,18 @@ const MobileTaskTblTop = memo(function MobileTaskTblTop({
   return (
     <div className="sm:hidden sticky left-0 z-[2] grid grid-cols-[25px_60px] auto-rows-[35px] bg-sky-600 uppercase text-slate-200">
       <div className=" row-span-4 text-slate-100 vertical-text text-center text-[0.75rem] font-bold py-2 px-1 bg-sky-400 scale-x-180">
-        Текущие задачи
+        Незавершенные
       </div>
-      <div className="p-1 text-slate-100 overflow-hidden text-[0.6rem] font-bold ">
+      <div className="p-1 text-slate-100 overflow-hidden border-b border-b-white text-[0.6rem] font-bold ">
         N/N
       </div>
-      <div className="p-1 text-slate-100 overflow-hidden text-[0.6rem] font-bold">
+      <div className="p-1 text-slate-100 overflow-hidden border-b border-b-white text-[0.6rem] font-bold">
         Наимен...
       </div>
-      <div className="p-1 text-slate-100 overflow-hidden text-[0.6rem] font-bold">
+      <div className="p-1 text-slate-100 overflow-hidden border-b border-b-white text-[0.6rem] font-bold">
         Старт
       </div>
-      <div className="p-1 text-slate-100 overflow-hidden text-[0.6rem] font-bold">
+      <div className="p-1 text-slate-100 overflow-hidden border-b border-b-white text-[0.6rem] font-bold">
         Финиш
       </div>
     </div>
@@ -51,7 +50,7 @@ const TaskTblTop = memo(function TaskTblTop({
   return (
     <div className="hidden sticky top-0 z-[2] sm:grid grid-cols-[25px_200px_120px_120px] gap-x-2 uppercase text-[0.75rem] text-slate-500 font-bold text-center bg-gradient-to-b from-sky-300 to-sky-100">
       <div className=" col-span-4 p-1 flex flex-wrap items-center justify-center gap-x-2">
-        Текущие задачи, от даты:{" "}
+        Незавершенные текущие задачи, от даты:{" "}
         <span className="text-[1rem] text-slate-700">{paramWorkDate}</span>
       </div>
       <div className="p-1 text-slate-600 whitespace-nowrap overflow-hidden">
@@ -100,6 +99,7 @@ export default function TasksExists() {
         }
       })();
     }
+
     return () => {
       isSubscribed = false;
     };

@@ -624,6 +624,26 @@ export function getNowDateStr(): string {
   return result;
 }
 //-------------------------------------------------
+//Возвращает текущую дату и время в формате day-month-year hours:minutes
+export function getNowDateTimeStr(): string {
+  let result: string = "";
+
+  const dt = new Date();
+  let day: string | number = dt.getDate();
+  day = ZeroToNumber(day);
+  let month: string | number = dt.getMonth();
+  month = ZeroToNumber(month);
+  let hours: string | number = dt.getHours();
+  hours = ZeroToNumber(hours);
+  let minutes: string | number = dt.getMinutes();
+  minutes = ZeroToNumber(minutes);
+
+  result =
+    day + "-" + month + "-" + dt.getFullYear() + " " + hours + ":" + minutes;
+
+  return result;
+}
+
 //Принять строку типа day-month-year Поменять местами год и день,
 // увеличить месяц на еденицу (для базы данных) вернуть строку типа year-month-day
 export function ChangeDateItemsMonthAdd(param: string): string {
@@ -640,11 +660,11 @@ export function ChangeDateItemsMonthAdd(param: string): string {
 //Принять строку типа day-month-year Поменять местами год и день,
 // вернуть строку типа year-month-day
 export function ChangeDateItems(param: string): string {
-  const MaxLength: number = 3;
+  const paramLength: number = 3;
 
   let result: string = param;
   const arrayDate: string[] = result.split("-");
-  if (arrayDate.length < MaxLength || arrayDate.length > MaxLength) {
+  if (arrayDate.length < paramLength || arrayDate.length > paramLength) {
     return "Error param dateTime";
   }
   let tmp: string = arrayDate[0];
@@ -655,9 +675,22 @@ export function ChangeDateItems(param: string): string {
   return result;
 }
 //---------------------------------------------------------------------------------------------
+
+function returnOneTwoPies(value: string): string {
+  let result: string[] = value.split(" ");
+  return result[0];
+}
+
 //Реализация pipe
-export const pipe =
+export const MyPipe =
   (...fns: any[]) =>
   (x: any) =>
     fns.reduce((v, f) => f(v), x);
 //----------------------------
+
+const ValuesStr: string = getNowDateTimeStr();
+export const caravanValue: string = MyPipe(
+  returnOneTwoPies,
+  ChangeDateItems
+)(ValuesStr) as string;
+//-------------------------------------------------------
