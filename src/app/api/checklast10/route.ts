@@ -13,7 +13,7 @@ const handler = auth(async function POST(req) {
           const userId = decryptId(id);
 
           const tasks =
-            await sql`SELECT id, name, completed, begin_at, end_at FROM tasks WHERE isdeleted=false AND completed=false AND userid=${userId} AND begin_at::date>=${day} ORDER BY begin_at LIMIT ${limit} OFFSET ${offset};`;
+            await sql`SELECT id, name, completed, begin_at, end_at, COUNT(id) OVER() as taskscount FROM tasks WHERE isdeleted=false AND completed=false AND userid=${userId} AND begin_at::date>=${day} GROUP BY id ORDER BY begin_at LIMIT ${limit} OFFSET ${offset};`;
           if (tasks) {
             return NextResponse.json(tasks);
           }

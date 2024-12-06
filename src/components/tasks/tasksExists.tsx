@@ -48,14 +48,17 @@ const MobileTaskTblTop = memo(function MobileTaskTblTop({
 
 const TaskTblTop = memo(function TaskTblTop({
   paramWorkDate,
+  paramTasksCount,
 }: {
   paramWorkDate: string;
+  paramTasksCount: number;
 }): React.JSX.Element {
   return (
     <div className="hidden sticky top-0 z-[2] sm:grid grid-cols-[25px_200px_120px_120px] gap-x-2 uppercase text-[0.75rem] text-slate-500 font-bold text-center bg-gradient-to-b from-sky-300 to-sky-100">
       <div className=" col-span-4 p-1 flex flex-wrap items-center justify-center gap-x-2">
         Незавершенные текущие задачи, от даты:{" "}
         <span className="text-[1rem] text-slate-700">{paramWorkDate}</span>
+        <span>({paramTasksCount})</span>
       </div>
       <div className="p-1 text-slate-600 whitespace-nowrap overflow-hidden">
         N/N
@@ -72,6 +75,7 @@ export default function TasksExists() {
   const [tasks, setTasks] = useState<TTaskList | TResponseError>([]);
   const WorkDate = useTrackerDate(useShallow((state) => state.trackerDateDb));
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [tasksCount, setTasksCount] = useState<number>(0);
   //console.log(WorkDate);
 
   //Запрос на задачи
@@ -94,9 +98,12 @@ export default function TasksExists() {
             next: { revalidate: 5 },
           });
           if (result.ok) {
-            const existsTasks = await result.json();
-            if (existsTasks) {
+            const existsTasks = (await result.json()) as TTaskList;
+            if (existsTasks && existsTasks.length > 0) {
               setTasks(existsTasks);
+              if (existsTasks[0].taskscount) {
+                setTasksCount(existsTasks[0].taskscount);
+              }
             }
           }
           //console.log(caravanValue);
@@ -215,7 +222,7 @@ export default function TasksExists() {
       </div>
       <div className="hidden sm:block overflow-y-auto overflow-x-hidden max-h-[53vh]">
         {/* Заголовок таблицы */}
-        <TaskTblTop paramWorkDate={WorkDate} />
+        <TaskTblTop paramWorkDate={WorkDate} paramTasksCount={tasksCount} />
         <ul className="p-2 text-[0.7rem]">
           {tasks.map((item, index, array) => {
             let transp: number = 1;

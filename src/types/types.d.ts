@@ -9,6 +9,7 @@ declare type TTask = {
   items: TTaskList | null;
   level: number;
   userId: number | null;
+  taskscount: number | null;
 };
 
 declare type TTaskList = Array<Partial<TTask>>;
