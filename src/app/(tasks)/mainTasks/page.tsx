@@ -156,23 +156,23 @@ export default function AllTasks() {
         </div>
       )}
       {data && Array.isArray(data) && data.length < 1 && <h2>Нет данных</h2>}
-      <div className="relative max-h-[75vh] rounded-md bg-gradient-to-b from-slate-300 via-transparent to-slate-300 overflow-y-auto">
+      <div className="relative max-h-[75vh] rounded-md bg-gradient-to-b from-slate-100 via-transparent to-slate-100 overflow-y-auto">
         {/* Заголовок таблицы */}
         {tasks && tasks.length > 0 && (
-          <div className=" sticky top-0.5 left-0 bg-slate-600 rounded-md text-center flex gap-x-1 items-center p-1 font-semibold text-[0.7rem] uppercase">
-            <div className="w-[30px] p-2 bg-slate-400 text-white overflow-hidden">
+          <div className=" sticky top-0.5 left-0 bg-slate-400 rounded-md text-center flex gap-x-1 items-center p-1 font-semibold text-[0.7rem] uppercase border-r-4 border-r-transparent">
+            <div className="w-[30px] p-2 bg-slate-300 text-black overflow-hidden">
               id
             </div>
-            <div className="w-[40px] p-2 bg-slate-400 text-white overflow-hidden whitespace-nowrap">
+            <div className="w-[40px] p-2 bg-slate-300 text-black overflow-hidden whitespace-nowrap">
               p_id
             </div>
-            <div className="w-[40px] p-2 bg-slate-400 text-white overflow-hidden whitespace-nowrap">
+            <div className="w-[40px] p-2 bg-slate-300 text-black overflow-hidden whitespace-nowrap">
               u-id
             </div>
-            <div className="w-[200px] p-2 bg-slate-400 text-white overflow-hidden">
+            <div className="w-[200px] p-2 bg-slate-300 text-black overflow-hidden">
               наименование
             </div>
-            <div className="w-[100px] p-2 bg-slate-400 text-white overflow-hidden">
+            <div className="w-[100px] p-2 bg-slate-300 text-black overflow-hidden">
               статус
             </div>
           </div>
@@ -185,7 +185,7 @@ export default function AllTasks() {
               key={item.id}
               className={`${
                 index === 0 ? "mt-2" : "mt-1"
-              } text-[0.8rem] text-left bg-slate-400 rounded-md flex gap-x-1 items-start p-1`}
+              } text-[0.8rem] text-left bg-slate-300 rounded-md flex gap-x-1 items-start p-1`}
             >
               <div className="w-[30px] bg-slate-50 p-2">{item.id}</div>
               <div className="w-[40px] bg-slate-50 p-2">

@@ -60,8 +60,8 @@ const TaskTblTop = memo(function TaskTblTop({
         N/N
       </div>
       <div className="p-1 text-slate-600 overflow-hidden">Наименование</div>
-      <div className="p-1 text-slate-600 overflow-hidden">Начинается</div>
-      <div className="p-1 text-slate-600 overflow-hidden">Заканчивается</div>
+      <div className="p-1 text-slate-600 overflow-hidden">Старт</div>
+      <div className="p-1 text-slate-600 overflow-hidden">Финиш</div>
     </div>
   );
 });
@@ -130,19 +130,35 @@ export default function TasksExists() {
 
         {tasks.map((item, index) => {
           //Сформировать дату и время
-          let b_date = TimeZoneDateToString(
-            item.begin_at as unknown as string
-          ).split(" ")[0];
-          let t_date = TimeZoneDateToString(
-            item.begin_at as unknown as string
-          ).split(" ")[1];
+          let b_date = MyPipeStr(
+            TimeZoneDateToString,
+            returnStrPartOne
+          )(item.begin_at as unknown as string);
+          // TimeZoneDateToString(item.begin_at as unknown as string).split(
+          //   " "
+          // )[0];
 
-          let e_date = TimeZoneDateToString(
-            item.end_at as unknown as string
-          ).split(" ")[0];
-          let et_date = TimeZoneDateToString(
-            item.end_at as unknown as string
-          ).split(" ")[1];
+          let t_date = MyPipeStr(
+            TimeZoneDateToString,
+            returnStrPartTwo
+          )(item.begin_at as unknown as string);
+          //  TimeZoneDateToString(
+          //   item.begin_at as unknown as string
+          // ).split(" ")[1];
+
+          let e_date = MyPipeStr(
+            TimeZoneDateToString,
+            returnStrPartOne
+          )(item.end_at as unknown as string);
+          // TimeZoneDateToString(item.end_at as unknown as string).split(" ")[0];
+          let et_date = MyPipeStr(
+            TimeZoneDateToString,
+            returnStrPartTwo
+          )(item.end_at as unknown as string);
+
+          // let et_date = TimeZoneDateToString(
+          //   item.end_at as unknown as string
+          // ).split(" ")[1];
 
           //Через группу
           const odd: boolean = index % 2 === 0;
@@ -150,11 +166,16 @@ export default function TasksExists() {
           //Сформировать ссылку
           let aHref: string =
             "/tasks/" +
-            ChangeDateItems(
-              TimeZoneDateToString(item.begin_at as unknown as string).split(
-                " "
-              )[0]
-            );
+            MyPipeStr(
+              TimeZoneDateToString,
+              returnStrPartOne,
+              ChangeDateItems
+            )(item.begin_at as unknown as string);
+          // ChangeDateItems(
+          //   TimeZoneDateToString(item.begin_at as unknown as string).split(
+          //     " "
+          //   )[0]
+          // );
 
           return (
             <div
@@ -255,7 +276,7 @@ export default function TasksExists() {
                     MyPipeStr(
                       TimeZoneDateToString,
                       returnStrPartOne
-                    )(item.begin_at as unknown as string)
+                    )(item.end_at as unknown as string)
                   }
                   <span className="text-[0.75rem] text-blue-900 font-bold">
                     {
@@ -265,7 +286,7 @@ export default function TasksExists() {
                       MyPipeStr(
                         TimeZoneDateToString,
                         returnStrPartTwo
-                      )(item.begin_at as unknown as string)
+                      )(item.end_at as unknown as string)
                     }
                   </span>
                 </div>
