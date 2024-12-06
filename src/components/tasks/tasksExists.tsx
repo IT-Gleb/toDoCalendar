@@ -13,6 +13,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useEffect, useState, memo } from "react";
 import { useShallow } from "zustand/shallow";
+import Loader from "../loader/loaderComp";
 
 type TResponseError = {
   status: string;
@@ -111,7 +112,11 @@ export default function TasksExists() {
   }, [WorkDate]);
 
   if (isLoading) {
-    return <div className="w-fit mt-5 mx-auto">Идет загрузка данных...</div>;
+    return (
+      <div className="w-[125px] h-[125px] mx-auto mt-10">
+        <Loader />
+      </div>
+    );
   }
 
   if ("status" in tasks) {

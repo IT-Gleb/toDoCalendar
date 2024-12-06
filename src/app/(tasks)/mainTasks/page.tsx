@@ -1,5 +1,6 @@
 "use client";
 
+import Loader from "@/components/loader/loaderComp";
 import { NoAuthComponent } from "@/components/noAuthComponent";
 import { Base_URL } from "@/utils/functions";
 import { useSession } from "next-auth/react";
@@ -139,10 +140,8 @@ export default function AllTasks() {
 
   if (isLoading) {
     return (
-      <section className="w-fit mx-auto mt-10">
-        <h4 className="text-[1.8rem] font-semibold">
-          Идет загрузка и обработка данных...
-        </h4>
+      <section className="mx-auto mt-10 w-[125px] h-[125px]">
+        <Loader />
       </section>
     );
   }

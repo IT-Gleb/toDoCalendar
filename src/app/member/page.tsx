@@ -5,6 +5,7 @@ import Link from "next/link";
 import { LoaderCalendarComponent } from "@/components/loader/loaderCalendarComponent";
 import dynamic from "next/dynamic";
 import TrackerDay from "@/components/tasks/trackerDay";
+import Loader from "@/components/loader/loaderComp";
 
 const DynamicCalendar = dynamic(
   () =>
@@ -22,7 +23,7 @@ const DynamicTasksExists = dynamic(
       (component) => component.default
     ),
   {
-    loading: () => <LoaderCalendarComponent />,
+    loading: () => <Loader />,
   }
 );
 
