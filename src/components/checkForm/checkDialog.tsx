@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useEffect, useRef, useState } from "react";
 import { DialogComponent, IDialog } from "../dialog/dialogComponent";
 import AuthNickNameComponent from "../authComponents/authNickNameComponent";
 import AuthPasswordComponent from "../authComponents/authPasswordComponent";
@@ -24,7 +24,6 @@ const CheckFormContent = ({
 }) => {
   const [isOk, setIsOk] = useState<boolean>(false);
   const [state, formAction, isPending] = useFormState(checkUser, initFormState);
-  const router = useRouter();
 
   const nickRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -136,7 +135,7 @@ export const CheckDialog = () => {
     return <div className="mt-5 w-fit mx-auto uppercase">Загрузка...</div>;
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (status === "authenticated") {
       router.replace("/member");
     }
@@ -145,7 +144,9 @@ export const CheckDialog = () => {
   //--------------
 
   const checkRef = useRef<IDialog>(null);
-  const [showDialog, setShowDialog] = useState<boolean>(true);
+  const [showDialog, setShowDialog] = useState<boolean>(
+    status === "unauthenticated"
+  );
 
   const handleCloseClick = () => {
     setShowDialog(false);

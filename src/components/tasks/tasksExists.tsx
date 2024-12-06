@@ -4,6 +4,9 @@ import { useTrackerDate } from "@/store/trackerStore";
 import {
   CalculateOpacity,
   ChangeDateItems,
+  MyPipeStr,
+  returnStrPartOne,
+  returnStrPartTwo,
   TimeZoneDateToString,
 } from "@/utils/functions";
 import { useSession } from "next-auth/react";
@@ -85,6 +88,7 @@ export default function TasksExists() {
               id: session?.user.userId,
               day: WorkDate,
               limit: 15,
+              offset: 0,
             }),
             next: { revalidate: 5 },
           });
@@ -94,6 +98,7 @@ export default function TasksExists() {
               setTasks(existsTasks);
             }
           }
+          //console.log(caravanValue);
         } finally {
           setIsLoading(false);
         }
@@ -191,13 +196,20 @@ export default function TasksExists() {
             //Прозрачность позиции
             transp = CalculateOpacity(index, array.length);
             //Сформировать ссылку
+            // let aHref: string =
+            //   "/tasks/" +
+            //   ChangeDateItems(
+            //     TimeZoneDateToString(item.begin_at as unknown as string).split(
+            //       " "
+            //     )[0]
+            //   );
             let aHref: string =
               "/tasks/" +
-              ChangeDateItems(
-                TimeZoneDateToString(item.begin_at as unknown as string).split(
-                  " "
-                )[0]
-              );
+              MyPipeStr(
+                TimeZoneDateToString,
+                returnStrPartOne,
+                ChangeDateItems
+              )(item.begin_at as unknown as string);
 
             return (
               <li
@@ -215,29 +227,45 @@ export default function TasksExists() {
                 </Link>
                 <div className="text-sky-800 text-[0.7rem] uppercase flex items-center gap-x-1">
                   {
-                    TimeZoneDateToString(
-                      item.begin_at as unknown as string
-                    ).split(" ")[0]
+                    // TimeZoneDateToString(
+                    //   item.begin_at as unknown as string
+                    // ).split(" ")[0]
+                    MyPipeStr(
+                      TimeZoneDateToString,
+                      returnStrPartOne
+                    )(item.begin_at as unknown as string)
                   }
                   <span className="text-[0.75rem] text-blue-900 font-bold">
                     {
-                      TimeZoneDateToString(
-                        item.begin_at as unknown as string
-                      ).split(" ")[1]
+                      // TimeZoneDateToString(
+                      //   item.begin_at as unknown as string
+                      // ).split(" ")[1]
+                      MyPipeStr(
+                        TimeZoneDateToString,
+                        returnStrPartTwo
+                      )(item.begin_at as unknown as string)
                     }
                   </span>
                 </div>
                 <div className="text-sky-800 text-[0.7rem] uppercase flex items-center gap-x-1">
                   {
-                    TimeZoneDateToString(
-                      item.end_at as unknown as string
-                    ).split(" ")[0]
+                    // TimeZoneDateToString(
+                    //   item.end_at as unknown as string
+                    // ).split(" ")[0]
+                    MyPipeStr(
+                      TimeZoneDateToString,
+                      returnStrPartOne
+                    )(item.begin_at as unknown as string)
                   }
                   <span className="text-[0.75rem] text-blue-900 font-bold">
                     {
-                      TimeZoneDateToString(
-                        item.end_at as unknown as string
-                      ).split(" ")[1]
+                      // TimeZoneDateToString(
+                      //   item.end_at as unknown as string
+                      // ).split(" ")[1]
+                      MyPipeStr(
+                        TimeZoneDateToString,
+                        returnStrPartTwo
+                      )(item.begin_at as unknown as string)
                     }
                   </span>
                 </div>

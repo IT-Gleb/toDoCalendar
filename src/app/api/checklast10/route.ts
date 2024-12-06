@@ -9,11 +9,11 @@ const handler = auth(async function POST(req) {
       const data = await req.json();
       if (data) {
         try {
-          const { id, day, limit } = data;
+          const { id, day, limit, offset } = data;
           const userId = decryptId(id);
 
           const tasks =
-            await sql`SELECT id, name, completed, begin_at, end_at FROM tasks WHERE isdeleted=false AND completed=false AND userid=${userId} AND begin_at::date>=${day} ORDER BY begin_at LIMIT ${limit} OFFSET 0;`;
+            await sql`SELECT id, name, completed, begin_at, end_at FROM tasks WHERE isdeleted=false AND completed=false AND userid=${userId} AND begin_at::date>=${day} ORDER BY begin_at LIMIT ${limit} OFFSET ${offset};`;
           if (tasks) {
             return NextResponse.json(tasks);
           }

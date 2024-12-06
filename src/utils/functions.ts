@@ -669,28 +669,34 @@ export function ChangeDateItems(param: string): string {
   }
   let tmp: string = arrayDate[0];
   arrayDate[0] = arrayDate[2];
-
   arrayDate[2] = tmp;
+
   result = arrayDate.join("-");
   return result;
 }
 //---------------------------------------------------------------------------------------------
 
-function returnOneTwoPies(value: string): string {
-  let result: string[] = value.split(" ");
-  return result[0];
-}
-
 //Реализация pipe
-export const MyPipe =
+export const MyPipeStr =
   (...fns: any[]) =>
-  (x: any) =>
-    fns.reduce((v, f) => f(v), x);
+  (x: string) =>
+    fns.reduce((v, f) => f(v), x) as string;
 //----------------------------
 
-const ValuesStr: string = getNowDateTimeStr();
-export const caravanValue: string = MyPipe(
-  returnOneTwoPies,
-  ChangeDateItems
-)(ValuesStr) as string;
+export const returnStrPartOne = (paramVal: string) => {
+  const result: string[] = paramVal.split(" ");
+  if (result.length < 2) {
+    return "-error-";
+  }
+  return result[0];
+};
+
+export const returnStrPartTwo = (paramVal: string) => {
+  const result: string[] = paramVal.split(" ");
+  if (result.length < 2) {
+    return "-error-";
+  }
+  return result[1];
+};
+
 //-------------------------------------------------------
