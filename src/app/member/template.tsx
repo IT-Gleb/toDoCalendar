@@ -1,4 +1,5 @@
 import AuthProvider from "@/components/authComponents/authProviderComponent";
+import FooterMemberComponent from "@/components/member/footerMemberComponent";
 import HeaderMemberComponent from "@/components/member/headerMemberComponent";
 
 export default async function MemberTemplate({
@@ -8,8 +9,11 @@ export default async function MemberTemplate({
 }) {
   return (
     <AuthProvider>
-      <HeaderMemberComponent />
-      {children}
+      <div className="flex flex-col">
+        <HeaderMemberComponent />
+        <section className="min-h-[80vh] flex-auto">{children}</section>
+        <FooterMemberComponent />
+      </div>
     </AuthProvider>
   );
 }
