@@ -1,8 +1,9 @@
 import React from "react";
+import Loader from "./loaderComp";
 
 export const LoaderSkeletonComponent = () => {
   return (
-    <div className="w-full lg:w-[80%] xl:w-[65%] mx-auto animate-pulse">
+    <div className="w-full lg:w-[80%] xl:w-[65%] mx-auto animate-pulse relative">
       <section className="p-4 flex items-center justify-between">
         <div className="bg-slate-300 w-[50px] h-[50px] lg:w-[150px] lg:h-[150px] rounded-full"></div>
         <div className="bg-slate-300 w-[85%] h-[50px] ml-2 lg:h-[100px]"></div>
@@ -55,6 +56,9 @@ export const LoaderSkeletonComponent = () => {
         </section>
       </section>
       <div className="bg-slate-300 w-full h-[30px]"></div>
+      <div className=" absolute z-10 w-[150px] h-[150px] p-1 left-[50%] top-[35%] translate-x-[-50%] translate-y-[-35%]">
+        <Loader />
+      </div>
     </div>
   );
 };

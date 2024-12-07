@@ -151,17 +151,11 @@ export default function TasksExists() {
             TimeZoneDateToString,
             returnStrPartOne
           )(item.begin_at as unknown as string);
-          // TimeZoneDateToString(item.begin_at as unknown as string).split(
-          //   " "
-          // )[0];
 
           let t_date = MyPipeStr(
             TimeZoneDateToString,
             returnStrPartTwo
           )(item.begin_at as unknown as string);
-          //  TimeZoneDateToString(
-          //   item.begin_at as unknown as string
-          // ).split(" ")[1];
 
           let e_date = MyPipeStr(
             TimeZoneDateToString,
@@ -188,18 +182,13 @@ export default function TasksExists() {
               returnStrPartOne,
               ChangeDateItems
             )(item.begin_at as unknown as string);
-          // ChangeDateItems(
-          //   TimeZoneDateToString(item.begin_at as unknown as string).split(
-          //     " "
-          //   )[0]
-          // );
 
           return (
             <div
               className={`grid grid-cols-[100px] auto-rows-[35px] text-[0.7rem] border-b-4 border-b-transparent ${
                 !odd ? "bg-sky-100" : "bg-slate-50"
               }`}
-              key={index}
+              key={item.id}
             >
               <div className="overflow-hidden p-1 text-center align-middle">
                 {index + 1}.
@@ -251,7 +240,7 @@ export default function TasksExists() {
 
             return (
               <li
-                key={index}
+                key={item.id}
                 className="p-1 grid grid-cols-[25px_1fr_120px_120px] gap-x-2 text-[0.8rem] odd:bg-sky-100"
                 style={{ opacity: transp }}
               >

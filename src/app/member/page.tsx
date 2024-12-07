@@ -48,15 +48,8 @@ export default function MemeberPage() {
 
   return (
     <section className="bg-[radial-gradient(circle_at_top,theme(colors.white),theme(colors.slate.50),theme(colors.sky.50),theme(colors.sky.100))]">
-      <section className="w-full bg-sky-400 p-2 text-slate-200">
-        <div className="flex items-center justify-center flex-wrap space-x-3 text-[0.8rem]">
-          <div>почта: {session?.user.email}</div>
-          <div>права: {session?.user.role}</div>
-        </div>
-      </section>
-
       {/* Календарь с задачами */}
-      <section className="p-0 md:p-2 grid grid-cols-1 auto-rows-auto lg:grid-cols-2 gap-2 min-h-[60vh] mt-5">
+      <section className="p-0 md:p-2 grid grid-cols-1 auto-rows-max lg:grid-cols-2 gap-2 min-h-[60vh] mt-5">
         <div className="lg:border-r border-b border-slate-400 lg:p-2">
           <DynamicCalendar />
         </div>
@@ -64,6 +57,8 @@ export default function MemeberPage() {
           <TrackerDay />
           <DynamicTasksExists />
         </div>
+        <div className="p-0 border-t lg:border-r border-slate-400 md:p-2 min-h-[20vh]"></div>
+        <div className="p-0 border-t lg:border-l border-slate-400 md:p-2 min-h-[20vh]"></div>
       </section>
 
       <span className="w-fit mx-auto mt-5 block">
