@@ -7,6 +7,7 @@ import {
   MyPipeStr,
   returnStrPartOne,
   returnStrPartTwo,
+  TASKS_ON_PAGE,
   TimeZoneDateToString,
 } from "@/utils/functions";
 import { useSession } from "next-auth/react";
@@ -14,6 +15,8 @@ import Link from "next/link";
 import React, { useEffect, useState, memo } from "react";
 import { useShallow } from "zustand/shallow";
 import Loader from "../loader/loaderComp";
+import TasksExistsPagination from "./tasksExistsPagination";
+import { usePaginationStore } from "@/store/paginationStore";
 
 type TResponseError = {
   status: string;
@@ -54,7 +57,7 @@ const TaskTblTop = memo(function TaskTblTop({
   paramTasksCount: number;
 }): React.JSX.Element {
   return (
-    <div className="hidden sticky top-0 z-[2] sm:grid grid-cols-[25px_200px_120px_120px] gap-x-2 uppercase text-[0.75rem] text-slate-500 font-bold text-center bg-gradient-to-b from-sky-300 to-sky-100">
+    <div className="hidden sticky top-0 z-[2] sm:grid grid-cols-[25px_1fr_120px_120px] gap-x-2 uppercase text-[0.75rem] text-slate-500 font-bold text-center bg-gradient-to-b from-sky-300 to-sky-100">
       <div className=" col-span-4 p-1 flex flex-wrap items-center justify-center gap-x-2">
         Незавершенные текущие задачи, от даты:{" "}
         <span className="text-[1rem] text-slate-700">{paramWorkDate}</span>
@@ -64,8 +67,8 @@ const TaskTblTop = memo(function TaskTblTop({
         N/N
       </div>
       <div className="p-1 text-slate-600 overflow-hidden">Наименование</div>
-      <div className="p-1 text-slate-600 overflow-hidden">Старт</div>
-      <div className="p-1 text-slate-600 overflow-hidden">Финиш</div>
+      <div className="p-1 text-slate-600 overflow-hidden text-left">Старт</div>
+      <div className="p-1 text-slate-600 overflow-hidden text-left">Финиш</div>
     </div>
   );
 });
@@ -76,6 +79,8 @@ export default function TasksExists() {
   const WorkDate = useTrackerDate(useShallow((state) => state.trackerDateDb));
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [tasksCount, setTasksCount] = useState<number>(0);
+  //Пагинация
+  const Offset: number = usePaginationStore((state) => state.activePage);
   //console.log(WorkDate);
 
   //Запрос на задачи
@@ -92,8 +97,8 @@ export default function TasksExists() {
             body: JSON.stringify({
               id: session?.user.userId,
               day: WorkDate,
-              limit: 15,
-              offset: 0,
+              limit: TASKS_ON_PAGE,
+              offset: Offset * TASKS_ON_PAGE,
             }),
             next: { revalidate: 5 },
           });
@@ -116,7 +121,7 @@ export default function TasksExists() {
     return () => {
       isSubscribed = false;
     };
-  }, [WorkDate]);
+  }, [WorkDate, Offset]);
 
   if (isLoading) {
     return (
@@ -247,7 +252,7 @@ export default function TasksExists() {
             return (
               <li
                 key={index}
-                className="p-1 grid grid-cols-[25px_200px_120px_120px] gap-x-2 text-[0.8rem] odd:bg-sky-100"
+                className="p-1 grid grid-cols-[25px_1fr_120px_120px] gap-x-2 text-[0.8rem] odd:bg-sky-100"
                 style={{ opacity: transp }}
               >
                 {index + 1}.
@@ -259,47 +264,27 @@ export default function TasksExists() {
                   {item.name}
                 </Link>
                 <div className="text-sky-800 text-[0.7rem] uppercase flex items-center gap-x-1">
-                  {
-                    // TimeZoneDateToString(
-                    //   item.begin_at as unknown as string
-                    // ).split(" ")[0]
-                    MyPipeStr(
-                      TimeZoneDateToString,
-                      returnStrPartOne
-                    )(item.begin_at as unknown as string)
-                  }
+                  {MyPipeStr(
+                    TimeZoneDateToString,
+                    returnStrPartOne
+                  )(item.begin_at as unknown as string)}
                   <span className="text-[0.75rem] text-blue-900 font-bold">
-                    {
-                      // TimeZoneDateToString(
-                      //   item.begin_at as unknown as string
-                      // ).split(" ")[1]
-                      MyPipeStr(
-                        TimeZoneDateToString,
-                        returnStrPartTwo
-                      )(item.begin_at as unknown as string)
-                    }
+                    {MyPipeStr(
+                      TimeZoneDateToString,
+                      returnStrPartTwo
+                    )(item.begin_at as unknown as string)}
                   </span>
                 </div>
                 <div className="text-sky-800 text-[0.7rem] uppercase flex items-center gap-x-1">
-                  {
-                    // TimeZoneDateToString(
-                    //   item.end_at as unknown as string
-                    // ).split(" ")[0]
-                    MyPipeStr(
-                      TimeZoneDateToString,
-                      returnStrPartOne
-                    )(item.end_at as unknown as string)
-                  }
+                  {MyPipeStr(
+                    TimeZoneDateToString,
+                    returnStrPartOne
+                  )(item.end_at as unknown as string)}
                   <span className="text-[0.75rem] text-blue-900 font-bold">
-                    {
-                      // TimeZoneDateToString(
-                      //   item.end_at as unknown as string
-                      // ).split(" ")[1]
-                      MyPipeStr(
-                        TimeZoneDateToString,
-                        returnStrPartTwo
-                      )(item.end_at as unknown as string)
-                    }
+                    {MyPipeStr(
+                      TimeZoneDateToString,
+                      returnStrPartTwo
+                    )(item.end_at as unknown as string)}
                   </span>
                 </div>
               </li>
@@ -307,6 +292,8 @@ export default function TasksExists() {
           })}
         </ul>
       </div>
+      {/* Пагинация по задачам */}
+      <TasksExistsPagination paramCount={tasksCount} />
     </section>
   );
 }

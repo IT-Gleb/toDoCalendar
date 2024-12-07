@@ -5,6 +5,7 @@ import { DaysOfWeek, Mounths } from "./data";
 export const Base_URL = process.env.NEXT_PUBLIC_BASE_APP_URL;
 const MounthData_url: string = "/api/monthdata/";
 export const CookieUserId: string = "u_value"; //Для cookie userId
+export const TASKS_ON_PAGE: number = 15;
 
 //Количество дней до конца года
 export function DaysToEndOfYear(): number {

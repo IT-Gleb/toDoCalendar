@@ -1,3 +1,4 @@
+import { usePaginationStore } from "@/store/paginationStore";
 import { useTrackerDate } from "@/store/trackerStore";
 import {
   CalculateDate,
@@ -24,6 +25,10 @@ export default function TrackerDay() {
   const setTrackPosition = useTrackerDate(
     useShallow((state) => state.setTrackPosition)
   );
+  //Для сброса пагинации
+  const setOffset = usePaginationStore(
+    useShallow((state) => state.setActivePage)
+  );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, step } = event.currentTarget;
@@ -36,6 +41,8 @@ export default function TrackerDay() {
 
     setDayValue(getDateWithMonthStr(calcDate).toLowerCase());
     setRangeValue(value);
+    //Обнулить пагинацию
+    setOffset(0);
   };
 
   return (
