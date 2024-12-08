@@ -27,9 +27,19 @@ const DynamicTasksExists = dynamic(
   }
 );
 
+const DynamicTaskNotCompleted = dynamic(
+  () =>
+    import("@/components/tasks/tasksNotCompleted").then(
+      (component) => component.default
+    ),
+  {
+    loading: () => <Loader />,
+  }
+);
+
 export default function MemeberPage() {
   // console.log(params);
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   if (status === "loading" || status === "unauthenticated") {
     return (
@@ -58,7 +68,9 @@ export default function MemeberPage() {
           <DynamicTasksExists />
         </div>
         <div className="p-0 border-t lg:border-r border-slate-200 md:p-2 min-h-[20vh]"></div>
-        <div className="p-0 border-t lg:border-l border-slate-200 md:p-2 min-h-[20vh]"></div>
+        <div className="p-0 border-t lg:border-l border-slate-200 md:p-2 min-h-[20vh]">
+          <DynamicTaskNotCompleted />
+        </div>
       </section>
 
       <span className="w-fit mx-auto mt-5 block">

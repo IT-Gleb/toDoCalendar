@@ -17,3 +17,12 @@ export const usePaginationStore = create<TPaginationState & TPaginationAction>(
     },
   })
 );
+
+export const useDepricatedStore = create<TPaginationState & TPaginationAction>(
+  (set) => ({
+    activePage: 0,
+    setActivePage: (param: number) => {
+      set({ activePage: param });
+    },
+  })
+);

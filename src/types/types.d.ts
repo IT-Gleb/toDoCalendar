@@ -86,3 +86,19 @@ declare type TUser = {
 declare type TPartUser = Partial<TUser>;
 
 declare type TUserRole = "user" | "admin";
+
+declare type TPostParams = {
+  userid: string;
+  day: string;
+  limit: number;
+  offset: number;
+};
+
+declare type TPostPartialParams = Partial<TPostParams>;
+
+declare type TResponseError = {
+  status: string;
+  message: string;
+};
+
+declare type TPagination = "existsTask" | "notTasks";

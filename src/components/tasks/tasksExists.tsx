@@ -19,11 +19,6 @@ import TasksExistsPagination from "./tasksExistsPagination";
 import { usePaginationStore } from "@/store/paginationStore";
 import MobileTasksExists from "./mobileTasksExists";
 
-type TResponseError = {
-  status: string;
-  message: string;
-};
-
 const TaskTblTop = memo(function TaskTblTop({
   paramWorkDate,
   paramTasksCount,
@@ -178,7 +173,7 @@ export default function TasksExists() {
         </ul>
       </div>
       {/* Пагинация по задачам */}
-      <TasksExistsPagination paramCount={tasksCount} />
+      <TasksExistsPagination paramType={"existsTask"} paramCount={tasksCount} />
     </section>
   );
 }
