@@ -62,7 +62,7 @@ export const CalendarNew = memo(
               {/* <span className="bg-clip-text text-transparent bg-[linear-gradient(to_bottom,theme(colors.sky.800),theme(colors.sky.200),theme(colors.yellow.300))]">
                 {strYear}
               </span> */}
-              <span className="font-stroke-1 text-yellow-50 font-bold">
+              <span className="font-stroke-1 text-yellow-50 font-bold drop-shadow-[0_1px_1px_rgba(60,40,120,0.6)]">
                 {strYear}
               </span>
             </div>
