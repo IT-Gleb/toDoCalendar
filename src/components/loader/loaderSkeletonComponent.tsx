@@ -56,7 +56,7 @@ export const LoaderSkeletonComponent = () => {
         </section>
       </section>
       <div className="bg-slate-300 w-full h-[30px]"></div>
-      <div className=" absolute z-10 w-[150px] h-[150px] p-1 left-[50%] top-[35%] translate-x-[-50%] translate-y-[-35%]">
+      <div className=" absolute z-10 w-[150px] h-[150px] p-1 left-[50%] top-[35%] translate-x-[-50%] translate-y-[-35%] text-slate-700">
         <Loader />
       </div>
     </div>

@@ -30,7 +30,7 @@ export default function HeaderMemberComponent() {
         {isShow && <AuthLogOutButton />}
       </div>
       {isShow && (
-        <div className="w-full bg-sky-400 p-2 text-slate-200">
+        <div className="p-1 w-full bg-sky-400 lg:p-2 text-slate-200">
           <div className="flex items-center justify-center flex-wrap space-x-3 text-[0.8rem]">
             <div>почта: {session?.user.email}</div>
             <div>права: {session?.user.role}</div>

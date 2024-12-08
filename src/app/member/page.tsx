@@ -50,15 +50,15 @@ export default function MemeberPage() {
     <section className="bg-[radial-gradient(circle_at_top,theme(colors.white),theme(colors.slate.50),theme(colors.sky.50),theme(colors.sky.100))]">
       {/* Календарь с задачами */}
       <section className="p-0 md:p-2 grid grid-cols-1 auto-rows-max lg:grid-cols-2 gap-2 min-h-[60vh] mt-5">
-        <div className="lg:border-r border-b border-slate-400 lg:p-2">
+        <div className="lg:border-r lg:border-b border-slate-200 lg:p-2">
           <DynamicCalendar />
         </div>
-        <div className="border-t lg:border-t-0 lg:border-l lg:border-b border-slate-400 p-2">
+        <div className="border-t lg:border-t-0 lg:border-l lg:border-b border-slate-200 p-2">
           <TrackerDay />
           <DynamicTasksExists />
         </div>
-        <div className="p-0 border-t lg:border-r border-slate-400 md:p-2 min-h-[20vh]"></div>
-        <div className="p-0 border-t lg:border-l border-slate-400 md:p-2 min-h-[20vh]"></div>
+        <div className="p-0 border-t lg:border-r border-slate-200 md:p-2 min-h-[20vh]"></div>
+        <div className="p-0 border-t lg:border-l border-slate-200 md:p-2 min-h-[20vh]"></div>
       </section>
 
       <span className="w-fit mx-auto mt-5 block">
