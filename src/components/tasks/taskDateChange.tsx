@@ -3,6 +3,7 @@ import { useDepricatedStore } from "@/store/paginationStore";
 import {
   ChangeDateItemsMonthAdd,
   getNowDateStr,
+  isValidDate,
   MyPipeStr,
 } from "@/utils/functions";
 import { useRef, useState } from "react";
@@ -22,8 +23,13 @@ export default function TaskDateChange() {
     const { value } = event.currentTarget;
     //console.log(value);
     setDateValue(value);
-    setOffset(0);
-    setNewDate(value);
+    if (isValidDate(value)) {
+      const dt = new Date(value);
+      if (dt.getFullYear() > 1970) {
+        setOffset(0);
+        setNewDate(value);
+      }
+    }
     //setNewDate(value);
   };
 

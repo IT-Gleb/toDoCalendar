@@ -1,6 +1,7 @@
 import {
   ChangeDateItemsMonthAdd,
   getNowDateStr,
+  isValidDate,
   MyPipeStr,
 } from "@/utils/functions";
 import { create } from "zustand";
@@ -18,6 +19,11 @@ export const useDepricatedDate = create<
 >((set) => ({
   dateStr: MyPipeStr(ChangeDateItemsMonthAdd)(getNowDateStr()),
   setNewDate: (param: string) => {
-    set({ dateStr: param });
+    if (isValidDate(param)) {
+      const dt = new Date(param);
+      if (dt.getFullYear() > 1970) {
+        set({ dateStr: param });
+      }
+    }
   },
 }));

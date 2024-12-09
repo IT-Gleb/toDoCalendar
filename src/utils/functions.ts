@@ -701,3 +701,14 @@ export const returnStrPartTwo = (paramVal: string) => {
 };
 
 //-------------------------------------------------------
+
+//Проверить дату на корректность
+export function isValidDate(paramDate: string | Object): boolean {
+  if (typeof paramDate === "object") {
+    if (!(paramDate instanceof Date)) {
+      return false;
+    }
+  }
+  return !isNaN(Date.parse(paramDate as string));
+}
+//-------------------------------
