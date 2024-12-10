@@ -110,7 +110,7 @@ export default function TasksExists() {
   }
 
   return (
-    <section className="w-fit mx-auto relative overflow-hidden">
+    <section className="max-w-[95%] mx-auto relative overflow-hidden">
       <MobileTasksExists paramWorkDate={WorkDate} paramTasks={tasks} />
       <div className="hidden sm:block overflow-y-auto overflow-x-hidden max-h-[53vh]">
         {/* Заголовок таблицы */}

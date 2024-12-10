@@ -121,7 +121,7 @@ export default function TasksNotCompleted() {
   }
 
   return (
-    <section className="w-fit mx-auto">
+    <section className="max-w-[95%] mx-auto">
       <TaskDateChange />
       <MobileTasksNotCompleted paramTasks={tasks} />
       {countTask > 0 && (
@@ -150,7 +150,7 @@ export default function TasksNotCompleted() {
               style={{ opacity: transp }}
             >
               <span>{index + 1}</span>
-              <span className="text-[0.8rem] whitespace-nowrap">
+              <span className="text-[0.8rem] whitespace-nowrap overflow-hidden">
                 <Link href={aHref} scroll={false} className="hover:underline">
                   {item.name}
                 </Link>
