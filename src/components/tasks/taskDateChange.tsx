@@ -53,7 +53,7 @@ export default function TaskDateChange() {
           type="date"
           name="dateTask"
           id="tskDate"
-          className="p-1 border-b outline-none border-stone-500 text-[1rem] bg-transparent text-sky-700 font-semibold font-mono"
+          className="p-1 border-b outline-none border-stone-500 text-[0.75rem] md:text-[1rem] bg-transparent text-sky-700 font-semibold font-mono"
           value={dateValue}
           onChange={handleDateChange}
         />

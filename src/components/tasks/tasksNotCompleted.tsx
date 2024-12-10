@@ -18,6 +18,7 @@ import { useDepricatedStore } from "@/store/paginationStore";
 import { useShallow } from "zustand/shallow";
 import TaskDateChange from "./taskDateChange";
 import { useDepricatedDate } from "@/store/DateNoCompletedTaskStore";
+import MobileTasksNotCompleted from "./mobileTasksNotCompleted";
 
 //Заголовок таблицы
 const TaskTblTop = memo(function TaskTblTop({
@@ -122,6 +123,7 @@ export default function TasksNotCompleted() {
   return (
     <section className="w-fit mx-auto">
       <TaskDateChange />
+      <MobileTasksNotCompleted paramTasks={tasks} />
       {countTask > 0 && (
         <TaskTblTop paramWorkDate={currentDate} paramTasksCount={countTask} />
       )}
@@ -143,7 +145,7 @@ export default function TasksNotCompleted() {
 
           return (
             <div
-              className="grid grid-cols-1 md:grid-cols-[25px_1fr_120px_120px] md:auto-rows-min lg:gap-x-4 text-[0.7rem] text-slate-600 even:bg-red-100 p-1"
+              className=" hidden sm:grid sm:grid-cols-[25px_1fr_120px_120px] sm:auto-rows-min lg:gap-x-4 text-[0.7rem] text-slate-600 even:bg-red-100 p-1"
               key={item.id}
               style={{ opacity: transp }}
             >

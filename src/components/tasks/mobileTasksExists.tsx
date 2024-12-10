@@ -16,7 +16,7 @@ const MobileTaskTblTop = memo(function MobileTaskTblTop({
 }): React.JSX.Element {
   return (
     <div className="sm:hidden sticky left-0 z-[2] grid grid-cols-[25px_60px] auto-rows-[35px] bg-sky-600 uppercase text-slate-200">
-      <div className=" row-span-4 text-slate-100 vertical-text text-center text-[0.75rem] font-bold py-2 px-1 bg-sky-400 scale-x-180">
+      <div className=" row-span-4 text-slate-100 vertical-text text-center text-[0.75rem] font-bold py-2 px-1 bg-sky-400 tracking-[0.09em] scale-x-180">
         Незавершенные
       </div>
       <div className="p-1 text-slate-100 overflow-hidden border-b border-b-white text-[0.6rem] font-bold ">
