@@ -6,6 +6,7 @@ import { LoaderCalendarComponent } from "@/components/loader/loaderCalendarCompo
 import dynamic from "next/dynamic";
 import TrackerDay from "@/components/tasks/trackerDay";
 import Loader from "@/components/loader/loaderComp";
+import DataChart01 from "@/components/antCharts/dataChart01";
 
 const DynamicCalendar = dynamic(
   () =>
@@ -67,7 +68,9 @@ export default function MemeberPage() {
           <TrackerDay />
           <DynamicTasksExists />
         </div>
-        <div className="p-0 border-t lg:border-r border-slate-200 md:p-2 min-h-[20vh]"></div>
+        <div className="p-1 border-t lg:border-r border-slate-200 md:p-2 min-h-[20vh] lg:p-4 w-full lg:mx-auto aspect-video">
+          <DataChart01 />
+        </div>
         <div className="p-0 border-t lg:border-l border-slate-200 md:p-2 min-h-[20vh]">
           <DynamicTaskNotCompleted />
         </div>
