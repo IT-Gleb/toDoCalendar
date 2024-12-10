@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import {
   ChangeDateItemsMonthAdd,
   getNowDateStr,
+  getValue,
   MyPipeStr,
 } from "@/utils/functions";
 
@@ -42,21 +43,17 @@ function getLabel(key: string) {
 
 function getColor(key: string) {
   if (key.startsWith("all")) {
-    return "#4577ff";
+    return "#8DA2FB";
   }
   if (key.startsWith("yes")) {
-    return "#45ff77";
+    return "#31C48D";
   }
   if (key.startsWith("no")) {
-    return "#ff4577";
+    return "#F98080";
   }
   if (key.startsWith("deprecated")) {
-    return "#771577";
+    return "#6B7280";
   }
-}
-
-function getValue<T, K extends keyof T>(param: T, key: K) {
-  return param[key];
 }
 
 function converDataDbToChart(paramData: TDataForChart | TResponseError) {
@@ -134,7 +131,7 @@ export default function DataChart01() {
 
   if (isLoad) {
     return (
-      <div className=" mx-auto w-[120px] h-[120px] text-sky-600">
+      <div className=" mx-auto w-[120px] h-[120px] text-green-400">
         <Loader />
       </div>
     );

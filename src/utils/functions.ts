@@ -712,3 +712,7 @@ export function isValidDate(paramDate: string | Object): boolean {
   return !isNaN(Date.parse(paramDate as string));
 }
 //-------------------------------
+
+export function getValue<T, K extends keyof T>(param: T, key: K) {
+  return param[key];
+}

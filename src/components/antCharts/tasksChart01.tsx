@@ -7,10 +7,7 @@ ChartJS.register(...registerables);
 export default function TasksChart01({ paramData }: { paramData: any }) {
   const chartRef = useRef<ChartJS>(null);
 
-  //console.log(paramData);
-
   const ChartData = {
-    //labels: [["1"], ["2"], ["3"]],
     datasets: paramData.map((item: any) => ({
       data: [item],
       backgroundColor: item.color,
@@ -18,7 +15,7 @@ export default function TasksChart01({ paramData }: { paramData: any }) {
       axis: "y",
       parsing: { xAxisKey: "value", yAxisKey: "label" },
       borderWidth: 1,
-      borderColor: "rgba(0,0,0,0)",
+      borderColor: "rgba(0,0,0,0.5)",
       barPercentage: 4,
       //barThickness: "flex",
       //maxBarThickness: 70,
@@ -45,7 +42,7 @@ export default function TasksChart01({ paramData }: { paramData: any }) {
       title: {
         display: true,
         text: "Выполнение задач".toUpperCase(),
-        padding: { top: 10, bottom: 5 },
+        padding: { top: 2, bottom: 2 },
       },
 
       //   subtitle: {
