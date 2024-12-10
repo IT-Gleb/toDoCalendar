@@ -35,7 +35,7 @@ export const CalendarNew = memo(
       <section className="w-fit mx-auto p-3 overflow-hidden">
         <div
           title={strTitle}
-          className=" pt-4 pb-0 border border-slate-400 shadow-md shadow-slate-500 relative before:content-[attr(title)] before:bg-white before:border before:border-slate-300 before:rounded-md before:text-slate-700 before:text-[1.2rem] before:uppercase before:font-bold before:px-2 before:absolute before:right-10 before:-top-3"
+          className=" pt-4 pb-0 border border-slate-400 shadow-md shadow-slate-500 relative before:content-[attr(title)] before:bg-white before:border before:border-slate-300 before:rounded-md before:text-slate-700 before:text-[0.9rem] before:lg:text-[1.2rem] before:uppercase before:font-bold before:px-2 before:absolute before:right-10 before:-top-3"
         >
           {/* Заголовок */}
           <ShortWeekDayComponent />
@@ -45,7 +45,7 @@ export const CalendarNew = memo(
               <div className="px-2 mt-3 flex items-center gap-x-3" key={index}>
                 <div
                   key={item + Math.random() * 100}
-                  className={`w-[28px] h-[28px] px-2 py-2 bg-slate-50 text-slate-500 text-[0.7rem] text-center font-semibold`}
+                  className={`w-[28px] h-[28px] px-1 py-1 lg:px-2 lg:py-2 bg-slate-50 text-black lg:text-slate-600 text-[0.55rem] lg:text-[0.7rem] text-center font-semibold`}
                 >
                   {item}
                 </div>
@@ -57,8 +57,8 @@ export const CalendarNew = memo(
               </div>
             );
           })}
-          <div className="relative w-full mt-3 bg-sky-500 text-slate-50 text-[0.6rem] p-1 text-center flex justify-evenly">
-            <div className=" absolute w-fit left-[44%] top-0 translate-y-[-44%] font-bold text-[1.1rem]">
+          <div className="relative w-full mt-3 bg-sky-500 text-slate-50 text-[0.5rem] lg:text-[0.6rem] p-1 text-center flex justify-evenly">
+            <div className=" absolute w-fit left-[44%] top-[-3px] lg:top-0 translate-y-[-44%] font-bold text-[0.95rem] lg:text-[1.1rem]">
               {/* <span className="bg-clip-text text-transparent bg-[linear-gradient(to_bottom,theme(colors.sky.800),theme(colors.sky.200),theme(colors.yellow.300))]">
                 {strYear}
               </span> */}
@@ -68,13 +68,13 @@ export const CalendarNew = memo(
             </div>
             <span>
               Дней в году:{" "}
-              <span className="text-yellow-100 text-[1rem] font-bold font-mono">
+              <span className="text-yellow-100 text-[0.75rem] lg:text-[1rem] font-bold font-mono">
                 {DaysInYear_var}
               </span>
             </span>
             <span>
               Дней года прошло:{" "}
-              <span className="text-yellow-100 text-[1rem] font-bold font-mono">
+              <span className="text-yellow-100 text-[0.75rem] lg:text-[1rem] font-bold font-mono">
                 {DaysInYear_var - DayEndYear}
               </span>
             </span>
@@ -86,7 +86,7 @@ export const CalendarNew = memo(
                   ? "день"
                   : "дня"
               } : `}
-              <span className="text-yellow-100 text-[1rem] font-bold font-mono">
+              <span className="text-yellow-100 text-[0.75rem] lg:text-[1rem] font-bold font-mono">
                 {DayEndYear}
               </span>
             </span>
