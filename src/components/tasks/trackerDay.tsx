@@ -5,10 +5,10 @@ import {
   getDateWithMonthStr,
   getNowDateStr,
 } from "@/utils/functions";
-import { useState } from "react";
+import { useState, memo, useMemo } from "react";
 import { useShallow } from "zustand/shallow";
 
-export default function TrackerDay() {
+export const TrackerDay = memo(() => {
   const [zeroDate] = useState<string>(getNowDateStr());
 
   const trackDate = useTrackerDate(useShallow((state) => state.trackerDate));
@@ -30,20 +30,23 @@ export default function TrackerDay() {
     useShallow((state) => state.setActivePage)
   );
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, step } = event.currentTarget;
-    let stepDay: number = Number(value) / Number(step);
-    let calcDate: string = CalculateDate(zeroDate, stepDay);
-    //console.log(calcDate);
-    //Передать значение в store
-    setTrackerDate(calcDate);
-    setTrackPosition(Number(value));
+  const handleChange = useMemo(
+    () => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { value, step } = event.currentTarget;
+      let stepDay: number = Number(value) / Number(step);
+      let calcDate: string = CalculateDate(zeroDate, stepDay);
+      //console.log(calcDate);
+      //Передать значение в store
+      setTrackerDate(calcDate);
+      setTrackPosition(Number(value));
 
-    setDayValue(getDateWithMonthStr(calcDate).toLowerCase());
-    setRangeValue(value);
-    //Обнулить пагинацию
-    setOffset(0);
-  };
+      setDayValue(getDateWithMonthStr(calcDate).toLowerCase());
+      setRangeValue(value);
+      //Обнулить пагинацию
+      setOffset(0);
+    },
+    [dayValue, setTrackPosition, setRangeValue, setTrackerDate]
+  );
 
   return (
     <div className="w-fit mx-auto p-1 mt-1">
@@ -63,4 +66,6 @@ export default function TrackerDay() {
       </div>
     </div>
   );
-}
+});
+
+export default TrackerDay;

@@ -713,6 +713,16 @@ export function isValidDate(paramDate: string | Object): boolean {
 }
 //-------------------------------
 
+export function getStringFromDate(paramId: string) {
+  let result: string = "";
+  result = new Intl.DateTimeFormat("ru-RU", {
+    dateStyle: "full",
+    timeZone: "Europe/Moscow",
+  }).format(new Date(paramId).getTime());
+
+  return result;
+}
+
 export function getValue<T, K extends keyof T>(param: T, key: K) {
   return param[key];
 }

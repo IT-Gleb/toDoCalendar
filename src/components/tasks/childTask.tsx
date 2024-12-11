@@ -1,54 +1,125 @@
+"use client";
+
 import {
-  StrTimeFromOneNumber,
-  StrFullDateTimeFromNumbers,
+  MyPipeStr,
+  TimeZoneDateToString,
+  returnStrPartOne,
+  returnStrPartTwo,
 } from "@/utils/functions";
 import { Selected_SVG } from "@/utils/svg-icons";
-import React from "react";
+import React, { memo, useMemo, useState } from "react";
 
-export const ChildTask = ({ paramItem }: { paramItem: Partial<TTask> }) => {
-  return (
-    <div
-      className={` overflow-hidden w-full flex flex-col space-y-2 rounded-b-xl border ${
-        paramItem.completed ? "border-green-500" : "border-slate-700"
-      }`}
-    >
-      <div
-        className={`p-1 ${
-          paramItem.completed ? "bg-green-600" : "bg-slate-600"
-        } text-white text-[0.7rem]`}
-      >
-        <span>{paramItem.name}</span>
-        <div className=" px-2 pt-1 whitespace-nowrap border-t border-t-white text-center text-[0.55rem]">
-          {StrTimeFromOneNumber(paramItem.begin_at as number) +
-            "-" +
-            StrTimeFromOneNumber(paramItem.end_at as number)}
-        </div>
-      </div>
-      <div className="p-1 flex flex-col">
-        <span className=" font-bold text-[0.65rem] uppercase">Начало:</span>
-        <span className="ml-auto text-[0.85rem] font-bold text-sky-500">
-          {StrFullDateTimeFromNumbers(paramItem.begin_at as number)}
-        </span>
-        <span className=" font-bold text-[0.65rem] uppercase">
-          Заканчивается:
-        </span>
-        <span className="ml-auto text-[0.85rem] font-bold text-sky-600">
-          {StrFullDateTimeFromNumbers(paramItem.end_at as number)}
-        </span>
-        <span className=" font-bold text-[0.65rem] uppercase">Статус:</span>
-        <span
-          className={`ml-auto text-[0.8rem] ${
-            paramItem.completed ? "text-green-400" : "text-rose-400"
-          }`}
-        >
-          {paramItem.completed ? (
-            <Selected_SVG pWidth={36} pHeight={36} />
-          ) : (
-            "Не завершена"
-          )}
-        </span>
-      </div>
-      <div></div>
-    </div>
-  );
+type TTaskButtonParams = {
+  paramText: string | React.JSX.Element;
+  paramTitle: string;
+  paramBgColor: string;
+  paramClick?: () => void;
 };
+
+const TskButton: React.FC<TTaskButtonParams> = memo(
+  ({
+    paramText,
+    paramTitle,
+    paramBgColor,
+    paramClick,
+  }: {
+    paramText: string | React.JSX.Element;
+    paramTitle: string;
+    paramBgColor: string;
+    paramClick?: () => void;
+  }) => {
+    return (
+      <button
+        type="button"
+        className={`w-[26px] h-[26px] p-1 ${
+          paramBgColor !== null && paramBgColor.trim() !== ""
+            ? paramBgColor
+            : "bg-sky-400"
+        } text-white rounded-full active:scale-90`}
+        title={paramTitle}
+        onClick={(e) => (paramClick ? paramClick() : null)}
+      >
+        {paramText}
+      </button>
+    );
+  }
+);
+
+export const ChildTask = memo(
+  ({ paramItem }: { paramItem: Partial<TTask> }) => {
+    const [completed, setCompleted] = useState<boolean>(
+      paramItem.completed as boolean
+    );
+
+    const handleCompleted = useMemo(
+      () => () => {
+        paramItem.completed = !paramItem.completed;
+        setCompleted(paramItem.completed);
+        //console.log(paramItem.id, paramItem.completed);
+      },
+      [completed]
+    );
+
+    return (
+      <li
+        className={`grid grid-cols-5 gap-x-2 p-1 ${
+          completed
+            ? "bg-green-200 odd:bg-green-50"
+            : "bg-sky-200 odd:bg-sky-50"
+        }   text-[0.8rem]/[1rem]`}
+      >
+        <span className="align-middle p-1 line-clamp-4">{paramItem.name}</span>
+        <span className="align-middle p-1 overflow-hidden whitespace-nowrap">
+          {completed ? "Завершена" : "Не завершена"}
+        </span>
+        <span className=" text-[0.7rem] align-middle p-1">
+          <span className=" whitespace-nowrap">
+            {MyPipeStr(
+              TimeZoneDateToString,
+              returnStrPartOne
+            )(paramItem.begin_at as unknown as string)}
+          </span>{" "}
+          <span className=" text-[0.8rem] font-bold align-middle p-1">
+            {MyPipeStr(
+              TimeZoneDateToString,
+              returnStrPartTwo
+            )(paramItem.begin_at as unknown as string)}
+          </span>
+        </span>
+        <span className=" text-[0.7rem] align-middle p-1">
+          <span className=" whitespace-nowrap">
+            {MyPipeStr(
+              TimeZoneDateToString,
+              returnStrPartOne
+            )(paramItem.end_at as unknown as string)}
+          </span>{" "}
+          <span className=" text-[0.8rem] font-bold align-middle p-1">
+            {MyPipeStr(
+              TimeZoneDateToString,
+              returnStrPartTwo
+            )(paramItem.end_at as unknown as string)}
+          </span>
+        </span>
+        {/* Кнопки добавить удалить */}
+        <div className="w-fit mx-auto grid grid-cols-1 md:flex items-start justify-center gap-x-2 gap-y-1 p-1">
+          <TskButton
+            paramText={<Selected_SVG pWidth={18} pHeight={18} />}
+            paramTitle="Пометить"
+            paramBgColor={"bg-sky-600"}
+            paramClick={handleCompleted}
+          />
+          <TskButton
+            paramText="+"
+            paramTitle="Добавить подзадачу"
+            paramBgColor={"bg-sky-400"}
+          />
+          <TskButton
+            paramText="--"
+            paramTitle="Удалить подзадачу"
+            paramBgColor={"bg-red-300"}
+          />
+        </div>
+      </li>
+    );
+  }
+);

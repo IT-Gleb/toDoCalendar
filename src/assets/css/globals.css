@@ -108,4 +108,11 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+  /* Диалог blur */
+  dialog::backdrop {
+    @apply bg-black/10 backdrop-blur-sm;
+  }
+  dialog + ::backdrop {
+    @apply bg-black/10 backdrop-blur-sm;
+  }
 }

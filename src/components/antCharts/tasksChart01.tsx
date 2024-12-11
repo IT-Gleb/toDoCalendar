@@ -1,10 +1,10 @@
 import { Chart as ChartJS, registerables } from "chart.js";
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import { Chart } from "react-chartjs-2";
 
 ChartJS.register(...registerables);
 
-export default function TasksChart01({ paramData }: { paramData: any }) {
+export const TasksChart01 = memo(({ paramData }: { paramData: any }) => {
   const chartRef = useRef<ChartJS>(null);
 
   const ChartData = {
@@ -77,4 +77,6 @@ export default function TasksChart01({ paramData }: { paramData: any }) {
       plugins={[ChartPlugin]}
     />
   );
-}
+});
+
+export default TasksChart01;

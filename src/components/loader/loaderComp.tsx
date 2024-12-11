@@ -1,9 +1,9 @@
 "use client";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import React, { useRef } from "react";
+import React, { memo, useRef } from "react";
 
-export default function Loader() {
+const Loader = memo(() => {
   const loadRef = useRef<SVGSVGElement>(null);
 
   const rotateRef_1 = useRef(null);
@@ -168,4 +168,6 @@ export default function Loader() {
       </g>
     </svg>
   );
-}
+});
+
+export default Loader;

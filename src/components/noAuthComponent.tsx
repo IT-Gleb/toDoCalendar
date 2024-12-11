@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { memo } from "react";
 
-export const NoAuthComponent = () => {
+export const NoAuthComponent = memo(() => {
   return (
     <section className="mt-5">
       <h2 className="w-fit mx-auto mt-2">Пользователь не авторизован...</h2>
@@ -15,4 +16,4 @@ export const NoAuthComponent = () => {
       </div>
     </section>
   );
-};
+});

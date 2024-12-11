@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import TasksChart01 from "./tasksChart01";
 import Loader from "../loader/loaderComp";
 import { useSession } from "next-auth/react";
@@ -72,7 +72,7 @@ function converDataDbToChart(paramData: TDataForChart | TResponseError) {
   return result;
 }
 
-export default function DataChart01() {
+export const DataChart01 = memo(() => {
   const { data: session } = useSession();
   const [isLoad, setIsLoad] = useState<boolean>(false);
   const [chartData, setChartData] = useState<TDataForChart | TResponseError>(
@@ -121,7 +121,7 @@ export default function DataChart01() {
 
   useEffect(() => {
     setDataChart(converDataDbToChart(chartData));
-  }, [chartData]);
+  }, [chartData, setDataChart]);
 
   if (isLoad) {
     return (
@@ -141,4 +141,6 @@ export default function DataChart01() {
   }
 
   return <TasksChart01 paramData={dataChart} />;
-}
+});
+
+export default DataChart01;

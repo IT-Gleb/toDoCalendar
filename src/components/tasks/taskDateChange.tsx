@@ -6,10 +6,10 @@ import {
   isValidDate,
   MyPipeStr,
 } from "@/utils/functions";
-import { useRef, useState } from "react";
+import { useRef, useState, memo, useMemo } from "react";
 import { useShallow } from "zustand/shallow";
 
-export default function TaskDateChange() {
+export const TaskDateChange = memo(() => {
   const dtCurrent = useDepricatedDate((state) => state.dateStr);
   const [dateValue, setDateValue] = useState<string>(dtCurrent);
   const setNewDate = useDepricatedDate(useShallow((state) => state.setNewDate));
@@ -19,19 +19,22 @@ export default function TaskDateChange() {
 
   const dtRef = useRef<HTMLInputElement>(null);
 
-  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    //console.log(value);
-    setDateValue(value);
-    if (isValidDate(value)) {
-      const dt = new Date(value);
-      if (dt.getFullYear() > 1970) {
-        setOffset(0);
-        setNewDate(value);
+  const handleDateChange = useMemo(
+    () => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { value } = event.currentTarget;
+      //console.log(value);
+      setDateValue(value);
+      if (isValidDate(value)) {
+        const dt = new Date(value);
+        if (dt.getFullYear() > 1970) {
+          setOffset(0);
+          setNewDate(value);
+        }
       }
-    }
-    //setNewDate(value);
-  };
+      //setNewDate(value);
+    },
+    [dateValue, setDateValue]
+  );
 
   const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -69,4 +72,6 @@ export default function TaskDateChange() {
       </span>
     </div>
   );
-}
+});
+
+export default TaskDateChange;

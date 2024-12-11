@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import TrackerDay from "@/components/tasks/trackerDay";
 import Loader from "@/components/loader/loaderComp";
 import DataChart01 from "@/components/antCharts/dataChart01";
+import { memo } from "react";
 
 const DynamicCalendar = dynamic(
   () =>
@@ -38,7 +39,7 @@ const DynamicTaskNotCompleted = dynamic(
   }
 );
 
-export default function MemeberPage() {
+const MemeberPage = memo(() => {
   // console.log(params);
   const { status } = useSession();
 
@@ -90,4 +91,6 @@ export default function MemeberPage() {
       </span>
     </section>
   );
-}
+});
+
+export default MemeberPage;

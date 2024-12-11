@@ -43,7 +43,7 @@ const TaskTblTop = memo(function TaskTblTop({
   );
 });
 
-export default function TasksExists() {
+export const TasksExists = memo(() => {
   const { data: session } = useSession();
   const [tasks, setTasks] = useState<TTaskList | TResponseError>([]);
   const WorkDate = useTrackerDate(useShallow((state) => state.trackerDateDb));
@@ -176,4 +176,6 @@ export default function TasksExists() {
       <TasksExistsPagination paramType={"existsTask"} paramCount={tasksCount} />
     </section>
   );
-}
+});
+
+export default TasksExists;

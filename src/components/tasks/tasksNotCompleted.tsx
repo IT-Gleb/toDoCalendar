@@ -45,7 +45,7 @@ const TaskTblTop = memo(function TaskTblTop({
   );
 });
 
-export default function TasksNotCompleted() {
+const TasksNotCompleted = memo(() => {
   const { data: session } = useSession();
   const [tasks, setTasks] = useState<TTaskList | TResponseError>([]);
   const [isLoad, setIsLoad] = useState<boolean>(false);
@@ -185,4 +185,6 @@ export default function TasksNotCompleted() {
       <TasksExistsPagination paramType={"notTasks"} paramCount={countTask} />
     </section>
   );
-}
+});
+
+export default TasksNotCompleted;

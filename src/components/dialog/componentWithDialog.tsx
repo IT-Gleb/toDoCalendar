@@ -14,7 +14,7 @@ const ExampleDialogContent = memo(
     return (
       <motion.article
         ref={scope}
-        className="w-[320px] md:w-[480px] xl:w-[640px] bg-sky-50 flex flex-col space-y-2 items-start overflow-hidden 
+        className="w-[320px] md:w-[480px] xl:w-[640px] mx-auto bg-sky-50 flex flex-col space-y-2 items-start overflow-hidden 
         rounded-lg border-4 border-l-sky-50 border-t-sky-50  border-r-sky-200 border-b-sky-200 shadow-sm shadow-sky-600"
       >
         <div
@@ -100,7 +100,6 @@ export const ComponentWithDialog = () => {
           <ExampleDialogContent paramClose={btnClick} />
         </DialogComponent>
       )}
-      <DiagButtonComp click={btnClick} />
     </section>
   );
 };

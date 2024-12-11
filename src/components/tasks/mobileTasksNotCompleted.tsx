@@ -35,7 +35,7 @@ export default function MobileTasksNotCompleted({
   paramTasks: TTaskList;
 }) {
   return (
-    <div className="w-[356px] mx-auto mt-4 sm:hidden overflow-x-auto overflow-y-hidden flex items-start relative">
+    <div className="max-w-[356px] mx-auto mt-4 sm:hidden overflow-x-auto overflow-y-hidden flex items-start relative">
       {/* Заголовок */}
       <MobileTopTable />
       {/* Данные */}

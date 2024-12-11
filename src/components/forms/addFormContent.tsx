@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { NameInputComponent } from "./addFormComponents/nameInputComponent";
 import { Date1Component } from "./addFormComponents/date1Component";
 import { Date2Component } from "./addFormComponents/date2Component";
@@ -22,7 +22,7 @@ const InitialState: TFormState = {
   },
 };
 
-export const AddFormContent = ({ paramDay }: { paramDay: string }) => {
+export const AddFormContent = memo(({ paramDay }: { paramDay: string }) => {
   const { data: session } = useSession();
   const [status, formAction] = useFormState(newTaskAction, InitialState);
   const formRef = useRef<HTMLFormElement>(null);
@@ -106,4 +106,4 @@ export const AddFormContent = ({ paramDay }: { paramDay: string }) => {
       </div>
     </form>
   );
-};
+});
