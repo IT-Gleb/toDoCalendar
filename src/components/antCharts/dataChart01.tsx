@@ -12,10 +12,7 @@ import {
 } from "@/utils/functions";
 
 type TDataForChart = {
-  alltasks: number;
-  yestasks: number;
-  notasks: number;
-  deprecatedtasks: number;
+  [key: string]: number;
 }[];
 
 type TChartDataValue = {
@@ -61,14 +58,11 @@ function converDataDbToChart(paramData: TDataForChart | TResponseError) {
   if ("status" in paramData) {
     return result;
   }
-  //console.log(paramData[0]);
 
   paramData.map((item) => {
     for (let key in item) {
-      //console.log(key);
-      let tmp: any = key;
       result.push({
-        value: getValue(item, tmp),
+        value: getValue(item, key),
         label: getLabel(key) as string,
         color: getColor(key) as string,
       });
