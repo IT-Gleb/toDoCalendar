@@ -64,13 +64,16 @@ export default function MemeberPage() {
         <div className="lg:border-r lg:border-b border-slate-200 lg:p-2">
           <DynamicCalendar />
         </div>
-        <div className="border-t lg:border-t-0 lg:border-l lg:border-b border-slate-200 p-2">
+
+        <div className="p-1 border-t lg:border-l lg:border-t-0 lg:border-b border-slate-200 md:p-2 min-h-[20vh] lg:p-4 w-full lg:mx-auto aspect-video">
+          <DataChart01 />
+        </div>
+
+        <div className="border-t lg:border-r border-slate-200 p-2">
           <TrackerDay />
           <DynamicTasksExists />
         </div>
-        <div className="p-1 border-t lg:border-r border-slate-200 md:p-2 min-h-[20vh] lg:p-4 w-full lg:mx-auto aspect-video">
-          <DataChart01 />
-        </div>
+
         <div className="p-0 border-t lg:border-l border-slate-200 md:p-2 min-h-[20vh]">
           <DynamicTaskNotCompleted />
         </div>
