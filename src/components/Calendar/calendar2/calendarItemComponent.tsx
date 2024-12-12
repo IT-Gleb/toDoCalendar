@@ -5,6 +5,7 @@ import {
   EqualDateNow,
   NumberFromString,
   StrDateFromNumbers,
+  ZeroToNumber,
 } from "@/utils/functions";
 import { DaySelect_SVG } from "@/utils/svg-icons";
 import Link from "next/link";
@@ -21,9 +22,7 @@ export const CalendarItemComponent = memo(
     );
     const Router = useRouter();
     const [currDay] = useState<string | undefined>(
-      paramDay.day && paramDay.day < 10
-        ? "0" + paramDay.day
-        : paramDay.day?.toString()
+      ZeroToNumber(paramDay.day as number) as string
     );
     const [today] = useState<boolean>(
       EqualDateNow(
@@ -37,6 +36,7 @@ export const CalendarItemComponent = memo(
 
     const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
       event.preventDefault();
+
       if (paramDay.id) {
         const dt: number = NumberFromString(paramDay, false) as number;
         setCurrentDate(dt);
@@ -67,7 +67,7 @@ export const CalendarItemComponent = memo(
         >
           <motion.div
             whileHover={{ scale: 1.2 }}
-            className={`px-1 py-[3px] w-[28px] h-[28px] lg:w-[34px] lg:h-[34px] transition-all relative ${
+            className={`px-1 py-1 lg:py-[3px] w-[28px] h-[28px] lg:w-[34px] lg:h-[34px] transition-all relative ${
               paramDay.isSelected
                 ? "text-slate-100 hover:text-white hover:outline-slate-600 "
                 : " text-slate-200 "
@@ -84,7 +84,7 @@ export const CalendarItemComponent = memo(
       );
     } else if (paramDay.id && !paramDay.enabled && !paramDay.isSelected) {
       return (
-        <div className="w-[28px] h-[28px] lg:w-[34px] lg:h-[34px] bg-slate-300 rounded-full text-slate-50 text-[0.7rem] lg:text-[0.95rem] uppercase text-center p-1">
+        <div className="w-[28px] h-[28px] lg:w-[34px] lg:h-[34px] bg-slate-300 rounded-full text-slate-50 text-[0.7rem] lg:text-[0.95rem] uppercase text-center p-[6px]">
           {currDay}
         </div>
       );
@@ -94,11 +94,12 @@ export const CalendarItemComponent = memo(
       <Link
         href={""}
         onClick={handleClick}
+        scroll={false}
         title={paramDay.day + "-" + paramDay.mounth_str + "-" + paramDay.year}
       >
         <motion.div
           whileHover={{ scale: 1.2 }}
-          className={`px-1 py-[3px] w-[28px] h-[28px] lg:w-[34px] lg:h-[34px] transition-all relative ${
+          className={`px-1 py-1 lg:py-[3px] w-[28px] h-[28px] lg:w-[34px] lg:h-[34px] transition-all relative ${
             paramDay.isSelected
               ? ` ${
                   today ? "bg-sky-300 text-black" : "bg-green-50 text-slate-600"

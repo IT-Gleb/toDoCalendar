@@ -559,7 +559,7 @@ export function CalculateOpacity(
   return result;
 }
 //-----------------------------------
-function ZeroToNumber(param: number): number | string {
+export function ZeroToNumber(param: number): number | string {
   return param < 10 ? "0" + param : param;
 }
 

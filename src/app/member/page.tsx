@@ -6,8 +6,16 @@ import { LoaderCalendarComponent } from "@/components/loader/loaderCalendarCompo
 import dynamic from "next/dynamic";
 import TrackerDay from "@/components/tasks/trackerDay";
 import Loader from "@/components/loader/loaderComp";
-import DataChart01 from "@/components/antCharts/dataChart01";
 import { memo } from "react";
+//import DataChart01 from "@/components/antCharts/dataChart01";
+
+const DynamicDataChart = dynamic(
+  () =>
+    import("@/components/antCharts/dataChart01").then(
+      (component) => component.DataChart01
+    ),
+  { loading: () => <Loader /> }
+);
 
 const DynamicCalendar = dynamic(
   () =>
@@ -39,11 +47,19 @@ const DynamicTaskNotCompleted = dynamic(
   }
 );
 
-const MemeberPage = memo(() => {
+const MemberPage = memo(() => {
   // console.log(params);
   const { status } = useSession();
 
-  if (status === "loading" || status === "unauthenticated") {
+  if (status === "loading") {
+    return (
+      <div className="w-[100px] h-[100px] mx-auto mt-10 text-slate-500">
+        <Loader />
+      </div>
+    );
+  }
+
+  if (status === "unauthenticated") {
     return (
       <section className="w-fit mx-auto mt-10 flex flex-col space-y-10">
         <h4>Вы не авторизованы...</h4>
@@ -61,13 +77,13 @@ const MemeberPage = memo(() => {
   return (
     <section className="bg-[radial-gradient(circle_at_top,theme(colors.white),theme(colors.slate.50),theme(colors.sky.50),theme(colors.sky.100))]">
       {/* Календарь с задачами */}
-      <section className="p-0 md:p-2 grid grid-cols-1 auto-rows-max lg:grid-cols-2 gap-2 min-h-[60vh] mt-5">
+      <section className="p-0 md:p-2 grid grid-cols-1 auto-rows-min lg:grid-cols-2 gap-2 min-h-[60vh] mt-5">
         <div className="lg:border-r lg:border-b border-slate-200 lg:p-2">
           <DynamicCalendar />
         </div>
 
-        <div className="p-1 border-t lg:border-l lg:border-t-0 lg:border-b border-slate-200 md:p-2 min-h-[20vh] lg:p-4 w-full lg:mx-auto aspect-video">
-          <DataChart01 />
+        <div className="p-1 border-t lg:border-l lg:border-t-0 lg:border-b border-slate-200 md:p-2 min-h-[20vh] lg:p-4 w-full lg:mx-auto">
+          <DynamicDataChart />
         </div>
 
         <div className="border-t lg:border-r border-slate-200 p-2">
@@ -93,4 +109,4 @@ const MemeberPage = memo(() => {
   );
 });
 
-export default MemeberPage;
+export default MemberPage;

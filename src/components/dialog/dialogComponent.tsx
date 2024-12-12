@@ -6,14 +6,14 @@ import React, {
   useImperativeHandle,
   useRef,
 } from "react";
-import { motion } from "framer-motion";
+import { AnimationSequence, motion } from "framer-motion";
 import { animate } from "framer-motion";
 
 export interface IDialog {
   get isOpen(): boolean;
 
   showModal(): void;
-  hide(): void;
+  hide(): Promise<void>;
   show(): void;
 }
 
@@ -46,6 +46,12 @@ export const DialogComponent = forwardRef<IDialog, TDialogProps>(
             //dialogRef?.current?.show();
           },
           async hide() {
+            //@ts-ignore
+            await animate(
+              dialogRef.current as unknown as AnimationSequence,
+              { opacity: [1, 0], scaleX: [1, 0] },
+              { duration: 0.35, ease: "easeOut" }
+            );
             dialogRef?.current?.close();
           },
         } as unknown as IDialog;
@@ -67,7 +73,7 @@ export const DialogComponent = forwardRef<IDialog, TDialogProps>(
           await animate(
             diag,
             { scaleX: [1, 0], opacity: [1, 0] },
-            { duration: 0.35, easy: "easyOut" }
+            { duration: 0.35, ease: "easeOut" }
           );
           if (paramClick) {
             paramClick();

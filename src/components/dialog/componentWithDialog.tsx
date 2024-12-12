@@ -70,7 +70,7 @@ const ExampleDialogContent = memo(
   }
 );
 
-export const ComponentWithDialog = () => {
+export const ComponentWithDialog = memo(() => {
   const [isShow, setIsShow] = useState<boolean>(false);
   const dRef = useRef<IDialog>(null);
 
@@ -102,4 +102,4 @@ export const ComponentWithDialog = () => {
       )}
     </section>
   );
-};
+});

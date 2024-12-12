@@ -7,7 +7,9 @@ import {
   returnStrPartTwo,
 } from "@/utils/functions";
 import { Selected_SVG } from "@/utils/svg-icons";
-import React, { memo, useMemo, useState } from "react";
+import React, { memo, useEffect, useMemo, useRef, useState } from "react";
+import { ComponentWithDialog } from "../dialog/componentWithDialog";
+import { DialogComponent, IDialog } from "../dialog/dialogComponent";
 
 type TTaskButtonParams = {
   paramText: string | React.JSX.Element;
@@ -51,6 +53,9 @@ export const ChildTask = memo(
       paramItem.completed as boolean
     );
 
+    const [canShowDialog, setCanShowDialog] = useState<boolean>(false);
+    const isDialogRef = useRef<IDialog>(null);
+
     const handleCompleted = useMemo(
       () => () => {
         paramItem.completed = !paramItem.completed;
@@ -60,66 +65,112 @@ export const ChildTask = memo(
       [completed]
     );
 
+    const handleDialog = () => {
+      setCanShowDialog((prev) => !prev);
+    };
+
+    const handleCloseDialog = async () => {
+      if (isDialogRef.current) {
+        if (isDialogRef.current.isOpen) {
+          await isDialogRef.current.hide();
+          handleDialog();
+        }
+      }
+    };
+
+    useEffect(() => {
+      if (canShowDialog) {
+        if (!isDialogRef.current?.isOpen) {
+          isDialogRef.current?.showModal();
+        }
+      } else {
+        if (isDialogRef.current?.isOpen) {
+          //console.log("Закрываю!");
+          isDialogRef.current?.hide();
+        }
+      }
+    }, [canShowDialog]);
+
     return (
-      <li
-        className={`grid grid-cols-5 gap-x-2 p-1 ${
-          completed
-            ? "bg-green-200 odd:bg-green-50"
-            : "bg-sky-200 odd:bg-sky-50"
-        }   text-[0.8rem]/[1rem]`}
-      >
-        <span className="align-middle p-1 line-clamp-4">{paramItem.name}</span>
-        <span className="align-middle p-1 overflow-hidden whitespace-nowrap">
-          {completed ? "Завершена" : "Не завершена"}
-        </span>
-        <span className=" text-[0.7rem] align-middle p-1">
-          <span className=" whitespace-nowrap">
-            {MyPipeStr(
-              TimeZoneDateToString,
-              returnStrPartOne
-            )(paramItem.begin_at as unknown as string)}
-          </span>{" "}
-          <span className=" text-[0.8rem] font-bold align-middle p-1">
-            {MyPipeStr(
-              TimeZoneDateToString,
-              returnStrPartTwo
-            )(paramItem.begin_at as unknown as string)}
+      <>
+        {canShowDialog && (
+          <DialogComponent paramClick={handleDialog} ref={isDialogRef}>
+            <section className="w-fit mx-auto flex flex-col bg-white shadow-xl shadow-sky-800">
+              <div
+                onClick={async (e) => await handleCloseDialog()}
+                className="min-h-[3vh] bg-sky-400"
+              ></div>
+              <article className=" p-2">
+                <p>
+                  Hello! {paramItem.name} {paramItem.id}
+                </p>
+              </article>
+            </section>
+          </DialogComponent>
+        )}
+        <li
+          className={`grid grid-cols-5 gap-x-2 p-1 ${
+            completed
+              ? "bg-green-200 odd:bg-green-50"
+              : "bg-sky-200 odd:bg-sky-50"
+          }   text-[0.8rem]/[1rem]`}
+        >
+          <span className="align-middle p-1 line-clamp-4">
+            {paramItem.name}
           </span>
-        </span>
-        <span className=" text-[0.7rem] align-middle p-1">
-          <span className=" whitespace-nowrap">
-            {MyPipeStr(
-              TimeZoneDateToString,
-              returnStrPartOne
-            )(paramItem.end_at as unknown as string)}
-          </span>{" "}
-          <span className=" text-[0.8rem] font-bold align-middle p-1">
-            {MyPipeStr(
-              TimeZoneDateToString,
-              returnStrPartTwo
-            )(paramItem.end_at as unknown as string)}
+          <span className="align-middle p-1 overflow-hidden whitespace-nowrap">
+            {completed ? "Завершена" : "Не завершена"}
           </span>
-        </span>
-        {/* Кнопки добавить удалить */}
-        <div className="w-fit mx-auto grid grid-cols-1 md:flex items-start justify-center gap-x-2 gap-y-1 p-1">
-          <TskButton
-            paramText={<Selected_SVG pWidth={18} pHeight={18} />}
-            paramTitle="Пометить"
-            paramBgColor={"bg-sky-600"}
-            paramClick={handleCompleted}
-          />
-          <TskButton
-            paramText="+"
-            paramTitle="Добавить подзадачу"
-            paramBgColor={"bg-sky-400"}
-          />
-          <TskButton
-            paramText="--"
-            paramTitle="Удалить подзадачу"
-            paramBgColor={"bg-red-300"}
-          />
-        </div>
-      </li>
+          <span className=" text-[0.7rem] align-middle p-1">
+            <span className=" whitespace-nowrap">
+              {MyPipeStr(
+                TimeZoneDateToString,
+                returnStrPartOne
+              )(paramItem.begin_at as unknown as string)}
+            </span>{" "}
+            <span className=" text-[0.8rem] font-bold align-middle p-1">
+              {MyPipeStr(
+                TimeZoneDateToString,
+                returnStrPartTwo
+              )(paramItem.begin_at as unknown as string)}
+            </span>
+          </span>
+          <span className=" text-[0.7rem] align-middle p-1">
+            <span className=" whitespace-nowrap">
+              {MyPipeStr(
+                TimeZoneDateToString,
+                returnStrPartOne
+              )(paramItem.end_at as unknown as string)}
+            </span>{" "}
+            <span className=" text-[0.8rem] font-bold align-middle p-1">
+              {MyPipeStr(
+                TimeZoneDateToString,
+                returnStrPartTwo
+              )(paramItem.end_at as unknown as string)}
+            </span>
+          </span>
+          {/* Кнопки добавить удалить */}
+          <div className="w-fit mx-auto grid grid-cols-1 md:flex items-start justify-center gap-x-2 gap-y-1 p-1">
+            <TskButton
+              paramText={<Selected_SVG pWidth={18} pHeight={18} />}
+              paramTitle="Пометить"
+              paramBgColor={"bg-sky-600"}
+              paramClick={handleCompleted}
+            />
+            <TskButton
+              paramText="+"
+              paramTitle="Добавить подзадачу"
+              paramBgColor={"bg-sky-400"}
+              paramClick={handleDialog}
+            />
+            <TskButton
+              paramText="--"
+              paramTitle="Удалить подзадачу"
+              paramBgColor={"bg-red-300"}
+            />
+          </div>
+        </li>
+      </>
     );
   }
 );
