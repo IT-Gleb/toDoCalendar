@@ -10,6 +10,8 @@ import { Selected_SVG } from "@/utils/svg-icons";
 import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { DialogComponent, IDialog } from "../dialog/dialogComponent";
 import { AddChildTaskForm } from "./addChildTaskForm";
+import { DeleteTaskForm } from "./deleteTaskForm";
+import { useSession } from "next-auth/react";
 
 type TTaskButtonParams = {
   paramText: string | React.JSX.Element;
@@ -37,7 +39,7 @@ const TskButton: React.FC<TTaskButtonParams> = memo(
           paramBgColor !== null && paramBgColor.trim() !== ""
             ? paramBgColor
             : "bg-sky-400"
-        } text-white rounded-full active:scale-90`}
+        } text-white rounded-full active:scale-75`}
         title={paramTitle}
         onClick={(e) => (paramClick ? paramClick() : null)}
       >
@@ -47,13 +49,19 @@ const TskButton: React.FC<TTaskButtonParams> = memo(
   }
 );
 
+type TEnumForm = "addSubTask" | "deleteTask";
+
 export const ChildTask = memo(
   ({ paramItem }: { paramItem: Partial<TTask> }) => {
+    const { data: session } = useSession();
+
     const [completed, setCompleted] = useState<boolean>(
       paramItem.completed as boolean
     );
 
     const [canShowDialog, setCanShowDialog] = useState<boolean>(false);
+    const [isAddelete, setIsAddDelete] = useState<TEnumForm>("addSubTask");
+
     const isDialogRef = useRef<IDialog>(null);
 
     const handleCompleted = useMemo(
@@ -65,15 +73,21 @@ export const ChildTask = memo(
       [completed]
     );
 
-    const handleDialog = () => {
-      setCanShowDialog((prev) => !prev);
+    const handleAddDialog = () => {
+      setIsAddDelete("addSubTask");
+      setCanShowDialog(true);
+    };
+
+    const handleTaskDeleteDialog = () => {
+      setIsAddDelete("deleteTask");
+      setCanShowDialog(true);
     };
 
     const handleCloseDialog = async () => {
       if (isDialogRef.current) {
         if (isDialogRef.current.isOpen) {
           await isDialogRef.current.hide();
-          handleDialog();
+          setCanShowDialog(false);
         }
       }
     };
@@ -94,11 +108,20 @@ export const ChildTask = memo(
     return (
       <>
         {canShowDialog && (
-          <DialogComponent paramClick={handleDialog} ref={isDialogRef}>
-            <AddChildTaskForm
-              paramItem={paramItem}
-              paramClick={handleCloseDialog}
-            />
+          <DialogComponent paramClick={handleCloseDialog} ref={isDialogRef}>
+            {isAddelete === "addSubTask" && (
+              <AddChildTaskForm
+                paramItem={paramItem}
+                paramClick={handleCloseDialog}
+              />
+            )}
+            {isAddelete === "deleteTask" && (
+              <DeleteTaskForm
+                taskId={paramItem.id as string}
+                userId={session?.user.userId}
+                closeClick={handleCloseDialog}
+              />
+            )}
           </DialogComponent>
         )}
         <li
@@ -154,12 +177,13 @@ export const ChildTask = memo(
               paramText="+"
               paramTitle="Добавить подзадачу"
               paramBgColor={"bg-sky-400"}
-              paramClick={handleDialog}
+              paramClick={handleAddDialog}
             />
             <TskButton
               paramText="--"
               paramTitle="Удалить подзадачу"
               paramBgColor={"bg-red-300"}
+              paramClick={handleTaskDeleteDialog}
             />
           </div>
         </li>

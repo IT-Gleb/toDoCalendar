@@ -7,10 +7,10 @@ type TChildTaskFormParam = {
 
 export const AddChildTaskForm: React.FC<TChildTaskFormParam> = memo((param) => {
   return (
-    <div className="w-[90%] sm:w-[80%] md:w-[75%] lg:w-[60%] mx-auto border-4 border-slate-100 rounded-sm lg:rounded-lg bg-white overflow-hidden text-[0.75rem]">
+    <div className="w-[90%] sm:w-[80%] md:w-[75%] lg:w-[60%] flex flex-col mx-auto border-4 border-slate-100 rounded-sm lg:rounded-lg bg-white overflow-hidden text-[0.75rem]">
       <div className="bg-sky-400 text-yellow-50 min-h-[2vh] p-2 flex items-start gap-x-1 justify-between">
         <span className="line-clamp-3">
-          Добавить подзадачу:: [{param.paramItem.name}]
+          Добавить подзадачу к :: [{param.paramItem.name}]
         </span>
         <button
           type="button"
@@ -22,7 +22,7 @@ export const AddChildTaskForm: React.FC<TChildTaskFormParam> = memo((param) => {
           x
         </button>
       </div>
-      <article className="p-2">
+      <article className="p-2 min-h-[10vh] bg-[url('../../assets/images/svg/back02.svg')] bg-no-repeat bg-cover bg-center relative flex-auto">
         <p>{param.paramItem.id}</p>
         <p>
           Далеко-далеко, за словесными горами в стране гласных и согласных живут

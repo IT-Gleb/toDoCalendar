@@ -49,13 +49,17 @@ const AuthFormContent: React.FunctionComponent<AuthFormContentProps> = ({
         </button>
       </div>
 
-      <div className="hidden sm:block object-cover object-center mt-2 text-[0.6rem] w-fit absolute z-0 -right-[30%] sm:-right-[18%] top-[5rem] -scale-x-[1] scale-y-[1.5]">
+      {/* <div className="hidden sm:block object-cover object-center mt-2 text-[0.6rem] w-fit absolute z-0 -right-[30%] sm:-right-[18%] top-[5rem] -scale-x-[1] scale-y-[1.5]">
         <picture>
           <source srcSet={"/images/svg/icon1.svg"} />
           <img src={"/images/svg/icon1.svg"} alt="Ввод данных" />
         </picture>
-      </div>
-      <form ref={formRef} className="relative mt-4 z-[2]" action={actionForm}>
+      </div> */}
+      <form
+        ref={formRef}
+        className="relative mt-4 z-[2] bg-[url('../../assets/images/svg/back02.svg')] bg-cover bg-center bg-no-repeat"
+        action={actionForm}
+      >
         <fieldset className="flex flex-col space-y-2 p-4">
           <AuthNickNameComponent ref={nickRef} />
           <EmailInputComponent ref={emailRef} />

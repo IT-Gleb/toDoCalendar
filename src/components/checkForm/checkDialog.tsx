@@ -78,7 +78,7 @@ const CheckFormContent = ({
           initFormState.message = "";
           await formAction(new FormData(formRef.current as HTMLFormElement));
         }}
-        className="p-4 flex flex-col gap-y-3 justify-center"
+        className="p-4 flex flex-col gap-y-3 justify-center bg-[url('../../assets/images/svg/back02.svg')] bg-center bg-no-repeat bg-cover"
       >
         <AuthNickNameComponent ref={nickRef} />
         <EmailInputComponent ref={emailRef} />
