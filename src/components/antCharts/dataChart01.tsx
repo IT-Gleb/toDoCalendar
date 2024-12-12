@@ -99,9 +99,20 @@ export const DataChart01 = memo(() => {
           });
           if (request.ok) {
             const tmp_chartData = (await request.json()) as TDataForChart;
-            if (tmp_chartData) {
+            if (tmp_chartData && tmp_chartData.length > 0) {
               setChartData(tmp_chartData);
             }
+            //Вернуть пустые данные
+            if (tmp_chartData && tmp_chartData.length < 1) {
+              setChartData([
+                { alltasks: 0, yestasks: 0, notasks: 0, deprecatedtasks: 0 },
+              ]);
+            }
+          } else {
+            //Вернуть пустые данные
+            setChartData([
+              { alltasks: 0, yestasks: 0, notasks: 0, deprecatedtasks: 0 },
+            ]);
           }
         } catch (err) {
           setChartData({

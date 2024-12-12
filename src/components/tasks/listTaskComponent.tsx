@@ -22,7 +22,7 @@ export const ListTaskComponent = memo(
       <div className=" w-fit mx-auto max-h-[60vh] overflow-y-auto overflow-x-hidden ">
         <ListTableHead />
         {paramList && paramList.length < 1 && (
-          <div className="w-fit mx-auto p-2 text-[1.5rem] text-sky-500 font-bold uppercase">
+          <div className="w-fit mx-auto p-2 text-[1rem] md:text-[1.5rem] text-sky-500 font-bold uppercase">
             у вас нет задач на эту дату.
           </div>
         )}

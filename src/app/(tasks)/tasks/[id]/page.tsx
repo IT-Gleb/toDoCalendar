@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-import { ComponentWithDialog } from "@/components/dialog/componentWithDialog";
 import { AddFormContent } from "@/components/forms/addFormContent";
 import { AddTaskFormComponent } from "@/components/forms/addTaskFormComponent";
 import { NoAuthComponent } from "@/components/noAuthComponent";
@@ -49,7 +48,6 @@ export default async function TaskPage({ params }: { params: { id: string } }) {
         <span className="mt-5 text-[1rem] font-bold first-letter:uppercase text-sky-800">
           {getStringFromDate(params.id)}
         </span>
-        <ComponentWithDialog />
       </section>
       <section className="w-[96%] md:w-[60%] xl:w-[40%] mx-auto mt-5">
         <AddTaskFormComponent paramDate={id}>

@@ -23,25 +23,6 @@ body {
 }
 
 @layer base {
-  .font-stroke-1 {
-    -webkit-text-stroke: 1px #0369a1;
-  }
-  .font-stroke-color-1 {
-    -webkit-text-stroke: 1px rgb(95, 102, 159);
-  }
-  .font-stroke-2 {
-    -webkit-text-stroke: 2px black;
-  }
-  .font-stroke-4 {
-    -webkit-text-stroke: 4px black;
-  }
-  .vertical-text {
-    writing-mode: vertical-rl;
-    text-orientation: sideways;
-  }
-}
-
-@layer components {
   /* width */
   ::-webkit-scrollbar {
     /* width: 8px; */
@@ -68,8 +49,27 @@ body {
     @apply bg-green-500 cursor-grabbing;
   }
 
+  .font-stroke-1 {
+    -webkit-text-stroke: 1px #0369a1;
+  }
+  .font-stroke-color-1 {
+    -webkit-text-stroke: 1px rgb(95, 102, 159);
+  }
+  .font-stroke-2 {
+    -webkit-text-stroke: 2px black;
+  }
+  .font-stroke-4 {
+    -webkit-text-stroke: 4px black;
+  }
+  .vertical-text {
+    writing-mode: vertical-rl;
+    text-orientation: sideways;
+  }
+}
+
+@layer components {
   body {
-    @apply min-w-[300px] overflow-x-hidden text-[1.1rem] flex flex-col;
+    @apply min-w-[300px] overflow-x-hidden text-[1.1rem] flex flex-col scroller;
   }
   body:has(dialog[open]) {
     @apply overflow-hidden;
@@ -101,7 +101,7 @@ body {
 
 @layer utilities {
   .scroller {
-    scrollbar-width: thin;
+    scrollbar-width: thin !important;
     scrollbar-color: rgb(3, 105, 161) rgba(202, 202, 202, 1);
   }
 
@@ -110,9 +110,9 @@ body {
   }
   /* Диалог blur */
   dialog::backdrop {
-    @apply bg-black/10 backdrop-blur-sm;
+    @apply bg-black/40 backdrop-blur-sm;
   }
   dialog + ::backdrop {
-    @apply bg-black/10 backdrop-blur-sm;
+    @apply bg-black/40 backdrop-blur-sm;
   }
 }

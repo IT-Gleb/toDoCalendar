@@ -8,8 +8,8 @@ import {
 } from "@/utils/functions";
 import { Selected_SVG } from "@/utils/svg-icons";
 import React, { memo, useEffect, useMemo, useRef, useState } from "react";
-import { ComponentWithDialog } from "../dialog/componentWithDialog";
 import { DialogComponent, IDialog } from "../dialog/dialogComponent";
+import { AddChildTaskForm } from "./addChildTaskForm";
 
 type TTaskButtonParams = {
   paramText: string | React.JSX.Element;
@@ -95,17 +95,10 @@ export const ChildTask = memo(
       <>
         {canShowDialog && (
           <DialogComponent paramClick={handleDialog} ref={isDialogRef}>
-            <section className="w-fit mx-auto flex flex-col bg-white shadow-xl shadow-sky-800">
-              <div
-                onClick={async (e) => await handleCloseDialog()}
-                className="min-h-[3vh] bg-sky-400"
-              ></div>
-              <article className=" p-2">
-                <p>
-                  Hello! {paramItem.name} {paramItem.id}
-                </p>
-              </article>
-            </section>
+            <AddChildTaskForm
+              paramItem={paramItem}
+              paramClick={handleCloseDialog}
+            />
           </DialogComponent>
         )}
         <li

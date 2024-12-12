@@ -58,6 +58,7 @@ export const EmailInputComponent = forwardRef((_, paramRef: any) => {
           title="Очистить"
           onClick={handleClearClick}
           className="w-[16px] h-[14px] px-1 bg-slate-300 text-black text-[0.6rem] active:scale-90 absolute right-1 md:right-[30%] top-8"
+          tabIndex={-1}
         >
           x
         </button>
