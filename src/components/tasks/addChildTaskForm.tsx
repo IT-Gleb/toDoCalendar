@@ -1,3 +1,4 @@
+import { getNowYear } from "@/utils/functions";
 import { memo } from "react";
 
 type TChildTaskFormParam = {
@@ -34,7 +35,7 @@ export const AddChildTaskForm: React.FC<TChildTaskFormParam> = memo((param) => {
         </p>
       </article>
       <div className="bg-sky-400/75 text-slate-700 min-h-[2vh] p-2 text-center text-[0.7rem] font-mono">
-        &copy; by Gleb Torgashin 2021-2025
+        &copy; by Gleb Torgashin 2021-{getNowYear()}
       </div>
     </div>
   );

@@ -472,6 +472,11 @@ export function EqualDateNow(paramDate: string): boolean {
     return result;
   }
 }
+//Вернуть год из текущей даты
+export function getNowYear(): number {
+  return new Date().getFullYear();
+}
+//--------------------------
 
 //Рандом целого числа из диапазона
 export function randomInteger(min: number, max: number): number {

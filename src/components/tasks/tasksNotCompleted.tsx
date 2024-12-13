@@ -127,7 +127,12 @@ const TasksNotCompleted = memo(() => {
       {countTask > 0 && (
         <TaskTblTop paramWorkDate={currentDate} paramTasksCount={countTask} />
       )}
-
+      {!tasks ||
+        (tasks.length < 1 && (
+          <div className="w-fit mx-auto uppercase text-[0.95rem] md:text-[1.2rem] text-sky-500 font-bold mt-10">
+            <p>У вас нет Просроченных задач</p>
+          </div>
+        ))}
       {tasks &&
         tasks.length > 0 &&
         tasks.map((item, index, array) => {

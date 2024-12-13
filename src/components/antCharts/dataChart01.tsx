@@ -99,6 +99,7 @@ export const DataChart01 = memo(() => {
           });
           if (request.ok) {
             const tmp_chartData = (await request.json()) as TDataForChart;
+
             if (tmp_chartData && tmp_chartData.length > 0) {
               setChartData(tmp_chartData);
             }

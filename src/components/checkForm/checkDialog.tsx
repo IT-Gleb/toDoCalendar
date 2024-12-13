@@ -11,6 +11,7 @@ import { checkUser } from "@/server/actions";
 import { useRouter } from "next/navigation";
 import { UKEY } from "@/utils/data";
 import { useSession } from "next-auth/react";
+import { getNowYear } from "@/utils/functions";
 
 const initFormState: TFormStateAndStatus = {
   status: "init",
@@ -119,8 +120,8 @@ const CheckFormContent = ({
           </Link>
         </span>
       </div>
-      <div className="min-h-[2vh] bg-slate-200 text-black p-1 text-center">
-        &copy;
+      <div className="min-h-[2vh] bg-slate-200 text-black text-[0.7rem] font-mono p-1 text-center">
+        &copy; by Gleb Torgashin 2021-{getNowYear()}
       </div>
     </section>
   );

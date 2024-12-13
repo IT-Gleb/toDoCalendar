@@ -17,7 +17,7 @@ const ListTableHead = memo(() => {
 });
 
 export const ListTaskComponent = memo(
-  ({ paramList }: { paramList: TTaskList }) => {
+  ({ paramList, paramPage }: { paramList: TTaskList; paramPage: string }) => {
     return (
       <div className=" w-fit mx-auto max-h-[60vh] overflow-y-auto overflow-x-hidden ">
         <ListTableHead />
@@ -36,7 +36,13 @@ export const ListTaskComponent = memo(
               if (isParent) {
                 return <ParentTask key={item.id} paramItem={item} />;
               } else {
-                return <ChildTask key={item.id} paramItem={item} />;
+                return (
+                  <ChildTask
+                    key={item.id}
+                    paramItem={item}
+                    paramPage={paramPage}
+                  />
+                );
               }
             })}
         </ul>

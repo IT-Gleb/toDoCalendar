@@ -12,6 +12,7 @@ import { DialogComponent, IDialog } from "../dialog/dialogComponent";
 import { AddChildTaskForm } from "./addChildTaskForm";
 import { DeleteTaskForm } from "./deleteTaskForm";
 import { useSession } from "next-auth/react";
+import { ChangeCompleted } from "@/server/actions";
 
 type TTaskButtonParams = {
   paramText: string | React.JSX.Element;
@@ -52,26 +53,34 @@ const TskButton: React.FC<TTaskButtonParams> = memo(
 type TEnumForm = "addSubTask" | "deleteTask";
 
 export const ChildTask = memo(
-  ({ paramItem }: { paramItem: Partial<TTask> }) => {
+  ({
+    paramItem,
+    paramPage,
+  }: {
+    paramItem: Partial<TTask>;
+    paramPage: string;
+  }) => {
     const { data: session } = useSession();
 
-    const [completed, setCompleted] = useState<boolean>(
-      paramItem.completed as boolean
-    );
+    const [completed] = useState<boolean>(paramItem.completed as boolean);
 
     const [canShowDialog, setCanShowDialog] = useState<boolean>(false);
     const [isAddelete, setIsAddDelete] = useState<TEnumForm>("addSubTask");
 
     const isDialogRef = useRef<IDialog>(null);
 
-    const handleCompleted = useMemo(
-      () => () => {
-        paramItem.completed = !paramItem.completed;
-        setCompleted(paramItem.completed);
-        //console.log(paramItem.id, paramItem.completed);
-      },
-      [completed]
-    );
+    const handleCompleted = async () => {
+      //Изменить статус задачи
+      paramItem.completed = !paramItem.completed;
+      await ChangeCompleted(
+        paramItem.completed,
+        session?.user.userId as string,
+        paramItem.id as string,
+        paramPage
+      );
+      //setCompleted(paramItem.completed);
+      //console.log(paramItem.id, paramItem.completed);
+    };
 
     const handleAddDialog = () => {
       setIsAddDelete("addSubTask");
@@ -119,6 +128,8 @@ export const ChildTask = memo(
               <DeleteTaskForm
                 taskId={paramItem.id as string}
                 userId={session?.user.userId}
+                paramPage={paramPage}
+                taskName={paramItem.name as string}
                 closeClick={handleCloseDialog}
               />
             )}
@@ -170,7 +181,7 @@ export const ChildTask = memo(
             <TskButton
               paramText={<Selected_SVG pWidth={18} pHeight={18} />}
               paramTitle="Пометить"
-              paramBgColor={"bg-sky-600"}
+              paramBgColor={completed ? "bg-green-600" : "bg-sky-600"}
               paramClick={handleCompleted}
             />
             <TskButton

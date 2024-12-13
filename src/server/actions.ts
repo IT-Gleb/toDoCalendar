@@ -8,6 +8,7 @@ import { decryptId, StrDateFromNumbers } from "@/utils/functions";
 import { signIn } from "@/auth";
 import { NICKNAME, UEMAIL, UKEY, UPASS1 } from "@/utils/data";
 import { userSchema, checkSchema } from "@/zodSchemas/zSchema";
+import { TPropertyDeleteTasks } from "@/components/tasks/deleteTaskForm";
 
 export async function newTaskAction(
   initialState: TFormState,
@@ -261,4 +262,50 @@ export async function checkUser(
     status: "error",
     message: "Error!!! User not found !!! Register!",
   } as TFormStateAndStatus;
+}
+
+//Удалить задачу
+export async function DeleteTask(
+  paramInit: TFormInitState,
+  param: FormData
+): Promise<TFormInitState> {
+  const user = param.get("userId")?.toString() ?? "";
+  const task = param.get("taskId")?.toString() ?? "";
+  const page = param.get("paramPage")?.toString() ?? "";
+
+  let userId: number = -1;
+  if (user) {
+    userId = parseInt(decryptId(user));
+  }
+  try {
+    await sql`UPDATE tasks SET isdeleted=true WHERE id=${parseInt(
+      task
+    )} AND userid=${userId}`;
+    revalidateTag(`task-${page}`);
+    paramInit = "success";
+
+    return paramInit;
+  } catch (err) {
+    paramInit = "error";
+    return paramInit;
+  }
+}
+//---------------
+
+export async function ChangeCompleted(
+  param: boolean,
+  paramUser: string,
+  paramTask: string,
+  paramPage: string
+) {
+  const user: number = parseInt(decryptId(paramUser));
+  const task: number = parseInt(paramTask);
+
+  try {
+    await sql`UPDATE tasks SET completed=${param} WHERE id=${task} AND userid=${user}`;
+
+    revalidateTag(`task-${paramPage}`);
+  } catch (err) {
+    console.log((err as Error).message);
+  }
 }

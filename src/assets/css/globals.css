@@ -23,6 +23,25 @@ body {
 }
 
 @layer base {
+  .font-stroke-1 {
+    -webkit-text-stroke: 1px #0369a1;
+  }
+  .font-stroke-color-1 {
+    -webkit-text-stroke: 1px rgb(95, 102, 159);
+  }
+  .font-stroke-2 {
+    -webkit-text-stroke: 2px black;
+  }
+  .font-stroke-4 {
+    -webkit-text-stroke: 4px black;
+  }
+  .vertical-text {
+    writing-mode: vertical-rl;
+    text-orientation: sideways;
+  }
+}
+
+@layer components {
   /* width */
   ::-webkit-scrollbar {
     /* width: 8px; */
@@ -49,25 +68,6 @@ body {
     @apply bg-green-500 cursor-grabbing;
   }
 
-  .font-stroke-1 {
-    -webkit-text-stroke: 1px #0369a1;
-  }
-  .font-stroke-color-1 {
-    -webkit-text-stroke: 1px rgb(95, 102, 159);
-  }
-  .font-stroke-2 {
-    -webkit-text-stroke: 2px black;
-  }
-  .font-stroke-4 {
-    -webkit-text-stroke: 4px black;
-  }
-  .vertical-text {
-    writing-mode: vertical-rl;
-    text-orientation: sideways;
-  }
-}
-
-@layer components {
   body {
     @apply min-w-[300px] overflow-x-hidden text-[1.1rem] flex flex-col scroller;
   }

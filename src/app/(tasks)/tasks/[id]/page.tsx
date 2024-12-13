@@ -55,7 +55,7 @@ export default async function TaskPage({ params }: { params: { id: string } }) {
         </AddTaskFormComponent>
       </section>
       <section className="w-[96%] md:w-[70%] xl:w-[60%] mx-auto mt-5">
-        <ListTaskComponent paramList={TaskData} />
+        <ListTaskComponent paramList={TaskData} paramPage={id} />
       </section>
       <section className="w-fit mx-auto mt-5">
         <Link

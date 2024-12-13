@@ -16,7 +16,7 @@ export const TasksChart01 = memo(({ paramData }: { paramData: any }) => {
       parsing: { xAxisKey: "value", yAxisKey: "label" },
       borderWidth: 1,
       borderColor: "rgba(0,0,0,0.5)",
-      barPercentage: 4,
+      barPercentage: 3,
       //barThickness: "flex",
       //maxBarThickness: 70,
     })),
@@ -34,8 +34,8 @@ export const TasksChart01 = memo(({ paramData }: { paramData: any }) => {
     },
 
     scales: {
-      y: { beginAtZero: false, grid: { display: true } },
-      x: { beginAtZero: false, grid: { display: true } },
+      y: { beginAtZero: true, grid: { display: true } },
+      x: { beginAtZero: true, grid: { display: true } },
     },
 
     plugins: {
@@ -69,13 +69,22 @@ export const TasksChart01 = memo(({ paramData }: { paramData: any }) => {
   // }, []);
 
   return (
-    <Chart
-      ref={chartRef}
-      type="bar"
-      data={ChartData}
-      options={ChartOptions}
-      plugins={[ChartPlugin]}
-    />
+    <div className="w-auto h-auto flex flex-col p-1">
+      <button
+        type="button"
+        className="w-[70px] h-[28px] text-[0.65em] bg-slate-100 p-1 active:scale-90 self-end"
+        onClick={() => chartRef.current?.update()}
+      >
+        Обновить
+      </button>
+      <Chart
+        ref={chartRef}
+        type="bar"
+        data={ChartData}
+        options={ChartOptions}
+        plugins={[ChartPlugin]}
+      />
+    </div>
   );
 });
 
