@@ -25,7 +25,7 @@ type TChartDataValues = Array<TChartDataValue>;
 
 function getLabel(key: string) {
   if (key.startsWith("all")) {
-    return "Всего задач";
+    return "Всего";
   }
   if (key.startsWith("yes")) {
     return "Завершено";

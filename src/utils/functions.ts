@@ -728,6 +728,16 @@ export function getStringFromDate(paramId: string) {
   return result;
 }
 
+export function getNowStringFromDate() {
+  let result: string = "";
+  result = new Intl.DateTimeFormat("ru-RU", {
+    dateStyle: "full",
+    timeZone: "Europe/Moscow",
+  }).format(new Date().getTime());
+
+  return result;
+}
+
 export function getValue<T, K extends keyof T>(param: T, key: K) {
   return param[key];
 }

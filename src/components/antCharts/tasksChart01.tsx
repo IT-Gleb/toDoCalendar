@@ -1,5 +1,6 @@
+import { getNowStringFromDate } from "@/utils/functions";
 import { Chart as ChartJS, registerables } from "chart.js";
-import { memo, useRef } from "react";
+import { memo, useLayoutEffect, useRef } from "react";
 import { Chart } from "react-chartjs-2";
 
 ChartJS.register(...registerables);
@@ -13,6 +14,8 @@ export const TasksChart01 = memo(({ paramData }: { paramData: any }) => {
       backgroundColor: item.color,
       label: item.label + `(${item.value})`,
       axis: "y",
+      // yAxisID: "yAxis",
+      // xAxisID: "xAxis",
       parsing: { xAxisKey: "value", yAxisKey: "label" },
       borderWidth: 1,
       borderColor: "rgba(0,0,0,0.5)",
@@ -34,15 +37,82 @@ export const TasksChart01 = memo(({ paramData }: { paramData: any }) => {
     },
 
     scales: {
-      y: { beginAtZero: true, grid: { display: true } },
-      x: { beginAtZero: true, grid: { display: true } },
+      // yAxis: {
+      //   display: true,
+      //   type: "linear",
+      //   text: "AAAAA",
+      // },
+      // xAxis: {
+      //   display: true,
+      //   type: "linear",
+      //   text: ["aaa01", "b00001"],
+      // },
+      y: {
+        beginAtZero: true,
+        grid: { display: true },
+        title: {
+          display: true,
+          text: "Категории задач".toUpperCase(),
+          color: "#1E429F",
+          font: {
+            family: "Verdana, Tahoma",
+            size: 10,
+            weight: 100,
+          },
+        },
+      },
+      x: {
+        beginAtZero: true,
+        grid: { display: true },
+        title: {
+          display: true,
+          text: "Количество задач по категориям".toUpperCase(),
+          color: "#1E429F",
+          font: {
+            family: "Verdana, Tahoma",
+            size: 10,
+            weight: 100,
+          },
+        },
+      },
     },
 
     plugins: {
       title: {
         display: true,
-        text: "Выполнение задач".toUpperCase(),
+        font: {
+          family: "Impact",
+          size: 16,
+          weight: 300,
+        },
+        text:
+          "График задач".toUpperCase() + " на " + ` ${getNowStringFromDate()}`,
         padding: { top: 2, bottom: 2 },
+        color: "#1E429F",
+      },
+      legend: {
+        labels: {
+          font: {
+            size: 10,
+            weight: 300,
+            family: "Verdana, Tahoma",
+          },
+          //color: "#cecece",
+        },
+      },
+      tooltip: {
+        backgroundColor: "#FDF6B2",
+        titleColor: "#8E4B10",
+        callbacks: {
+          // labelColor: (ctx: any) => {
+          //   return {
+          //     backgroundColor: "rgb(210, 200, 67)",
+          //   };
+          // },
+          labelTextColor: (ctx: any) => {
+            return "#633112";
+          },
+        },
       },
 
       //   subtitle: {
@@ -65,7 +135,8 @@ export const TasksChart01 = memo(({ paramData }: { paramData: any }) => {
   };
 
   // useLayoutEffect(() => {
-  //   ChartJS.defaults.plugins.legend.labels.padding = 40;
+  //   ChartJS.defaults.scales["linear"].title.display = true;
+  //   ChartJS.defaults.scales["linear"].title.text = "AAAAAA";
   // }, []);
 
   return (
