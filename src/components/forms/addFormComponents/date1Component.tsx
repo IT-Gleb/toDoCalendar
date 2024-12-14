@@ -1,10 +1,11 @@
 "use client";
 
-import { formatDateToInput } from "@/utils/functions";
+import { formatDateToInput, GetCurrentTimeStr } from "@/utils/functions";
 import React, { useState } from "react";
 
 export const Date1Component = ({ paramDay }: { paramDay?: string }) => {
   const [isActive, setIsActive] = useState<boolean>(false);
+  const [nowTime] = useState<string>(paramDay + "T" + GetCurrentTimeStr());
 
   const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
     setIsActive((prev) => !prev);
@@ -13,6 +14,8 @@ export const Date1Component = ({ paramDay }: { paramDay?: string }) => {
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     setIsActive((prev) => !prev);
   };
+
+  //console.log(paramDay + "T" + GetCurrentTimeStr());
 
   return (
     <label
@@ -37,9 +40,9 @@ export const Date1Component = ({ paramDay }: { paramDay?: string }) => {
         onFocus={handleFocus}
         onBlur={handleBlur}
         defaultValue={formatDateToInput(
-          new Date(paramDay ? paramDay : Date.now()).getTime()
+          new Date(paramDay ? nowTime : Date.now()).getTime()
         )}
-      ></input>
+      />
     </label>
   );
 };

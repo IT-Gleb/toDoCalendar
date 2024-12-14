@@ -1,8 +1,9 @@
-import { DateAddMinutesToInput } from "@/utils/functions";
+import { DateAddMinutesToInput, GetCurrentTimeStr } from "@/utils/functions";
 import React, { useState } from "react";
 
 export const Date2Component = ({ paramDay }: { paramDay?: string }) => {
   const [isActive, setIsActive] = useState<boolean>(false);
+  const [nowTime] = useState<string>(paramDay + "T" + GetCurrentTimeStr());
 
   const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
     setIsActive((prev) => !prev);
@@ -34,7 +35,7 @@ export const Date2Component = ({ paramDay }: { paramDay?: string }) => {
         onFocus={handleFocus}
         onBlur={handleBlur}
         defaultValue={DateAddMinutesToInput(
-          paramDay ? new Date(paramDay).getTime() : Date.now(),
+          paramDay ? new Date(nowTime).getTime() : Date.now(),
           30
         )}
       ></input>

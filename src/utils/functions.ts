@@ -106,7 +106,7 @@ export function StrFullDateTimeFromNumbers(paramDate: number) {
 }
 
 export function CurrentDateToInput() {
-  let dt = new Date(Date.now());
+  let dt = new Date();
   //console.log(dt.toString());
   let res: string = "";
   let strDate: string = StrDateFromNumbers(
@@ -117,12 +117,22 @@ export function CurrentDateToInput() {
 
   let Hour: string | number = dt.getHours();
   let Min: string | number = dt.getMinutes();
-  Min = Min < 10 ? "0" + Min : Min;
-  Hour = Hour < 10 ? "0" + Hour : Hour;
+  Min = ZeroToNumber(Min);
+  Hour = ZeroToNumber(Hour);
 
   res = strDate + "T" + Hour + ":" + Min;
 
   return res;
+}
+
+export function GetCurrentTimeStr() {
+  let dt = new Date();
+  let Hour: string | number = dt.getHours();
+  let Min: string | number = dt.getMinutes();
+  Min = ZeroToNumber(Min);
+  Hour = ZeroToNumber(Hour);
+
+  return `${Hour}:${Min}:00`;
 }
 
 export function formatDateToInput(paramDate: number) {
@@ -138,8 +148,8 @@ export function formatDateToInput(paramDate: number) {
 
   let Hour: string | number = dt.getHours();
   let Min: string | number = dt.getMinutes();
-  Min = Min < 10 ? "0" + Min : Min;
-  Hour = Hour < 10 ? "0" + Hour : Hour;
+  Min = ZeroToNumber(Min);
+  Hour = ZeroToNumber(Hour);
 
   res = strDate + "T" + Hour + ":" + Min;
 
