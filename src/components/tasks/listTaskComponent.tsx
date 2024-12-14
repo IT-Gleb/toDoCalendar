@@ -26,10 +26,10 @@ export const ListTaskComponent = memo(
             у вас нет задач на эту дату.
           </div>
         )}
-        <ul className="p-1">
-          {paramList &&
-            paramList.length > 0 &&
-            paramList.map((item) => {
+
+        {paramList && paramList.length > 0 && (
+          <ul className="p-1">
+            {paramList.map((item) => {
               const isParent: boolean =
                 Array.isArray(item.items) && item.items.length > 0;
 
@@ -45,7 +45,8 @@ export const ListTaskComponent = memo(
                 );
               }
             })}
-        </ul>
+          </ul>
+        )}
       </div>
     );
   }
