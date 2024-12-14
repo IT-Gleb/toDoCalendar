@@ -176,7 +176,7 @@ const TasksNotCompleted = memo(() => {
                 {MyPipeStr(
                   TimeZoneDateToString,
                   returnStrPartOne
-                )(item.begin_at as unknown as string)}{" "}
+                )(item.end_at as unknown as string)}{" "}
                 <span className="font-bold text-[0.8rem] text-red-700">
                   {MyPipeStr(
                     TimeZoneDateToString,
