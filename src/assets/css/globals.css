@@ -20,9 +20,34 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  accent-color: theme(colors.sky.600);
 }
 
 @layer base {
+  html,
+  body {
+    /* Works on Firefox */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: theme("colors.sky.600") theme("colors.slate.300");
+    }
+    /* Works on Chrome, Edge, and Safari */
+    *::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    *::-webkit-scrollbar-track {
+      background: theme("colors.slate.300");
+    }
+
+    *::-webkit-scrollbar-thumb {
+      background-color: theme("colors.slate.300");
+      border-radius: 20px;
+      border: 2px solid theme("colors.slate.500");
+      color: theme("colors.slate.800");
+    }
+  }
+
   .font-stroke-1 {
     -webkit-text-stroke: 1px #0369a1;
   }
@@ -39,41 +64,21 @@ body {
     writing-mode: vertical-rl;
     text-orientation: sideways;
   }
+
+  .scroller {
+    scrollbar-width: thin;
+    scrollbar-color: theme("colors.sky.600") theme("colors.slate.300");
+  }
 }
 
 @layer components {
-  /* width */
-  ::-webkit-scrollbar {
-    /* width: 8px; */
-    @apply w-[6px] h-[6px];
-  }
-
-  /* Track */
-  ::-webkit-scrollbar-track {
-    /* background: #a7a7a7;
-  border-radius: 3px; */
-    @apply bg-slate-300 rounded-[4px];
-  }
-
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    /* background: #000;
-  border-radius: 3px; */
-    @apply bg-sky-700 rounded-[3px];
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    /* background: #afafff; */
-    @apply bg-green-500 cursor-grabbing;
-  }
-
   body {
     @apply min-w-[300px] overflow-x-hidden text-[1.1rem] flex flex-col scroller;
   }
   body:has(dialog[open]) {
     @apply overflow-hidden;
   }
+
   main {
     @apply min-h-[84vh] flex-auto;
   }

@@ -14,14 +14,6 @@ const handler = auth(async function POST(req: any) {
       const userId: string = decryptId(userid);
 
       try {
-        // await sql`WITH data1 AS(SELECT COUNT(id) OVER() as allTasks FROM tasks WHERE isdeleted=false AND userid=${userId} GROUP BY id),
-        // data2 AS(SELECT completed, (SELECT CASE WHEN completed=true THEN COUNT(completed) ELSE 0 END) as yesTasks,
-        // (SELECT CASE WHEN completed=false THEN COUNT(completed) ELSE 0 END) as noTasks
-        // FROM tasks WHERE isdeleted=false AND userid=${userId} GROUP BY completed),
-        // data3 AS(SELECT (SELECT CASE WHEN end_at::date<${day} THEN COUNT(end_at) ELSE 0 END) as dTask FROM tasks WHERE isdeleted=false AND completed=false AND userid=${userId} GROUP BY end_at),
-        // data4 AS(SELECT CASE WHEN dTask>0 THEN SUM(dTask) ELSE SUM(0) END as deprecatedTasks FROM data3 GROUP BY dTask)
-        // SELECT DISTINCT a.allTasks, b.yesTasks, b.noTasks, c.deprecatedTasks FROM data1 as a, data2 as b, data4 as c;`;
-
         const chartData =
           await sql`WITH data1 AS(SELECT SUM(CASE WHEN completed=true THEN 1 ELSE 0 END) as yesTasks FROM tasks WHERE userid=${userId} AND isdeleted=false),
           data2 AS(SELECT SUM(CASE WHEN completed=false THEN 1 ELSE 0 END) as noTasks FROM tasks WHERE userid=${userId} AND isdeleted=false),

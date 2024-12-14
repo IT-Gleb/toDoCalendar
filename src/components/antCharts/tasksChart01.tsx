@@ -88,7 +88,7 @@ export const TasksChart01 = memo(({ paramData }: { paramData: any }) => {
         text:
           "График задач".toUpperCase() + " на " + ` ${getNowStringFromDate()}`,
         padding: { top: 2, bottom: 2 },
-        color: "#1E429F",
+        color: "#3F83F8",
       },
       legend: {
         labels: {
