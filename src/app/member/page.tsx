@@ -74,10 +74,11 @@ const MemberPage = memo(() => {
     );
   }
 
+  // className="bg-[radial-gradient(circle_at_top,theme(colors.white),theme(colors.slate.50),theme(colors.sky.50),theme(colors.sky.100))]"
   return (
-    <section className="bg-[radial-gradient(circle_at_top,theme(colors.white),theme(colors.slate.50),theme(colors.sky.50),theme(colors.sky.100))]">
+    <section>
       {/* Календарь с задачами */}
-      <section className="p-0 md:p-2 grid grid-cols-1 auto-rows-min lg:grid-cols-2 gap-2 min-h-[60vh] mt-5">
+      <section className="p-0 md:p-2 grid grid-cols-1 auto-rows-max lg:grid-cols-2 gap-2 min-h-[60vh] mt-5">
         <div className="lg:border-r lg:border-b border-slate-200 lg:p-2">
           <DynamicCalendar />
         </div>

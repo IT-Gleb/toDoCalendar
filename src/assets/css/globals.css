@@ -73,7 +73,7 @@ body {
 
 @layer components {
   body {
-    @apply min-w-[300px] overflow-x-hidden text-[1.1rem] flex flex-col scroller;
+    @apply min-w-[300px] overflow-x-hidden text-[1.1rem] flex flex-col;
   }
   body:has(dialog[open]) {
     @apply overflow-hidden;
