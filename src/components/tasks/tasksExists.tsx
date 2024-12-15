@@ -51,6 +51,7 @@ export const TasksExists = memo(() => {
   const [tasksCount, setTasksCount] = useState<number>(0);
   //Пагинация
   const Offset: number = usePaginationStore((state) => state.activePage);
+  //console.log(WorkDate, Offset);
 
   //Запрос на задачи
   useEffect(() => {
@@ -59,6 +60,7 @@ export const TasksExists = memo(() => {
       (async function getExistsTasks() {
         const url: string = "/api/checklast10";
         setIsLoading(true);
+        setTasks([]);
         try {
           const result = await fetch(url, {
             headers: { "Content-Type": "application/json" },
@@ -69,7 +71,7 @@ export const TasksExists = memo(() => {
               limit: TASKS_ON_PAGE,
               offset: Offset * TASKS_ON_PAGE,
             }),
-            next: { revalidate: 5 },
+            next: { revalidate: 0 },
           });
           if (result.ok) {
             const existsTasks = (await result.json()) as TTaskList;
@@ -109,67 +111,77 @@ export const TasksExists = memo(() => {
     );
   }
 
+  if (!tasks || tasks.length < 1) {
+    return (
+      <div className="w-fit mx-auto p-2 text-[1.1rem] text-sky-500 uppercase font-bold">
+        У Вас нет незавершенных задач
+      </div>
+    );
+  }
+
   return (
-    <section className="max-w-[95%] mx-auto relative overflow-hidden">
+    <section className="max-w-[95%] mx-auto relative overflow-hidden bg-white">
       <MobileTasksExists paramWorkDate={WorkDate} paramTasks={tasks} />
       <div className="hidden sm:block overflow-y-auto overflow-x-hidden max-h-[53vh]">
         {/* Заголовок таблицы */}
         <TaskTblTop paramWorkDate={WorkDate} paramTasksCount={tasksCount} />
+
         <ul className="p-2 text-[0.7rem]">
-          {tasks.map((item, index, array) => {
-            let transp: number = 1;
-            //Прозрачность позиции
-            transp = CalculateOpacity(index, array.length);
+          {tasks.length > 0 &&
+            tasks.map((item, index, array) => {
+              let transp: number = 1;
+              //Прозрачность позиции
+              transp = CalculateOpacity(index, array.length);
 
-            let aHref: string =
-              "/tasks/" +
-              MyPipeStr(
-                TimeZoneDateToString,
-                returnStrPartOne,
-                ChangeDateItems
-              )(item.begin_at as unknown as string);
+              let aHref: string =
+                "/tasks/" +
+                MyPipeStr(
+                  TimeZoneDateToString,
+                  returnStrPartOne,
+                  ChangeDateItems
+                )(item.begin_at as unknown as string);
 
-            return (
-              <li
-                key={item.id}
-                className="p-1 grid grid-cols-[25px_1fr_120px_120px] gap-x-2 text-[0.8rem] odd:bg-sky-100"
-                style={{ opacity: transp }}
-              >
-                {index + 1}.
-                <Link
-                  href={aHref}
-                  scroll={false}
-                  className="hover:underline whitespace-nowrap overflow-hidden"
+              return (
+                <li
+                  key={item.id}
+                  className="p-1 grid grid-cols-[25px_1fr_120px_120px] gap-x-2 text-[0.8rem] odd:bg-sky-100"
+                  style={{ opacity: transp }}
                 >
-                  {item.name}
-                </Link>
-                <div className="text-sky-800 text-[0.7rem] uppercase flex items-center gap-x-1">
-                  {MyPipeStr(
-                    TimeZoneDateToString,
-                    returnStrPartOne
-                  )(item.begin_at as unknown as string)}
-                  <span className="text-[0.75rem] text-blue-900 font-bold">
+                  {index + 1}.
+                  <Link
+                    href={aHref}
+                    scroll={false}
+                    className="hover:underline whitespace-nowrap overflow-hidden"
+                  >
+                    {item.name}
+                  </Link>
+                  <div className="text-sky-800 text-[0.7rem] uppercase flex items-center gap-x-1">
                     {MyPipeStr(
                       TimeZoneDateToString,
-                      returnStrPartTwo
+                      returnStrPartOne
                     )(item.begin_at as unknown as string)}
-                  </span>
-                </div>
-                <div className="text-sky-800 text-[0.7rem] uppercase flex items-center gap-x-1">
-                  {MyPipeStr(
-                    TimeZoneDateToString,
-                    returnStrPartOne
-                  )(item.end_at as unknown as string)}
-                  <span className="text-[0.75rem] text-blue-900 font-bold">
+                    <span className="text-[0.75rem] text-blue-900 font-bold">
+                      {MyPipeStr(
+                        TimeZoneDateToString,
+                        returnStrPartTwo
+                      )(item.begin_at as unknown as string)}
+                    </span>
+                  </div>
+                  <div className="text-sky-800 text-[0.7rem] uppercase flex items-center gap-x-1">
                     {MyPipeStr(
                       TimeZoneDateToString,
-                      returnStrPartTwo
+                      returnStrPartOne
                     )(item.end_at as unknown as string)}
-                  </span>
-                </div>
-              </li>
-            );
-          })}
+                    <span className="text-[0.75rem] text-blue-900 font-bold">
+                      {MyPipeStr(
+                        TimeZoneDateToString,
+                        returnStrPartTwo
+                      )(item.end_at as unknown as string)}
+                    </span>
+                  </div>
+                </li>
+              );
+            })}
         </ul>
       </div>
       {/* Пагинация по задачам */}

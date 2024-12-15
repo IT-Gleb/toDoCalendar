@@ -32,7 +32,7 @@ export const CalendarNew = memo(
     }, [paramMonth]);
 
     return (
-      <section className="w-fit mx-auto p-3 overflow-hidden">
+      <section className="w-fit mx-auto overflow-hidden bg-white pt-3">
         <div
           title={strTitle}
           className=" pt-4 pb-0 border border-slate-400 shadow-md shadow-slate-500 relative before:content-[attr(title)] before:bg-white before:border before:border-slate-300 before:rounded-md before:text-slate-700 before:text-[0.9rem] before:lg:text-[1.2rem] before:uppercase before:font-bold before:px-2 before:absolute before:right-10 before:-top-3"

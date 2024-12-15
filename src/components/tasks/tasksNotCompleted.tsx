@@ -68,6 +68,7 @@ const TasksNotCompleted = memo(() => {
       };
 
       setIsLoad(true);
+      setTasks([]);
       try {
         const result = await fetch(url, {
           headers: { "Content-Type": "application/json" },
@@ -121,7 +122,7 @@ const TasksNotCompleted = memo(() => {
   }
 
   return (
-    <section className="max-w-[95%] mx-auto">
+    <section className="max-w-[95%] mx-auto bg-white">
       <TaskDateChange />
       <MobileTasksNotCompleted paramTasks={tasks} />
       {countTask > 0 && (
