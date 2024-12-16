@@ -87,6 +87,7 @@ export const DataChart01 = memo(() => {
       (async function getChartData() {
         const url: string = "/api/tasksForChart";
         setIsLoad(true);
+        setDataChart([]);
         try {
           const request = await fetch(url, {
             headers: { "Content-Type": "application/json" },
