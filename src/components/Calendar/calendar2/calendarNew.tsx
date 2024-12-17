@@ -58,11 +58,11 @@ export const CalendarNew = memo(
             );
           })}
           <div className="relative w-full mt-3 bg-sky-500 text-slate-50 text-[0.5rem] lg:text-[0.6rem] p-1 text-center flex justify-evenly">
-            <div className=" absolute w-fit left-[44%] top-[-3px] lg:top-0 translate-y-[-44%] font-bold text-[0.95rem] lg:text-[1.1rem]">
+            <div className=" absolute w-fit left-[44%] top-[-3px] lg:top-0 translate-y-[-44%] font-bold text-[0.8rem] lg:text-[0.9rem] bg-sky-500 px-1 py-[2px] rounded-t-xl">
               {/* <span className="bg-clip-text text-transparent bg-[linear-gradient(to_bottom,theme(colors.sky.800),theme(colors.sky.200),theme(colors.yellow.300))]">
                 {strYear}
               </span> */}
-              <span className="font-stroke-1 text-yellow-50 font-bold drop-shadow-[0_1px_1px_rgba(60,40,120,0.6)]">
+              <span className="font-stroke-1 p-0 text-yellow-50 font-bold drop-shadow-[0_1px_1px_rgba(60,40,120,0.6)]">
                 {strYear}
               </span>
             </div>

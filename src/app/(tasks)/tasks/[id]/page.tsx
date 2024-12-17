@@ -4,6 +4,7 @@ import { AddTaskFormComponent } from "@/components/forms/addTaskFormComponent";
 import { NoAuthComponent } from "@/components/noAuthComponent";
 import { ListTaskComponent } from "@/components/tasks/listTaskComponent";
 import { Base_URL, getStringFromDate } from "@/utils/functions";
+
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -15,17 +16,30 @@ type TTasksParams = {
 };
 
 async function getData(params: TTasksParams, paramUserId: string) {
+  const param = {
+    day: params.id,
+    limit: params.limit,
+    offset: params.offset,
+    key: paramUserId,
+  };
+  const url: string = `${Base_URL}api/tasks`;
+  //console.log(url);
   const result = await fetch(
-    `${Base_URL}api/tasks/?day=${params.id}&limit=${params.limit}&offset=${params.offset}&key=${paramUserId}`,
+    //`${Base_URL}api/tasks/?day=${params.id}&limit=${params.limit}&offset=${params.offset}&key=${paramUserId}`,
+    url,
     {
       headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify(param),
       next: { tags: [`task-${params.id}`], revalidate: 2 },
     }
   );
 
   if (result.ok) {
+    //console.log(result);
+
     const res = await result.json();
-    //console.log(res);
+
     return res;
   }
 }
@@ -40,7 +54,16 @@ export default async function TaskPage({ params }: { params: { id: string } }) {
   const { id } = params;
   const pageParams: TTasksParams = { id, limit: 10, offset: 0 };
   let uId: string = session.user.userId as string;
-  const TaskData: TTaskList = await getData(pageParams, uId);
+  const TaskData: TTaskList | TResponseError = await getData(pageParams, uId);
+
+  if ("status" in TaskData) {
+    return (
+      <div className="w-fit mx-auto mt-5 text-red-500 text-[0.9rem]">
+        <div>{TaskData.status}</div>
+        <div>{TaskData.message}</div>
+      </div>
+    );
+  }
 
   return (
     <>

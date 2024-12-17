@@ -18,6 +18,7 @@ const ListTableHead = memo(() => {
 
 export const ListTaskComponent = memo(
   ({ paramList, paramPage }: { paramList: TTaskList; paramPage: string }) => {
+    //console.log(paramList);
     return (
       <div className=" w-fit mx-auto max-h-[60vh] overflow-y-auto overflow-x-hidden ">
         <ListTableHead />

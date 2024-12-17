@@ -21,25 +21,37 @@ import { decryptId } from "@/utils/functions";
 //   return NextResponse.json(data);
 // }
 
-export async function handler(request: NextRequest) {
-  let userId = request.nextUrl.searchParams.get("key")?.toString() ?? "-1";
-  if (userId !== "-1" && userId.trim().length > 5) {
-    userId = decryptId(userId);
-  }
-  const currDate =
-    request.nextUrl.searchParams.get("day")?.toString() ?? "2024-11-27";
-  const limit = request.nextUrl.searchParams.get("limit")?.toString() ?? "10";
-  const offset = request.nextUrl.searchParams.get("offset")?.toString() ?? "0";
+export const handler = async (request: NextRequest) => {
+  if (request.method === "POST") {
+    const body = await request.json();
+    if (body) {
+      //console.log(body);
+      const { day, limit, offset, key } = body;
+      let userId = key;
+      if (userId !== "-1" && userId.trim().length > 5) {
+        userId = decryptId(userId);
+      }
 
-  let data: any = {};
-  try {
-    data =
-      await sql`SELECT id, parent_id, userid, name, completed, begin_at, end_at, items FROM tasks WHERE userid=${userId} AND begin_at::date=${currDate} AND isdeleted=false ORDER BY begin_at LIMIT ${limit} OFFSET ${offset}`;
-    return NextResponse.json(data);
-  } catch (err) {
-    data = { status: false, message: (err as Error).message };
-    return NextResponse.json(data);
+      let data: TTaskList | TResponseError = [];
+      try {
+        data =
+          (await sql`SELECT id, parent_id, userid, name, completed, begin_at, end_at,
+          items, (SELECT 0) as level 
+          FROM tasks 
+          WHERE userid=${userId} AND begin_at::date=${day} AND isdeleted=false 
+          ORDER BY begin_at LIMIT ${limit} OFFSET ${offset}`) as TTaskList;
+        //console.log(data);
+        return NextResponse.json(data);
+      } catch (err) {
+        data = { status: "error", message: (err as Error).message };
+        return NextResponse.json(data);
+      }
+    }
+    return NextResponse.json({
+      status: 500,
+      message: "Ошибка получения данных!",
+    });
   }
-}
+};
 
 export { handler as GET, handler as POST };
