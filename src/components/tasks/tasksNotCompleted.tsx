@@ -29,7 +29,7 @@ const TaskTblTop = memo(function TaskTblTop({
   paramTasksCount: number;
 }): React.JSX.Element {
   return (
-    <div className="hidden sticky top-0 z-[2] sm:grid grid-cols-[25px_1fr_120px_120px] sm:mt-7 gap-x-2 uppercase text-[0.75rem] text-slate-100 font-bold text-center bg-gradient-to-b from-red-500 to-red-50">
+    <div className="hidden sticky top-0 z-[2] sm:grid grid-cols-[25px_1fr_120px_120px] sm:mt-7 gap-x-2 uppercase text-[0.75rem] text-slate-100 font-bold text-center bg-gradient-to-b from-red-400 to-red-50">
       <div className=" col-span-4 p-1 flex flex-wrap items-center justify-center gap-x-2">
         Просроченные задачи, на дату:{" "}
         <span className="text-[1rem] text-yellow-300">{paramWorkDate}</span>
@@ -151,7 +151,7 @@ const TasksNotCompleted = memo(() => {
 
           return (
             <div
-              className=" hidden sm:grid sm:grid-cols-[25px_1fr_120px_120px] sm:auto-rows-min lg:gap-x-4 text-[0.7rem] text-slate-600 even:bg-red-100 p-1"
+              className=" hidden sm:grid sm:grid-cols-[25px_1fr_120px_120px] sm:auto-rows-min lg:gap-x-4 text-[0.7rem] text-slate-600 odd:bg-red-100 p-1"
               key={item.id}
               style={{ opacity: transp }}
             >

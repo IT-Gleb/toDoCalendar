@@ -9,19 +9,9 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-type TTasksParams = {
-  id: string;
-  limit: number;
-  offset: number;
-};
-
-async function getData(params: TTasksParams, paramUserId: string) {
-  const param = {
-    day: params.id,
-    limit: params.limit,
-    offset: params.offset,
-    key: paramUserId,
-  };
+async function getData(
+  params: TPostPartialParams
+): Promise<TTaskList | TResponseError> {
   const url: string = `${Base_URL}api/tasks`;
   //console.log(url);
   const result = await fetch(
@@ -30,8 +20,8 @@ async function getData(params: TTasksParams, paramUserId: string) {
     {
       headers: { "Content-Type": "application/json" },
       method: "POST",
-      body: JSON.stringify(param),
-      next: { tags: [`task-${params.id}`], revalidate: 2 },
+      body: JSON.stringify(params),
+      next: { tags: [`task-${params.day}`], revalidate: 2 },
     }
   );
 
@@ -42,6 +32,7 @@ async function getData(params: TTasksParams, paramUserId: string) {
 
     return res;
   }
+  return { status: "Error", message: "Ошибка получения данных!!!" };
 }
 
 export default async function TaskPage({ params }: { params: { id: string } }) {
@@ -52,15 +43,30 @@ export default async function TaskPage({ params }: { params: { id: string } }) {
   }
 
   const { id } = params;
-  const pageParams: TTasksParams = { id, limit: 10, offset: 0 };
   let uId: string = session.user.userId as string;
-  const TaskData: TTaskList | TResponseError = await getData(pageParams, uId);
+  const pageParams: TPostPartialParams = {
+    userid: uId,
+    day: id,
+    limit: 10,
+    offset: 0,
+  };
 
-  if ("status" in TaskData) {
+  const TaskData: TTaskList | TResponseError = await getData(pageParams);
+
+  if (!Array.isArray(TaskData) && "status" in TaskData) {
     return (
       <div className="w-fit mx-auto mt-5 text-red-500 text-[0.9rem]">
         <div>{TaskData.status}</div>
         <div>{TaskData.message}</div>
+        <div className="mt-10">
+          <Link
+            href={{ pathname: "/member" }}
+            scroll={false}
+            className="bg-sky-600 text-white text-[0.8rem] p-2 rounded-md"
+          >
+            Вернуться
+          </Link>
+        </div>
       </div>
     );
   }

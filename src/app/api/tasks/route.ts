@@ -25,9 +25,9 @@ export const handler = async (request: NextRequest) => {
   if (request.method === "POST") {
     const body = await request.json();
     if (body) {
-      //console.log(body);
-      const { day, limit, offset, key } = body;
-      let userId = key;
+      console.log(body);
+      const { day, limit, offset, userid } = body;
+      let userId = userid;
       if (userId !== "-1" && userId.trim().length > 5) {
         userId = decryptId(userId);
       }

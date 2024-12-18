@@ -68,7 +68,8 @@ export const handler = auth(async function POST(req) {
       const { user, id, role } = data;
       const userId = decryptId(id as string);
       const items =
-        await sql`SELECT * FROM tasks WHERE userid=${userId} and isdeleted=false ORDER BY begin_at desc LIMIT 20 OFFSET 0;`;
+        await sql`SELECT * FROM tasks WHERE userid=${userId} and isdeleted=false 
+        ORDER BY begin_at desc LIMIT 20 OFFSET 0;`;
 
       return NextResponse.json(items);
     }
@@ -82,5 +83,6 @@ export const handler = auth(async function POST(req) {
 }) as any;
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 8;
 
 export { handler as GET, handler as POST };

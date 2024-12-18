@@ -3,6 +3,8 @@ import sql from "@/clientdb/connectdb";
 import { decryptId } from "@/utils/functions";
 import { NextResponse } from "next/server";
 
+export const maxDuration = 8;
+
 const handler = auth(async function POST(req) {
   if (req.auth) {
     if (req.method === "POST") {

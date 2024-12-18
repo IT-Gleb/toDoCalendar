@@ -60,6 +60,9 @@ body {
   .font-stroke-4 {
     -webkit-text-stroke: 4px black;
   }
+  .font-stroke-1-white {
+    -webkit-text-stroke: 1px white;
+  }
   .vertical-text {
     writing-mode: vertical-rl;
     text-orientation: sideways;
