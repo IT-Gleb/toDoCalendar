@@ -35,6 +35,21 @@ export default async function Home() {
         </AuthProvider>
 
         <BgSvgTasksComponent />
+        <div className="2xl:hidden">
+          <BgSvgTasksComponent />
+        </div>
+        <div className="xl:hidden">
+          <BgSvgTasksComponent />
+        </div>
+        <div className="lg:hidden">
+          <BgSvgTasksComponent />
+        </div>
+        <div className="md:hidden">
+          <BgSvgTasksComponent />
+        </div>
+        <div className="sm:hidden">
+          <BgSvgTasksComponent />
+        </div>
       </section>
     </>
   );

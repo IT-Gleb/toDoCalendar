@@ -9,6 +9,8 @@ import { signIn } from "@/auth";
 import { NICKNAME, UEMAIL, UKEY, UPASS1 } from "@/utils/data";
 import { userSchema, checkSchema } from "@/zodSchemas/zSchema";
 import { TPropertyDeleteTasks } from "@/components/tasks/deleteTaskForm";
+import { nanoid } from "nanoid";
+import TaskPage from "@/app/(tasks)/tasks/[id]/page";
 
 export async function newTaskAction(
   initialState: TFormState,
@@ -309,3 +311,78 @@ export async function ChangeCompleted(
     console.log((err as Error).message);
   }
 }
+
+//Add child Task in Array of items
+//ВНИМАНИЕ!!! обновлять в базе только задачу содержащую этот JSON
+//parent_id
+export async function addItemTask(
+  paramInit: "init" | "success" | "error",
+  paramFormData: FormData
+): Promise<"init" | "success" | "error"> {
+  let result: "init" | "success" | "error" = paramInit;
+
+  const parentId = (paramFormData.get("pId")?.valueOf() as string) ?? "";
+  let pppId: string | number = "";
+  if (!isNaN(parseInt(parentId))) {
+    pppId = parentId as unknown as number;
+  } else {
+    pppId = parentId as string;
+  }
+
+  const addedTask: Partial<TTask> = {
+    id: paramFormData.get("taskId")?.toString() ?? nanoid(),
+    parent_id: pppId,
+    userId: decryptId(
+      paramFormData.get("user")?.valueOf() as string
+    ) as unknown as number,
+    name: (paramFormData.get("name")?.valueOf() as string) ?? "a001",
+    create_at: Date.now(),
+    begin_at:
+      (paramFormData.get("begin")?.toString() as unknown as number) ??
+      Date.now(),
+    end_at: (paramFormData.get("end")?.valueOf() as number) ?? Date.now(),
+    completed: (paramFormData.get("completed")?.valueOf() as boolean) ?? false,
+
+    items: [],
+    level: parseInt(paramFormData.get("level")?.valueOf() as string) ?? 1,
+    maintask: (paramFormData.get("maintask")?.valueOf() as string) ?? "",
+  };
+
+  const taskPage = paramFormData.get("taskDay")?.valueOf() ?? "2024-12-19";
+
+  const childrenTasks: TTaskList = [];
+  childrenTasks.push(addedTask);
+
+  result = "error";
+  try {
+    const uId = addedTask.userId;
+
+    // await sql`UPDATE tasks SET items=json_build_array(jsonb_build_object(
+    //   'id',${taskId}::text,
+    //   'parent_id',${addedTask.parent_id as string}::text,
+    //   'userid',${addedTask.userId as number}::int,
+    //   'name', ${addedTask.name as string}::text,
+    //   'create_at',${addedTask.create_at as number}::timestamptz,
+    //   'begin_at',${addedTask.begin_at as number}::timestamptz,
+    //   'end_at',${addedTask.end_at as number}::timestamptz,
+    //   'completed',${addedTask.completed as boolean}::boolean,
+    //   'items', ${addedTask.items as never}::json,
+    //   'level',${addedTask.level as number}::int))
+    //   WHERE userid=${uId as number}::int AND id=${pppId as string};`;
+    await sql`UPDATE tasks SET items=${
+      childrenTasks as never
+    }::jsonb WHERE userid=${
+      uId as number
+    }::int AND id=${pppId} AND isdeleted=false;`;
+
+    result = "success";
+    //Обновить данные
+
+    revalidateTag(`task-${taskPage}`);
+    return result;
+  } catch (err) {
+    console.log((err as Error).message);
+    return result;
+  }
+}
+//---------------------------------

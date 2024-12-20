@@ -2,7 +2,10 @@ import { auth } from "@/auth";
 import { AddFormContent } from "@/components/forms/addFormContent";
 import { AddTaskFormComponent } from "@/components/forms/addTaskFormComponent";
 import { NoAuthComponent } from "@/components/noAuthComponent";
-import { ListTaskComponent } from "@/components/tasks/listTaskComponent";
+import {
+  ListTableHead,
+  ListTaskComponent,
+} from "@/components/tasks/listTaskComponent";
 import { Base_URL, getStringFromDate } from "@/utils/functions";
 
 import Link from "next/link";
@@ -21,18 +24,20 @@ async function getData(
       headers: { "Content-Type": "application/json" },
       method: "POST",
       body: JSON.stringify(params),
-      next: { tags: [`task-${params.day}`], revalidate: 2 },
+      next: { tags: [`task-${params.day}`], revalidate: 5 },
     }
   );
+  let res: TTaskList | TResponseError = {
+    status: "500",
+    message: "Ошибка получения данных!",
+  };
 
+  //console.log(result);
   if (result.ok) {
-    //console.log(result);
-
-    const res = await result.json();
-
-    return res;
+    res = await result.json();
   }
-  return { status: "Error", message: "Ошибка получения данных!!!" };
+
+  return res;
 }
 
 export default async function TaskPage({ params }: { params: { id: string } }) {
@@ -83,7 +88,8 @@ export default async function TaskPage({ params }: { params: { id: string } }) {
           <AddFormContent paramDay={id} />
         </AddTaskFormComponent>
       </section>
-      <section className="w-[96%] md:w-[70%] xl:w-[60%] mx-auto mt-5">
+      <section className="w-fit mx-auto mt-5 p-0 sm:p-1 lg:p-2 xl:p-4 max-h-[60vh] overflow-y-auto overflow-x-hidden">
+        <ListTableHead />
         <ListTaskComponent paramList={TaskData} paramPage={id} />
       </section>
       <section className="w-fit mx-auto mt-5">

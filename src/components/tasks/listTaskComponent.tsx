@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { ParentTask } from "./parentTask";
 import { ChildTask } from "./childTask";
 
-const ListTableHead = memo(() => {
+export const ListTableHead: React.FC = memo(() => {
   return (
     <div className=" sticky top-0 z-[2] grid grid-cols-5 gap-x-2 bg-sky-600 text-white font-bold text-[0.7rem] uppercase">
       <div className="border-r border-white p-2 overflow-hidden">
@@ -18,10 +18,9 @@ const ListTableHead = memo(() => {
 
 export const ListTaskComponent = memo(
   ({ paramList, paramPage }: { paramList: TTaskList; paramPage: string }) => {
-    //console.log(paramList);
+    // console.log(paramPage);
     return (
-      <div className=" w-fit mx-auto max-h-[60vh] overflow-y-auto overflow-x-hidden ">
-        <ListTableHead />
+      <div className=" w-fit mx-auto">
         {paramList && paramList.length < 1 && (
           <div className="w-fit mx-auto p-2 text-[1rem] md:text-[1.5rem] text-sky-500 font-bold uppercase">
             у вас нет задач на эту дату.
@@ -33,13 +32,20 @@ export const ListTaskComponent = memo(
             {paramList.map((item) => {
               const isParent: boolean =
                 Array.isArray(item.items) && item.items.length > 0;
+              //console.log(item.items);
 
               if (isParent) {
-                return <ParentTask key={item.id} paramItem={item} />;
+                return (
+                  <ParentTask
+                    key={(item.id as string) + Math.round(125)}
+                    paramItem={item}
+                    paramPage={paramPage}
+                  />
+                );
               } else {
                 return (
                   <ChildTask
-                    key={item.id}
+                    key={(item.id as string) + Math.round(345)}
                     paramItem={item}
                     paramPage={paramPage}
                   />

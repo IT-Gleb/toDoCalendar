@@ -748,6 +748,12 @@ export function getNowStringFromDate() {
   return result;
 }
 
-export function getValue<T, K extends keyof T>(param: T, key: K) {
+export function getValue<T, K extends keyof T>(param: T, key: K): T[K] {
   return param[key];
+}
+
+function groupTasks(paramTasks: TTaskList, paramGroup: "completed") {
+  return Object.groupBy(paramTasks, (item) =>
+    item[paramGroup] ? "Worked" : "NotWorked"
+  );
 }

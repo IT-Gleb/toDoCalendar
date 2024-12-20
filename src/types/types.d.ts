@@ -10,6 +10,7 @@ declare type TTask = {
   level: number;
   userId: number | null;
   taskscount: number | null;
+  maintask: number | string | null;
 };
 
 declare type TTaskList = Array<Partial<TTask>>;
@@ -102,3 +103,4 @@ declare type TResponseError = {
 };
 
 declare type TPagination = "existsTask" | "notTasks";
+declare type TEnumForm = "addSubTask" | "deleteTask";

@@ -25,7 +25,7 @@ export const handler = async (request: NextRequest) => {
   if (request.method === "POST") {
     const body = await request.json();
     if (body) {
-      console.log(body);
+      //console.log(body);
       const { day, limit, offset, userid } = body;
       let userId = userid;
       if (userId !== "-1" && userId.trim().length > 5) {
@@ -36,9 +36,9 @@ export const handler = async (request: NextRequest) => {
       try {
         data =
           (await sql`SELECT id, parent_id, userid, name, completed, begin_at, end_at,
-          items, (SELECT 0) as level 
+          items, (SELECT 0) as level, (SELECT id) as maintask 
           FROM tasks 
-          WHERE userid=${userId} AND begin_at::date=${day} AND isdeleted=false 
+          WHERE userid=${userId}::int AND begin_at::date=${day} AND isdeleted=false 
           ORDER BY begin_at LIMIT ${limit} OFFSET ${offset}`) as TTaskList;
         //console.log(data);
         return NextResponse.json(data);
