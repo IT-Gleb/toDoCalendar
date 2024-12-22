@@ -11,6 +11,7 @@ import { userSchema, checkSchema } from "@/zodSchemas/zSchema";
 import { TPropertyDeleteTasks } from "@/components/tasks/deleteTaskForm";
 import { nanoid } from "nanoid";
 import TaskPage from "@/app/(tasks)/tasks/[id]/page";
+import { isValue } from "@/utils/tasksFunctions";
 
 export async function newTaskAction(
   initialState: TFormState,
@@ -312,6 +313,25 @@ export async function ChangeCompleted(
   }
 }
 
+//Получить JSON данные из головной задачи
+async function getTaskDbJson(
+  paramTaskId: number,
+  paramUserId: string | number
+) {
+  try {
+    const childTasks =
+      await sql`SELECT items::jsonb FROM tasks WHERE isdeleted=false AND id=${paramTaskId} AND userid=${paramUserId};`;
+    console.log(childTasks[0].items);
+    if (isValue(childTasks[0].items)) {
+      return childTasks[0].items as TTaskList;
+    } else {
+      return [];
+    }
+  } catch (err) {
+    console.log((err as Error).message);
+  }
+}
+
 //Add child Task in Array of items
 //ВНИМАНИЕ!!! обновлять в базе только задачу содержащую этот JSON
 //parent_id
@@ -335,13 +355,16 @@ export async function addItemTask(
     userId: decryptId(
       paramFormData.get("user")?.valueOf() as string
     ) as unknown as number,
-    name: (paramFormData.get("name")?.valueOf() as string) ?? "a001",
+    name: (paramFormData.get("nameTask")?.valueOf() as string) ?? "a001",
     create_at: Date.now(),
     begin_at:
       (paramFormData.get("begin")?.toString() as unknown as number) ??
       Date.now(),
     end_at: (paramFormData.get("end")?.valueOf() as number) ?? Date.now(),
-    completed: (paramFormData.get("completed")?.valueOf() as boolean) ?? false,
+    completed:
+      (paramFormData.get("completed")?.valueOf() as string) === "false"
+        ? false
+        : true,
 
     items: [],
     level: parseInt(paramFormData.get("level")?.valueOf() as string) ?? 1,
@@ -350,13 +373,30 @@ export async function addItemTask(
 
   const taskPage = paramFormData.get("taskDay")?.valueOf() ?? "2024-12-19";
 
-  const childrenTasks: TTaskList = [];
+  const uId = addedTask.userId;
+
+  //Получить подзадачи
+  const childrenTasks: TTaskList = (await getTaskDbJson(
+    pppId as number,
+    uId as number
+  )) as TTaskList;
+  //Добавить и отсортировать по началу
   childrenTasks.push(addedTask);
+  if (childrenTasks.length > 1) {
+    childrenTasks.sort((a, b) => {
+      if (
+        (a.begin_at as unknown as number) < (b.begin_at as unknown as number)
+      ) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+  }
+  //console.log(childrenTasks);
 
   result = "error";
   try {
-    const uId = addedTask.userId;
-
     // await sql`UPDATE tasks SET items=json_build_array(jsonb_build_object(
     //   'id',${taskId}::text,
     //   'parent_id',${addedTask.parent_id as string}::text,
@@ -369,6 +409,7 @@ export async function addItemTask(
     //   'items', ${addedTask.items as never}::json,
     //   'level',${addedTask.level as number}::int))
     //   WHERE userid=${uId as number}::int AND id=${pppId as string};`;
+
     await sql`UPDATE tasks SET items=${
       childrenTasks as never
     }::jsonb WHERE userid=${

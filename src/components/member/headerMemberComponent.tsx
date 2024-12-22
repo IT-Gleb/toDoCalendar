@@ -23,7 +23,7 @@ export default function HeaderMemberComponent() {
          after:content-[''] after:w-[60px] after:h-[10px] after:bg-transparent after:border-t-8
           after:border-double after:border-white/55"
         >
-          <h2 className="text-[1.6rem] font-stroke-1-white whitespace-nowrap uppercase md:text-[2.8rem] bg-clip-text text-transparent bg-[linear-gradient(90deg,theme(colors.transparent),theme(colors.yellow.300),theme(colors.green.500),theme(colors.lime.300),theme(colors.green.500),theme(colors.yellow.300),theme(colors.transparent))] ">
+          <h2 className="text-[1.6rem] font-stroke-1-white-transparent whitespace-nowrap uppercase md:text-[2.8rem] bg-clip-text text-transparent bg-[linear-gradient(90deg,theme(colors.transparent),theme(colors.yellow.300),theme(colors.green.500),theme(colors.lime.300),theme(colors.green.500),theme(colors.yellow.300),theme(colors.transparent))] ">
             Ваши задачи
           </h2>
         </div>

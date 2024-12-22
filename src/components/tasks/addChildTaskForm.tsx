@@ -1,5 +1,10 @@
 import { addItemTask } from "@/server/actions";
-import { getNowYear } from "@/utils/functions";
+import {
+  DateAddMinutesToInput,
+  formatDateToInput,
+  getNowYear,
+} from "@/utils/functions";
+import { isValue } from "@/utils/tasksFunctions";
 import { nanoid } from "nanoid";
 import { memo } from "react";
 import { useFormState, useFormStatus } from "react-dom";
@@ -50,8 +55,117 @@ export const AddChildTaskForm: React.FC<TChildTaskFormParam> = memo((param) => {
           x
         </button>
       </div>
-      <article className="p-2 min-h-[10vh] bg-[url('../../assets/images/svg/back02.svg')] bg-no-repeat bg-cover bg-center relative flex-auto">
+      <article className="p-2 min-h-[2vh] bg-[url('../../assets/images/svg/back02.svg')] bg-no-repeat bg-cover bg-center relative flex-auto">
         <p>{param.paramItem.id}</p>
+
+        <form action={formAction} className="mt-5">
+          <div className="w-full text-center p-2 min-h-[5vh] flex flex-col items-start">
+            <label
+              title="Задача"
+              className=" w-full text-[0.8rem] relative before:content-[attr(title)] before:text-[0.7rem] before:bg-white before:p-1 before:absolute before:left-0 before:top-[-1.2rem] focus-within:before:font-bold focus-within:before:text-sky-700 focus-within:before:animate-pulse"
+            >
+              <input
+                type="text"
+                name="nameTask"
+                id="nameTask"
+                defaultValue={""}
+                className="w-[99%] pl-2 py-2 pr-6 bg-transparent focus:bg-[linear-gradient(90deg,theme(colors.white),theme(colors.white),theme(colors.sky.200/70),theme(colors.transparent))] outline-none border-b border-b-slate-300 focus:border-b-sky-600 placeholder:text-slate-300 "
+                maxLength={100}
+                required
+                autoComplete="off"
+                placeholder="назовите задачу"
+              />
+            </label>
+            <div className="mt-6 flex gap-x-8 items-start">
+              <label
+                title="Старт"
+                className=" w-full text-[0.8rem] relative before:content-[attr(title)] before:absolute before:left-0 top-[-1.1rem] before:p-1 before:bg-white before:text-[0.7rem] focus-within:before:font-bold focus-within:before:text-sky-700 focus-within:before:animate-pulse"
+              >
+                <input
+                  type="datetime-local"
+                  name="begin"
+                  required
+                  className="mt-6 p-2 bg-transparent outline-none border-b border-b-slate-300 focus:bg-[linear-gradient(90deg,theme(colors.white),theme(colors.white),theme(colors.sky.200/70),theme(colors.transparent))] focus:border-b-sky-600"
+                  defaultValue={formatDateToInput(
+                    new Date(
+                      isValue(param.paramItem.end_at)
+                        ? (param.paramItem.end_at as number)
+                        : Date.now()
+                    ).getTime()
+                  )}
+                />
+              </label>
+
+              <label
+                title="Финиш"
+                className=" w-full text-[0.8rem] relative before:content-[attr(title)] before:absolute before:left-0 top-[-1.1rem] before:p-1 before:bg-white before:text-[0.7rem] focus-within:before:font-bold focus-within:before:text-sky-700 focus-within:before:animate-pulse"
+              >
+                <input
+                  type="datetime-local"
+                  name="end"
+                  className="mt-6 p-2 bg-transparent outline-none border-b border-b-slate-300 focus:bg-[linear-gradient(90deg,theme(colors.white),theme(colors.white),theme(colors.sky.200/70),theme(colors.transparent))] focus:border-b-sky-600"
+                  defaultValue={DateAddMinutesToInput(
+                    isValue(param.paramItem.end_at)
+                      ? (param.paramItem.end_at as number)
+                      : Date.now(),
+                    30
+                  )}
+                />
+              </label>
+            </div>
+            <input type="hidden" name="taskId" defaultValue={nanoid()} />
+            <input type="hidden" name="pId" defaultValue={param.paramItem.id} />
+            <input
+              type="hidden"
+              name="level"
+              defaultValue={
+                isValue(param.paramItem.level)
+                  ? Number(param.paramItem.level) + 1
+                  : 1
+              }
+            />
+
+            <input type="hidden" name="user" defaultValue={param.paramUser} />
+            <label
+              title="Статус"
+              className="mt-3 flex items-center justify-center gap-x-4 border border-slate-500 p-4 rounded-sm text-[0.7rem] relative before:content-[attr(title)] focus-within:border-sky-600 focus-within:before:font-bold before:focus-within:animate-pulse before:focus-within:text-sky-700 before:bg-white before:top-[-0.8rem] before:left-[50%] before:translate-x-[-50%] before:absolute before:text-[0.7rem] before:p-1"
+            >
+              <label className="flex flex-col gap-y-1 cursor-pointer">
+                <span className=" order-2">Не завершена</span>
+                <input
+                  type="radio"
+                  name="completed"
+                  id="item1"
+                  defaultValue={"false"}
+                  className="cursor-pointer"
+                />
+              </label>
+              <label className="flex flex-col gap-y-1 cursor-pointer">
+                <span className=" order-2">Завершена</span>
+                <input
+                  type="radio"
+                  name="completed"
+                  id="item2"
+                  defaultValue={"true"}
+                  className="cursor-pointer"
+                />
+              </label>
+            </label>
+            <input
+              type="hidden"
+              name="taskDay"
+              defaultValue={param.paramTaskDay}
+            />
+            <input
+              type="hidden"
+              name="maintask"
+              defaultValue={param.paramItem.maintask as string}
+            />
+            <div className="self-end">
+              <BtnAddTask />
+            </div>
+          </div>
+        </form>
         <p
           className={`text-white p-2 indent-2 ${
             state === "init"
@@ -71,61 +185,6 @@ export const AddChildTaskForm: React.FC<TChildTaskFormParam> = memo((param) => {
             ? "Подзадача добавлена!"
             : ""}
         </p>
-        <form action={formAction} className="mt-5">
-          <div className="text-center p-2">
-            <input type="hidden" name="taskId" defaultValue={nanoid()} />
-            <input type="hidden" name="pId" defaultValue={param.paramItem.id} />
-            <input
-              type="hidden"
-              name="level"
-              defaultValue={
-                param.paramItem.level !== undefined
-                  ? Number(param.paramItem.level) + 1
-                  : 1
-              }
-            />
-            <input
-              type="hidden"
-              name="begin"
-              defaultValue={
-                param.paramItem.begin_at !== undefined
-                  ? (param.paramItem.begin_at as number)
-                  : Date.now()
-              }
-            />
-            <input
-              type="hidden"
-              name="end"
-              defaultValue={
-                param.paramItem.end_at !== undefined
-                  ? (param.paramItem.end_at as number)
-                  : Date.now()
-              }
-            />
-            <input type="hidden" name="user" defaultValue={param.paramUser} />
-            <input
-              type="hidden"
-              name="name"
-              defaultValue={"rerproba-1 Task-23"}
-            />
-            <input
-              type="hidden"
-              name="completed"
-              defaultValue={false as unknown as number}
-            />
-            <input
-              type="hidden"
-              name="taskDay"
-              defaultValue={param.paramTaskDay}
-            />
-            <input
-              type="hidden"
-              name="maintask"
-              defaultValue={param.paramItem.maintask as string}
-            />
-            <BtnAddTask />
-          </div>
-        </form>
       </article>
       <div className="bg-sky-400/75 text-slate-700 min-h-[2vh] p-2 text-center text-[0.7rem] font-mono">
         &copy; by Gleb Torgashin 2021-{getNowYear()}

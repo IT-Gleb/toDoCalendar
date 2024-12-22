@@ -61,7 +61,10 @@ body {
     -webkit-text-stroke: 4px black;
   }
   .font-stroke-1-white {
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.7);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 1);
+  }
+  .font-stroke-1-white-transparent {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.25);
   }
   .vertical-text {
     writing-mode: vertical-rl;

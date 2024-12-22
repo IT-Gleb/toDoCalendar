@@ -146,7 +146,11 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
             : "bg-sky-200 odd:bg-sky-50"
         }   text-[0.8rem]/[1rem]`}
         style={{
-          marginLeft: param.paramItem.level ? param.paramItem.level * 12 : 8,
+          marginLeft:
+            isValue(param.paramItem.level) &&
+            (param.paramItem.level as number) > 0
+              ? (param.paramItem.level as number) * 15
+              : 0,
         }}
       >
         <span className="align-middle p-1 line-clamp-4 first-letter:uppercase">

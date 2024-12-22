@@ -6,6 +6,7 @@ import { TskButton } from "./childTask";
 import { DialogComponent, IDialog } from "../dialog/dialogComponent";
 import { AddChildTaskForm } from "./addChildTaskForm";
 import { useSession } from "next-auth/react";
+import { isValue } from "@/utils/tasksFunctions";
 
 type TParentTaskProps = {
   paramItem: Partial<TTask>;
@@ -65,7 +66,11 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
       <div
         className="bg-sky-400 text-green-100 rounded-s-2xl p-2 text-[0.8rem] font-bold col-span-5 "
         style={{
-          marginLeft: param.paramItem.level ? param.paramItem.level * 12 : 8,
+          marginLeft:
+            isValue(param.paramItem.level) &&
+            (param.paramItem.level as number) > 0
+              ? (param.paramItem.level as number) * 15
+              : 0,
         }}
       >
         <div className="align-middle first-letter:uppercase flex items-center justify-between gap-x-2 gap-y-1 ">
@@ -80,12 +85,15 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
           </div>
         </div>
       </div>
-      {hasChildren && (
-        <ListTaskComponent
-          paramList={param.paramItem.items as TTaskList}
-          paramPage={param.paramPage}
-        />
-      )}
+      {/* Подзадачи */}
+      <div>
+        {hasChildren && (
+          <ListTaskComponent
+            paramList={param.paramItem.items as TTaskList}
+            paramPage={param.paramPage}
+          />
+        )}
+      </div>
     </>
   );
 });
