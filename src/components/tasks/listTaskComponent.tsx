@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import { ParentTask } from "./parentTask";
 import { ChildTask } from "./childTask";
+import { SortTaskByBeginAt } from "@/utils/tasksFunctions";
 
 export const ListTableHead: React.FC = memo(() => {
   return (
@@ -20,7 +21,7 @@ export const ListTaskComponent = memo(
   ({ paramList, paramPage }: { paramList: TTaskList; paramPage: string }) => {
     // console.log(paramPage);
     return (
-      <div className=" w-fit mx-auto">
+      <>
         {paramList && paramList.length < 1 && (
           <div className="w-fit mx-auto p-2 text-[1rem] md:text-[1.5rem] text-sky-500 font-bold uppercase">
             у вас нет задач на эту дату.
@@ -29,7 +30,7 @@ export const ListTaskComponent = memo(
 
         {paramList && paramList.length > 0 && (
           <ul className="p-1">
-            {paramList.map((item) => {
+            {paramList.sort(SortTaskByBeginAt).map((item) => {
               const isParent: boolean =
                 Array.isArray(item.items) && item.items.length > 0;
               //console.log(item.items);
@@ -54,7 +55,7 @@ export const ListTaskComponent = memo(
             })}
           </ul>
         )}
-      </div>
+      </>
     );
   }
 );

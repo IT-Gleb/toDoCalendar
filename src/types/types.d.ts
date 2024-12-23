@@ -13,7 +13,9 @@ declare type TTask = {
   maintask: number | string | null;
 };
 
-declare type TTaskList = Array<Partial<TTask>>;
+declare type TPartTask = Partial<TTask>;
+
+declare type TTaskList = Array<TPartTask>;
 
 declare type TMainMenu = {
   id: string;

@@ -10,8 +10,13 @@ import { NICKNAME, UEMAIL, UKEY, UPASS1 } from "@/utils/data";
 import { userSchema, checkSchema } from "@/zodSchemas/zSchema";
 import { TPropertyDeleteTasks } from "@/components/tasks/deleteTaskForm";
 import { nanoid } from "nanoid";
-import TaskPage from "@/app/(tasks)/tasks/[id]/page";
-import { isValue } from "@/utils/tasksFunctions";
+import {
+  getCompletedFromList,
+  getMaxBeginAtFromList,
+  getMinBeginAtFromList,
+  getTasksFromObject,
+  isValue,
+} from "@/utils/tasksFunctions";
 
 export async function newTaskAction(
   initialState: TFormState,
@@ -305,7 +310,7 @@ export async function ChangeCompleted(
   const task: number = parseInt(paramTask);
 
   try {
-    await sql`UPDATE tasks SET completed=${param} WHERE id=${task} AND userid=${user}`;
+    await sql`UPDATE tasks SET completed=${param} WHERE id=${task} AND userid=${user} AND isdeleted=false`;
 
     revalidateTag(`task-${paramPage}`);
   } catch (err) {
@@ -321,7 +326,7 @@ async function getTaskDbJson(
   try {
     const childTasks =
       await sql`SELECT items::jsonb FROM tasks WHERE isdeleted=false AND id=${paramTaskId} AND userid=${paramUserId};`;
-    console.log(childTasks[0].items);
+    //console.log(childTasks[0].items);
     if (isValue(childTasks[0].items)) {
       return childTasks[0].items as TTaskList;
     } else {
@@ -371,6 +376,9 @@ export async function addItemTask(
     maintask: (paramFormData.get("maintask")?.valueOf() as string) ?? "",
   };
 
+  const isJsonTask: boolean =
+    paramFormData.get("jsonTask")?.valueOf() === "true" ? true : false;
+
   const taskPage = paramFormData.get("taskDay")?.valueOf() ?? "2024-12-19";
 
   const uId = addedTask.userId;
@@ -380,19 +388,19 @@ export async function addItemTask(
     pppId as number,
     uId as number
   )) as TTaskList;
-  //Добавить и отсортировать по началу
-  childrenTasks.push(addedTask);
-  if (childrenTasks.length > 1) {
-    childrenTasks.sort((a, b) => {
-      if (
-        (a.begin_at as unknown as number) < (b.begin_at as unknown as number)
-      ) {
-        return -1;
-      } else {
-        return 1;
-      }
-    });
+
+  if (isJsonTask) {
+  } else {
+    //Добавить и отсортировать по началу
+    childrenTasks.push(addedTask);
   }
+
+  //Проставить completed и дату начала и окончания учитывая вложенные задачи
+  let completedTask: boolean = getCompletedFromList(childrenTasks);
+  const beginAt: number = getMinBeginAtFromList(childrenTasks);
+  const endAt: number = getMaxBeginAtFromList(childrenTasks);
+
+  //console.log(completedTask);
   //console.log(childrenTasks);
 
   result = "error";
@@ -412,14 +420,13 @@ export async function addItemTask(
 
     await sql`UPDATE tasks SET items=${
       childrenTasks as never
-    }::jsonb WHERE userid=${
-      uId as number
-    }::int AND id=${pppId} AND isdeleted=false;`;
+    }::jsonb, completed=${completedTask}, begin_at=${beginAt}::timestamptz, end_at=${endAt}::timestamptz 
+    WHERE userid=${uId as number}::int AND id=${pppId} AND isdeleted=false;`;
 
     result = "success";
     //Обновить данные
-
     revalidateTag(`task-${taskPage}`);
+
     return result;
   } catch (err) {
     console.log((err as Error).message);

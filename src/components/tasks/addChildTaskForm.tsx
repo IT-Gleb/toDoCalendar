@@ -6,7 +6,7 @@ import {
 } from "@/utils/functions";
 import { isValue } from "@/utils/tasksFunctions";
 import { nanoid } from "nanoid";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
 const BtnAddTask: React.FC = () => {
@@ -34,6 +34,11 @@ const initAdd: "init" | "success" | "error" = "init";
 
 export const AddChildTaskForm: React.FC<TChildTaskFormParam> = memo((param) => {
   const [state, formAction] = useFormState(addItemTask, initAdd);
+  const [isJsonTask] = useState<boolean>(
+    (param.paramItem.level as number) > 0 &&
+      typeof param.paramItem.id == "string" &&
+      (param.paramItem.id as string).length > 8
+  );
   //console.log(param.paramTaskDay);
 
   return (
@@ -56,7 +61,11 @@ export const AddChildTaskForm: React.FC<TChildTaskFormParam> = memo((param) => {
         </button>
       </div>
       <article className="p-2 min-h-[2vh] bg-[url('../../assets/images/svg/back02.svg')] bg-no-repeat bg-cover bg-center relative flex-auto">
-        <p>{param.paramItem.id}</p>
+        <p>
+          {param.paramItem.id} <span>{param.paramItem.level}</span>
+          {"          "}
+          <span>{isJsonTask ? "true" : "false"}</span>
+        </p>
 
         <form action={formAction} className="mt-5">
           <div className="w-full text-center p-2 min-h-[5vh] flex flex-col items-start">
@@ -160,6 +169,12 @@ export const AddChildTaskForm: React.FC<TChildTaskFormParam> = memo((param) => {
               type="hidden"
               name="maintask"
               defaultValue={param.paramItem.maintask as string}
+            />
+            <input
+              type="hidden"
+              name="jsonTask"
+              id="jsonTask"
+              defaultValue={isJsonTask ? "true" : "false"}
             />
             <div className="self-end">
               <BtnAddTask />

@@ -149,7 +149,7 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
           marginLeft:
             isValue(param.paramItem.level) &&
             (param.paramItem.level as number) > 0
-              ? (param.paramItem.level as number) * 15
+              ? (param.paramItem.level as number) * 12
               : 0,
         }}
       >

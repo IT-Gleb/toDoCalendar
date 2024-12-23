@@ -7,6 +7,13 @@ import { DialogComponent, IDialog } from "../dialog/dialogComponent";
 import { AddChildTaskForm } from "./addChildTaskForm";
 import { useSession } from "next-auth/react";
 import { isValue } from "@/utils/tasksFunctions";
+import {
+  MyPipeStr,
+  TimeZoneDateToString,
+  returnStrPartOne,
+  returnStrPartTwo,
+} from "@/utils/functions";
+import { AnimatePresence, motion, useAnimate } from "framer-motion";
 
 type TParentTaskProps = {
   paramItem: Partial<TTask>;
@@ -21,6 +28,8 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const dialogRef = useRef<IDialog>(null);
   const [isTypeDialog, setIsTypeDialog] = useState<TEnumForm>("addSubTask");
+  const [aRef, animate] = useAnimate();
+  const [isOpenChild, setOpenChild] = useState<boolean>(false); //Закрыто по умолчанию
 
   const handleAddDialog = () => {
     setIsTypeDialog("addSubTask");
@@ -49,6 +58,25 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
     }
   }, [showModal]);
 
+  //Открыть закрыть субзадачи
+  const handleOpenClose = () => {
+    setOpenChild((prev) => !prev);
+  };
+
+  useEffect(() => {
+    if (isOpenChild) {
+      animate(
+        aRef.current,
+        {
+          y: [-50, 0],
+          height: [0, "auto"],
+          opacity: [0, 1],
+        },
+        { ease: "easeOut" }
+      );
+    }
+  }, [isOpenChild]);
+  //-----------------------------------
   return (
     <>
       {showModal && (
@@ -63,41 +91,87 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
           )}
         </DialogComponent>
       )}
-      <div
-        className={`${
-          param.paramItem.completed
-            ? "bg-green-400 text-sky-700"
-            : "bg-sky-600 text-green-100"
-        }  rounded-s-2xl p-2 text-[0.8rem] font-bold col-span-5 `}
-        style={{
-          marginLeft:
-            isValue(param.paramItem.level) &&
-            (param.paramItem.level as number) > 0
-              ? (param.paramItem.level as number) * 15
-              : 0,
-        }}
-      >
-        <div className="align-middle first-letter:uppercase flex items-center justify-between gap-x-2 gap-y-1 ">
-          {param.paramItem.name?.trim()}
-          <div className="flex flex-col sm:flex-row items-center justify-center p-1">
-            <TskButton
-              paramBgColor={"bg-sky-600"}
-              paramTitle="Добавить подзадачу"
-              paramText={"+"}
-              paramClick={handleAddDialog}
-            />
+      <li>
+        <div
+          className={`${
+            param.paramItem.completed
+              ? "bg-green-400 text-sky-700"
+              : "bg-sky-500 text-green-50"
+          }  rounded-s-2xl p-1 text-[0.8rem] font-bold col-span-5 `}
+          style={{
+            marginLeft:
+              isValue(param.paramItem.level) &&
+              (param.paramItem.level as number) > 0
+                ? (param.paramItem.level as number) * 5
+                : 0,
+          }}
+        >
+          <div className="pl-3 align-middle first-letter:uppercase flex items-center justify-between gap-x-2 gap-y-1 ">
+            <span className=" line-clamp-2 max-w-[300px]">
+              {param.paramItem.name?.trim()}
+            </span>
+            <span className="overflow-hidden max-w-[100px]">
+              {param.paramItem.completed ? "OK" : "Не завершена"}
+            </span>
+            <span className="max-w-[120px]">
+              {MyPipeStr(
+                TimeZoneDateToString,
+                returnStrPartOne
+              )(param.paramItem.begin_at as unknown as string)}{" "}
+              {MyPipeStr(
+                TimeZoneDateToString,
+                returnStrPartTwo
+              )(param.paramItem.begin_at as unknown as string)}
+            </span>
+            <span className="max-w-[120px]">
+              {MyPipeStr(
+                TimeZoneDateToString,
+                returnStrPartOne
+              )(param.paramItem.end_at as unknown as string)}{" "}
+              {MyPipeStr(
+                TimeZoneDateToString,
+                returnStrPartTwo
+              )(param.paramItem.end_at as unknown as string)}
+            </span>
+            <div className="flex flex-col sm:flex-row items-center justify-center p-1 min-w-[100px]">
+              <TskButton
+                paramBgColor={"bg-sky-600"}
+                paramTitle="Открыть/Закрыть"
+                paramText={`${isOpenChild ? "^" : "-"}`}
+                paramClick={handleOpenClose}
+              />
+              <TskButton
+                paramBgColor={"bg-sky-600"}
+                paramTitle="Добавить подзадачу"
+                paramText={"+"}
+                paramClick={handleAddDialog}
+              />
+            </div>
           </div>
         </div>
-      </div>
-      {/* Подзадачи */}
-      <div>
+        {/* Подзадачи */}
+
         {hasChildren && (
-          <ListTaskComponent
-            paramList={param.paramItem.items as TTaskList}
-            paramPage={param.paramPage}
-          />
+          <AnimatePresence>
+            {isOpenChild && (
+              <motion.div
+                ref={aRef}
+                exit={{
+                  opacity: 0,
+                  height: 0,
+                  y: 0,
+                  transition: { ease: "easeOut" },
+                }}
+              >
+                <ListTaskComponent
+                  paramList={param.paramItem.items as TTaskList}
+                  paramPage={param.paramPage}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         )}
-      </div>
+      </li>
     </>
   );
 });
