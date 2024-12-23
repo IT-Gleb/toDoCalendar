@@ -64,7 +64,11 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
         </DialogComponent>
       )}
       <div
-        className="bg-sky-400 text-green-100 rounded-s-2xl p-2 text-[0.8rem] font-bold col-span-5 "
+        className={`${
+          param.paramItem.completed
+            ? "bg-green-400 text-sky-700"
+            : "bg-sky-600 text-green-100"
+        }  rounded-s-2xl p-2 text-[0.8rem] font-bold col-span-5 `}
         style={{
           marginLeft:
             isValue(param.paramItem.level) &&

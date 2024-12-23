@@ -38,12 +38,12 @@ export const AddChildTaskForm: React.FC<TChildTaskFormParam> = memo((param) => {
 
   return (
     <div className="w-[90%] sm:w-[80%] md:w-[75%] lg:w-[60%] flex flex-col mx-auto border-4 border-slate-100 rounded-sm lg:rounded-lg bg-white overflow-hidden text-[0.75rem]">
-      <div className="bg-sky-400 text-yellow-50 min-h-[2vh] p-2 flex items-start gap-x-1 justify-between">
+      <div className="bg-sky-400 text-sky-800 min-h-[2vh] p-2 flex items-start gap-x-1 justify-between">
         <span className="line-clamp-3">
           Добавить подзадачу к ::
-          <span className="text-[0.85] font bold text-yellow-100 line-clamp-2 indent-2">
+          <p className="text-[0.85] font bold text-yellow-50 line-clamp-2 indent-2">
             {param.paramItem.name}
-          </span>
+          </p>
         </span>
         <button
           type="button"
