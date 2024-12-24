@@ -63,10 +63,10 @@ export function StrTimeFromOneNumber(paramDate: number): string {
 
   const dt = new Date(paramDate);
   let hour: string | number = dt.getHours() as number;
-  hour = hour < 10 ? "0" + hour : (hour as unknown as string);
+  hour = ZeroToNumber(hour);
 
   let minutes: string | number = dt.getMinutes() as number;
-  minutes = minutes < 10 ? "0" + minutes : (minutes as unknown as string);
+  minutes = ZeroToNumber(minutes);
   result = hour + ":" + minutes;
 
   return result;
@@ -676,6 +676,12 @@ export function ChangeDateItemsMonthAdd(param: string): string {
 //Принять строку типа day-month-year Поменять местами год и день,
 // вернуть строку типа year-month-day
 export function ChangeDateItems(param: string): string {
+  let dateStr = new RegExp("^[0-9]{2,2}-[0-9]{2,2}-[0-9]{4,4}$", "giu");
+
+  //console.log(param, " - ", dateStr.test(param));
+  if (!dateStr.test(param)) {
+    return "Error param dateTime  - " + param;
+  }
   const paramLength: number = 3;
 
   let result: string = param;
@@ -688,7 +694,12 @@ export function ChangeDateItems(param: string): string {
   arrayDate[2] = tmp;
 
   result = arrayDate.join("-");
-  return result;
+  dateStr = new RegExp("^[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2}$", "giu");
+  if (dateStr.test(result)) {
+    return result;
+  }
+
+  return "Error dateTime format";
 }
 //---------------------------------------------------------------------------------------------
 
