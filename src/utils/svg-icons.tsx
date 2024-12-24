@@ -160,6 +160,44 @@ function DaySelect_SVG({
   );
 }
 
+function ArrowUp_SVG() {
+  return (
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 512 512"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M419.5 337.5L256.5 174.5L93.5 337.5"
+        stroke="currentColor"
+        strokeWidth="24"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function ArrowDown_SVG() {
+  return (
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 512 512"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M93.5 174.5L256.5 337.5L419.5 174.5"
+        stroke="currentColor"
+        strokeWidth="24"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export {
   Selected_SVG,
   Next_SVG,
@@ -167,4 +205,6 @@ export {
   Plus_SVG,
   Minus_SVG,
   DaySelect_SVG,
+  ArrowUp_SVG,
+  ArrowDown_SVG,
 };

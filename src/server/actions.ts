@@ -346,7 +346,11 @@ export async function addItemTask(
 ): Promise<"init" | "success" | "error"> {
   let result: "init" | "success" | "error" = paramInit;
 
-  const parentId = (paramFormData.get("pId")?.valueOf() as string) ?? "";
+  const isJsonTask: boolean =
+    paramFormData.get("jsonTask")?.valueOf() === "true" ? true : false;
+
+  const mainTaskId = paramFormData.get("maintask")?.valueOf() as number;
+  const parentId = paramFormData.get("pId")?.valueOf() as string;
   let pppId: string | number = "";
   if (!isNaN(parseInt(parentId))) {
     pppId = parentId as unknown as number;
@@ -376,20 +380,26 @@ export async function addItemTask(
     maintask: (paramFormData.get("maintask")?.valueOf() as string) ?? "",
   };
 
-  const isJsonTask: boolean =
-    paramFormData.get("jsonTask")?.valueOf() === "true" ? true : false;
-
   const taskPage = paramFormData.get("taskDay")?.valueOf() ?? "2024-12-19";
 
   const uId = addedTask.userId;
 
   //Получить подзадачи
   const childrenTasks: TTaskList = (await getTaskDbJson(
-    pppId as number,
+    isJsonTask ? (addedTask.maintask as number) : (pppId as number),
     uId as number
   )) as TTaskList;
 
   if (isJsonTask) {
+    const parentTask = childrenTasks.find((item) => {
+      if (typeof item.id == "string") {
+        return item.id === addedTask.parent_id;
+      }
+    });
+    if (isValue(parentTask)) {
+      parentTask?.items?.push(addedTask);
+    }
+    //console.log(parentTask);
   } else {
     //Добавить и отсортировать по началу
     childrenTasks.push(addedTask);
@@ -420,8 +430,10 @@ export async function addItemTask(
 
     await sql`UPDATE tasks SET items=${
       childrenTasks as never
-    }::jsonb, completed=${completedTask}, begin_at=${beginAt}::timestamptz, end_at=${endAt}::timestamptz 
-    WHERE userid=${uId as number}::int AND id=${pppId} AND isdeleted=false;`;
+    }::jsonb, completed=${completedTask}, begin_at=${beginAt}::timestamptz, end_at=${endAt}::timestamptz
+    WHERE userid=${
+      uId as number
+    }::int AND id=${mainTaskId} AND isdeleted=false;`;
 
     result = "success";
     //Обновить данные

@@ -142,8 +142,8 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
       <li
         className={`grid grid-cols-5 gap-x-2 p-1 ${
           completed
-            ? "bg-green-200 odd:bg-green-50"
-            : "bg-sky-200 odd:bg-sky-50"
+            ? "bg-green-100 odd:bg-green-50"
+            : "bg-slate-100 odd:bg-slate-50"
         }   text-[0.8rem]/[1rem]`}
         style={{
           marginLeft:

@@ -14,6 +14,7 @@ import {
   returnStrPartTwo,
 } from "@/utils/functions";
 import { AnimatePresence, motion, useAnimate } from "framer-motion";
+import { ArrowDown_SVG, ArrowUp_SVG, Plus_SVG } from "@/utils/svg-icons";
 
 type TParentTaskProps = {
   paramItem: Partial<TTask>;
@@ -29,7 +30,7 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
   const dialogRef = useRef<IDialog>(null);
   const [isTypeDialog, setIsTypeDialog] = useState<TEnumForm>("addSubTask");
   const [aRef, animate] = useAnimate();
-  const [isOpenChild, setOpenChild] = useState<boolean>(false); //Закрыто по умолчанию
+  const [isOpenChild, setOpenChild] = useState<boolean>(true); //Раскрыто по умолчанию
 
   const handleAddDialog = () => {
     setIsTypeDialog("addSubTask");
@@ -68,7 +69,7 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
       animate(
         aRef.current,
         {
-          y: [-50, 0],
+          y: [-20, 0],
           height: [0, "auto"],
           opacity: [0, 1],
         },
@@ -95,8 +96,8 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
         <div
           className={`${
             param.paramItem.completed
-              ? "bg-green-400 text-sky-700"
-              : "bg-sky-500 text-green-50"
+              ? "bg-green-300 text-sky-700"
+              : "bg-sky-300 text-slate-700"
           }  rounded-s-2xl p-1 text-[0.8rem] font-bold col-span-5 `}
           style={{
             marginLeft:
@@ -107,6 +108,12 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
           }}
         >
           <div className="pl-3 align-middle first-letter:uppercase flex items-center justify-between gap-x-2 gap-y-1 ">
+            <TskButton
+              paramBgColor={"bg-sky-600"}
+              paramTitle="Открыть/Закрыть"
+              paramText={isOpenChild ? <ArrowUp_SVG /> : <ArrowDown_SVG />}
+              paramClick={handleOpenClose}
+            />
             <span className=" line-clamp-2 max-w-[300px]">
               {param.paramItem.name?.trim()}
             </span>
@@ -136,14 +143,8 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
             <div className="flex flex-col sm:flex-row items-center justify-center p-1 min-w-[100px]">
               <TskButton
                 paramBgColor={"bg-sky-600"}
-                paramTitle="Открыть/Закрыть"
-                paramText={`${isOpenChild ? "^" : "-"}`}
-                paramClick={handleOpenClose}
-              />
-              <TskButton
-                paramBgColor={"bg-sky-600"}
                 paramTitle="Добавить подзадачу"
-                paramText={"+"}
+                paramText={<Plus_SVG pHeight={18} pWidth={18} />}
                 paramClick={handleAddDialog}
               />
             </div>
@@ -160,7 +161,7 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
                   opacity: 0,
                   height: 0,
                   y: 0,
-                  transition: { ease: "easeOut" },
+                  transition: { ease: "easeIn" },
                 }}
               >
                 <ListTaskComponent
