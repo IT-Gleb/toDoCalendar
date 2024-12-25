@@ -30,7 +30,9 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
   const dialogRef = useRef<IDialog>(null);
   const [isTypeDialog, setIsTypeDialog] = useState<TEnumForm>("addSubTask");
   const [aRef, animate] = useAnimate();
-  const [isOpenChild, setOpenChild] = useState<boolean>(true); //Раскрыто по умолчанию
+  const [isOpenChild, setOpenChild] = useState<boolean>(
+    param.paramItem.level == 0
+  ); //Раскрыто по умолчанию
 
   const handleAddDialog = () => {
     setIsTypeDialog("addSubTask");
