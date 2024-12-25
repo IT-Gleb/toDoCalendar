@@ -601,6 +601,11 @@ export function TimeZoneDateToString(paramDate: string): string {
 //Функция прибавляет и удаляет дни возвращает результат в виде строки
 export function CalculateDate(paramDate: string, paramStepDay: number): string {
   let result: string = "";
+  //Проверить параметр на соответвтвие шаблону dd-mm-yyyy
+  if (!CheckDateFormat(paramDate)) {
+    return "Не верный формат даты";
+  }
+
   const dateArray: string[] = paramDate.split("-");
   const dt = new Date(
     Number(dateArray[2]),
@@ -627,7 +632,7 @@ export function getDateWithMonthStr(paramDate: string): string {
 
   return result;
 }
-//Возвращает текущую дату в формате day-month-year
+//Возвращает текущую дату в формате dd-mm-yyyy
 export function getNowDateStr(): string {
   let result: string = "";
   const dt = new Date();
@@ -672,16 +677,20 @@ export function ChangeDateItemsMonthAdd(param: string): string {
   result = arrayDate.join("-");
   return result;
 }
+//Проверяет строку на соответвие формату dd-mm-yyyy
+function CheckDateFormat(paramDate: string): boolean {
+  let dateStr = new RegExp("^[0-9]{2,2}-[0-9]{2,2}-[0-9]{4,4}$", "giu");
+  return dateStr.test(paramDate);
+}
 //---------------------------------------------------------------------------------------------
 //Принять строку типа day-month-year Поменять местами год и день,
 // вернуть строку типа year-month-day
 export function ChangeDateItems(param: string): string {
-  let dateStr = new RegExp("^[0-9]{2,2}-[0-9]{2,2}-[0-9]{4,4}$", "giu");
-
   //console.log(param, " - ", dateStr.test(param));
-  if (!dateStr.test(param)) {
-    return "Error param dateTime  - " + param;
+  if (!CheckDateFormat(param)) {
+    return "Не верный формат даты- " + param;
   }
+
   const paramLength: number = 3;
 
   let result: string = param;
@@ -694,14 +703,19 @@ export function ChangeDateItems(param: string): string {
   arrayDate[2] = tmp;
 
   result = arrayDate.join("-");
-  dateStr = new RegExp("^[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2}$", "giu");
-  if (dateStr.test(result)) {
+
+  if (!CheckDateFormatYYYY(result)) {
     return result;
   }
 
   return "Error dateTime format";
 }
 //---------------------------------------------------------------------------------------------
+//Проверяет строку на соответствие формату yyyy-mm-dd
+function CheckDateFormatYYYY(paramDate: string): boolean {
+  const dateStr = new RegExp("^[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2}$", "giu");
+  return dateStr.test(paramDate);
+}
 
 //Реализация pipe
 export const MyPipeStr =

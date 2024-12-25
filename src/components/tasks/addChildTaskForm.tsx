@@ -145,7 +145,8 @@ export const AddChildTaskForm: React.FC<TChildTaskFormParam> = memo((param) => {
                   type="radio"
                   name="completed"
                   id="item1"
-                  defaultValue={"false"}
+                  defaultChecked
+                  value={"false"}
                   className="cursor-pointer"
                 />
               </label>
@@ -155,7 +156,7 @@ export const AddChildTaskForm: React.FC<TChildTaskFormParam> = memo((param) => {
                   type="radio"
                   name="completed"
                   id="item2"
-                  defaultValue={"true"}
+                  value={"true"}
                   className="cursor-pointer"
                 />
               </label>
