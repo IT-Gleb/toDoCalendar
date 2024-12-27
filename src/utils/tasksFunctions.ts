@@ -34,15 +34,24 @@ export function findTaskById(
     if (!isValue(item)) {
       continue;
     }
-    item?.forEach((_item) => {
+    // item?.forEach((_item) => {
+    //   if (_item.id === paramId) {
+    //     result = _item;
+    //     return result;
+    //   }
+    //   if (isValue(_item.items) && typeof _item.items == "object") {
+    //     queue.push(_item.items as TTaskList);
+    //   }
+    // });
+    for (let _item of item as TTaskList) {
       if (_item.id === paramId) {
         result = _item;
-        return result;
+        break;
       }
       if (isValue(_item.items) && typeof _item.items == "object") {
         queue.push(_item.items as TTaskList);
       }
-    });
+    }
   }
   if (isValue(result)) {
     const subTasks = (result as unknown as TPartTask).items;
