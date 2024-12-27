@@ -704,7 +704,7 @@ export function ChangeDateItems(param: string): string {
 
   result = arrayDate.join("-");
 
-  if (!CheckDateFormatYYYY(result)) {
+  if (CheckDateFormatYYYY(result)) {
     return result;
   }
 

@@ -20,6 +20,40 @@ export function SortTaskByBeginAt(param1: TPartTask, param2: TPartTask) {
   }
 }
 
+//Ищет по вложенным данным объект с заданным Id
+export function findTaskById(
+  param: TTaskList,
+  paramId: string
+): TPartTask | null {
+  let result: TPartTask | null = null;
+
+  const queue = [param];
+  while (queue.length > 0) {
+    let item: TTaskList | undefined = queue.shift();
+
+    if (!isValue(item)) {
+      continue;
+    }
+    item?.forEach((_item) => {
+      if (_item.id === paramId) {
+        result = _item;
+        return result;
+      }
+      if (isValue(_item.items) && typeof _item.items == "object") {
+        queue.push(_item.items as TTaskList);
+      }
+    });
+  }
+  if (isValue(result)) {
+    const subTasks = (result as unknown as TPartTask).items;
+    if (isValue(subTasks)) {
+      subTasks?.sort(SortTaskByBeginAt);
+    }
+  }
+
+  return result;
+}
+
 //Разворачивает иеархический массив задач в плоский массив
 export function getTasksFromObject(param: TTaskList) {
   const result: TTaskList = [];
@@ -57,22 +91,23 @@ export function getTasksFromObject(param: TTaskList) {
 export function getCompletedFromList(param: TTaskList): boolean {
   let result: boolean = false;
 
-  const data: TTaskList = getTasksFromObject(param);
+  //const data: TTaskList = getTasksFromObject(param);
 
-  if (isValue(data) && data.length > 0) {
-    result = data.every((item) => item.completed == true);
+  if (isValue(param) && param.length > 0) {
+    result = param.every((item) => item.completed === true);
   }
+
   return result;
 }
 
 //Возвращает минимальное значение датыы начала задачи из вложенных задач
 export function getMinBeginAtFromList(param: TTaskList): number {
   let result: number = -1;
-  const data: TTaskList = getTasksFromObject(param);
+  //const data: TTaskList = getTasksFromObject(param);
 
-  if (isValue(data) && data.length > 0) {
+  if (isValue(param) && param.length > 0) {
     const tmp: number[] = [];
-    data.forEach((item) => {
+    param.forEach((item) => {
       let dt: number = new Date(item.begin_at as unknown as string).getTime();
       tmp.push(dt);
     });
@@ -84,13 +119,13 @@ export function getMinBeginAtFromList(param: TTaskList): number {
 }
 
 //Возвращает максимальное окончание даты задачи из вложенных задач
-export function getMaxBeginAtFromList(param: TTaskList): number {
+export function getMaxEndAtFromList(param: TTaskList): number {
   let result: number = -1;
-  const data: TTaskList = getTasksFromObject(param);
+  //const data: TTaskList = getTasksFromObject(param);
 
-  if (isValue(data) && data.length > 0) {
+  if (isValue(param) && param.length > 0) {
     const tmp: number[] = [];
-    data.forEach((item) => {
+    param.forEach((item) => {
       let dt: number = new Date(item.end_at as unknown as string).getTime();
       tmp.push(dt);
     });

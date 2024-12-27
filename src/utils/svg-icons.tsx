@@ -198,6 +198,25 @@ function ArrowDown_SVG() {
   );
 }
 
+function ArrowRight_SVG() {
+  return (
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 512 512"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M175 419L338 256L175 93"
+        stroke="currentColor"
+        strokeWidth="24"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export {
   Selected_SVG,
   Next_SVG,
@@ -207,4 +226,5 @@ export {
   DaySelect_SVG,
   ArrowUp_SVG,
   ArrowDown_SVG,
+  ArrowRight_SVG,
 };

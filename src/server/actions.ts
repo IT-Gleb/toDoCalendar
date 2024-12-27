@@ -8,11 +8,11 @@ import { decryptId, StrDateFromNumbers } from "@/utils/functions";
 import { signIn } from "@/auth";
 import { NICKNAME, UEMAIL, UKEY, UPASS1 } from "@/utils/data";
 import { userSchema, checkSchema } from "@/zodSchemas/zSchema";
-import { TPropertyDeleteTasks } from "@/components/tasks/deleteTaskForm";
 import { nanoid } from "nanoid";
 import {
+  findTaskById,
   getCompletedFromList,
-  getMaxBeginAtFromList,
+  getMaxEndAtFromList,
   getMinBeginAtFromList,
   getTasksFromObject,
   isValue,
@@ -304,13 +304,67 @@ export async function ChangeCompleted(
   param: boolean,
   paramUser: string,
   paramTask: string,
+  paramMainTask: number,
   paramPage: string
 ) {
   const user: number = parseInt(decryptId(paramUser));
-  const task: number = parseInt(paramTask);
+  const task: string | number = paramTask;
+  console.log(param, task, user, paramMainTask, paramPage);
+
+  let isJsonTask: boolean = false;
+  //Если это задача в JSON
+  if (
+    isNaN(task as unknown as number) &&
+    typeof task == "string" &&
+    task.length > 5
+  ) {
+    isJsonTask = true;
+
+    const parentTasks = await getTaskDbJson(paramMainTask, user);
+
+    if (isValue(parentTasks)) {
+      //console.log((parentTasks as TTaskList).length);
+      const taskObj: TPartTask | null = findTaskById(
+        parentTasks as TTaskList,
+        task
+      );
+      if (isValue(taskObj)) {
+        (taskObj as TPartTask).completed = param;
+        //найти задачу непосредственного родителя
+        const pTask = findTaskById(
+          parentTasks as TTaskList,
+          taskObj?.parent_id as string
+        );
+        if (isValue(pTask)) {
+          const parentCompleted: boolean = getCompletedFromList(
+            pTask?.items as TTaskList
+          );
+          (pTask as TPartTask).completed = parentCompleted;
+          console.log(parentCompleted);
+        }
+        try {
+          //Сохранить в базе
+          await sql`UPDATE tasks set items=${
+            parentTasks as never
+          }::jsonb WHERE id=${paramMainTask} AND userid=${user} AND isdeleted=false;`;
+
+          //Установить completed у задачи родителя
+
+          //Обновить страницу
+          revalidateTag(`task-${paramPage}`);
+        } catch (err) {
+          console.log((err as Error).message);
+        }
+      }
+    }
+  }
+
+  if (isJsonTask) {
+    return;
+  }
 
   try {
-    await sql`UPDATE tasks SET completed=${param} WHERE id=${task} AND userid=${user} AND isdeleted=false`;
+    await sql`UPDATE tasks SET completed=${param} WHERE id=${paramMainTask} AND userid=${user} AND isdeleted=false`;
 
     revalidateTag(`task-${paramPage}`);
   } catch (err) {
@@ -390,25 +444,43 @@ export async function addItemTask(
     uId as number
   )) as TTaskList;
 
-  if (isJsonTask) {
-    const parentTask = childrenTasks.find((item) => {
-      if (typeof item.id == "string") {
-        return item.id === addedTask.parent_id;
+  //Поиск и вставка данных в JSON поле задач
+  result = "error";
+  try {
+    if (isJsonTask) {
+      const parentTask = findTaskById(
+        childrenTasks,
+        addedTask.parent_id as string
+      );
+      if (isValue(parentTask)) {
+        parentTask?.items?.push(addedTask);
+
+        const chTasks = getTasksFromObject(parentTask?.items as TTaskList);
+        const subCompleted: boolean = getCompletedFromList(chTasks);
+        const minDate = getMinBeginAtFromList(chTasks);
+        const endDate = getMaxEndAtFromList(chTasks);
+
+        (parentTask as TPartTask).completed = subCompleted;
+        (parentTask as TPartTask).begin_at = minDate;
+        (parentTask as TPartTask).end_at = endDate;
+      } else {
+        throw new Error(`Задача с id=${addedTask.parent_id}  не найдена!!!`);
       }
-    });
-    if (isValue(parentTask)) {
-      parentTask?.items?.push(addedTask);
+      //console.log(parentTask);
+    } else {
+      //Добавить и отсортировать по началу
+      childrenTasks.push(addedTask);
     }
-    //console.log(parentTask);
-  } else {
-    //Добавить и отсортировать по началу
-    childrenTasks.push(addedTask);
+  } catch (err) {
+    console.log((err as Error).message);
+    return result;
   }
 
   //Проставить completed и дату начала и окончания учитывая вложенные задачи
-  let completedTask: boolean = getCompletedFromList(childrenTasks);
-  const beginAt: number = getMinBeginAtFromList(childrenTasks);
-  const endAt: number = getMaxBeginAtFromList(childrenTasks);
+  const childTasks = getTasksFromObject(childrenTasks);
+  let completedTask: boolean = getCompletedFromList(childTasks);
+  const beginAt: number = getMinBeginAtFromList(childTasks);
+  const endAt: number = getMaxEndAtFromList(childTasks);
 
   //console.log(completedTask);
   //console.log(childrenTasks);

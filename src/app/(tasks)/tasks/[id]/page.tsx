@@ -88,7 +88,7 @@ export default async function TaskPage({ params }: { params: { id: string } }) {
           <AddFormContent paramDay={id} />
         </AddTaskFormComponent>
       </section>
-      <section className="w-fit mx-auto mt-5 p-0 sm:p-1 lg:p-2 xl:p-4 max-h-[60vh] overflow-y-auto overflow-x-hidden">
+      <section className="w-fit mx-auto mt-5 p-0 sm:p-1 lg:p-2 xl:p-4 max-h-[80vh] overflow-y-auto overflow-x-hidden">
         {/* <ListTableHead /> */}
         <ListTaskComponent paramList={TaskData} paramPage={id} />
       </section>

@@ -37,11 +37,11 @@ export const TskButton: React.FC<TTaskButtonParams> = memo(
     return (
       <button
         type="button"
-        className={`w-[26px] h-[26px] p-1 ${
+        className={`w-[22px] h-[22px] p-1 ${
           paramBgColor !== null && paramBgColor.trim() !== ""
             ? paramBgColor
             : "bg-sky-400"
-        } text-white rounded-full scale-90 transition-shadow active:scale-90 hover:shadow-[0_0_4px_rgba(0,0,0,1)] hover:shadow-black`}
+        } text-white rounded-full scale-75 sm:scale-90 transition-shadow active:scale-90 hover:shadow-[0_0_4px_rgba(0,0,0,1)] hover:shadow-black`}
         title={paramTitle}
         onClick={(e) => (paramClick ? paramClick() : null)}
       >
@@ -68,16 +68,19 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
 
   const handleCompleted = async () => {
     //Проверка на задачу верхнего уровня
-    if (isValue(param.paramItem.parent_id)) {
-      //console.log("Это json задача", param.paramItem.parent_id);
-      return;
-    }
+    // if (isValue(param.paramItem.parent_id)) {
+    //console.log("Это json задача", param.paramItem.parent_id);
+    //      return;
+    // }
     //Изменить статус задачи
     param.paramItem.completed = !param.paramItem.completed;
+    const mainTaskId: number = parseInt(param.paramItem.maintask as string);
+
     await ChangeCompleted(
       param.paramItem.completed,
       session?.user.userId as string,
       param.paramItem.id as string,
+      mainTaskId,
       param.paramPage
     );
     //setCompleted(paramItem.completed);
@@ -144,7 +147,11 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
           completed
             ? "bg-green-100 odd:bg-green-50"
             : "bg-slate-100 odd:bg-slate-50"
-        }   text-[0.8rem]/[1rem]`}
+        }  text-[0.55em] sm:text-[0.75em]/[1rem] ${
+          (param.paramItem.level as number) > 0
+            ? "border-l border-b border-slate-500"
+            : ""
+        }`}
         style={{
           marginLeft:
             isValue(param.paramItem.level) &&
@@ -191,7 +198,7 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
         {/* Кнопки добавить удалить */}
         <div className="w-fit mx-auto grid grid-cols-1 md:flex items-start justify-center gap-x-2 gap-y-1 p-1">
           <TskButton
-            paramText={<Selected_SVG pWidth={18} pHeight={18} />}
+            paramText={<Selected_SVG pWidth={14} pHeight={14} />}
             paramTitle="Пометить"
             paramBgColor={completed ? "bg-green-600" : "bg-sky-600"}
             paramClick={handleCompleted}
