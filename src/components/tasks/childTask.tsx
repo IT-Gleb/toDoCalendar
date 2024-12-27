@@ -19,37 +19,27 @@ type TTaskButtonParams = {
   paramText: string | React.JSX.Element;
   paramTitle: string;
   paramBgColor: string;
+  paramDisabled: boolean;
   paramClick?: () => void;
 };
 
-export const TskButton: React.FC<TTaskButtonParams> = memo(
-  ({
-    paramText,
-    paramTitle,
-    paramBgColor,
-    paramClick,
-  }: {
-    paramText: string | React.JSX.Element;
-    paramTitle: string;
-    paramBgColor: string;
-    paramClick?: () => void;
-  }) => {
-    return (
-      <button
-        type="button"
-        className={`w-[22px] h-[22px] p-1 ${
-          paramBgColor !== null && paramBgColor.trim() !== ""
-            ? paramBgColor
-            : "bg-sky-400"
-        } text-white rounded-full scale-75 sm:scale-90 transition-shadow active:scale-90 hover:shadow-[0_0_4px_rgba(0,0,0,1)] hover:shadow-black`}
-        title={paramTitle}
-        onClick={(e) => (paramClick ? paramClick() : null)}
-      >
-        {paramText}
-      </button>
-    );
-  }
-);
+export const TskButton: React.FC<TTaskButtonParams> = memo((param) => {
+  return (
+    <button
+      type="button"
+      className={`w-[22px] h-[22px] p-1 ${
+        param.paramBgColor !== null && param.paramBgColor.trim() !== ""
+          ? param.paramBgColor
+          : "bg-sky-400"
+      } text-white rounded-full scale-75 sm:scale-90 transition-shadow disabled:bg-slate-200 disabled:text-slate-100 active:scale-90 hover:shadow-[0_0_4px_rgba(0,0,0,1)] hover:shadow-black`}
+      title={param.paramTitle}
+      disabled={param.paramDisabled}
+      onClick={(e) => (param.paramClick ? param.paramClick() : null)}
+    >
+      {param.paramText}
+    </button>
+  );
+});
 
 type TChildTaskProps = {
   paramItem: Partial<TTask>;
@@ -202,18 +192,21 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
             paramTitle="Пометить"
             paramBgColor={completed ? "bg-green-600" : "bg-sky-600"}
             paramClick={handleCompleted}
+            paramDisabled={false}
           />
           <TskButton
             paramText="+"
             paramTitle="Добавить подзадачу"
             paramBgColor={"bg-sky-400"}
             paramClick={handleAddDialog}
+            paramDisabled={param.paramItem.completed === true}
           />
           <TskButton
             paramText="--"
             paramTitle="Удалить подзадачу"
             paramBgColor={"bg-red-300"}
             paramClick={handleTaskDeleteDialog}
+            paramDisabled={param.paramItem.completed === true}
           />
         </div>
       </li>

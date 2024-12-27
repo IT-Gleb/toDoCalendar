@@ -96,8 +96,8 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
         <div
           className={`${
             param.paramItem.completed
-              ? "bg-green-400 text-sky-800"
-              : "bg-amber-200 odd:bg-amber-300 text-slate-800"
+              ? "bg-green-400 even:bg-green-300 text-sky-800"
+              : "bg-rose-200 odd:bg-rose-300 text-slate-800"
           } text-[0.55em] sm:text-[0.7rem] font-bold col-span-5 ${
             isOpenChild ? "" : "border-b border-b-slate-500"
           } `}
@@ -115,6 +115,7 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
               paramTitle="Открыть/Закрыть"
               paramText={isOpenChild ? <ArrowDown_SVG /> : <ArrowRight_SVG />}
               paramClick={handleOpenClose}
+              paramDisabled={false}
             />
             <span className=" line-clamp-2 max-w-[300px]">
               {param.paramItem.name?.trim()}
@@ -148,6 +149,7 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
                 paramTitle="Добавить подзадачу"
                 paramText={<Plus_SVG pHeight={14} pWidth={14} />}
                 paramClick={handleAddDialog}
+                paramDisabled={param.paramItem.completed === true}
               />
             </div>
           </div>

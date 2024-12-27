@@ -309,15 +309,12 @@ export async function ChangeCompleted(
 ) {
   const user: number = parseInt(decryptId(paramUser));
   const task: string | number = paramTask;
-  console.log(param, task, user, paramMainTask, paramPage);
+
+  //console.log(param, task, user, paramMainTask, paramPage);
 
   let isJsonTask: boolean = false;
   //Если это задача в JSON
-  if (
-    isNaN(task as unknown as number) &&
-    typeof task == "string" &&
-    task.length > 5
-  ) {
+  if (isNaN(task as unknown as number) && typeof task == "string") {
     isJsonTask = true;
 
     const parentTasks = await getTaskDbJson(paramMainTask, user);
@@ -328,6 +325,7 @@ export async function ChangeCompleted(
         parentTasks as TTaskList,
         task
       );
+
       if (isValue(taskObj)) {
         (taskObj as TPartTask).completed = param;
         //найти задачу непосредственного родителя
@@ -335,20 +333,25 @@ export async function ChangeCompleted(
           parentTasks as TTaskList,
           taskObj?.parent_id as string
         );
+
         if (isValue(pTask)) {
           const parentCompleted: boolean = getCompletedFromList(
             pTask?.items as TTaskList
           );
           (pTask as TPartTask).completed = parentCompleted;
-          console.log(parentCompleted);
+          //console.log(parentCompleted);
         }
         try {
           //Сохранить в базе
-          await sql`UPDATE tasks set items=${
+          const upTasks: TTaskList = getTasksFromObject(
+            parentTasks as TTaskList
+          );
+          const allCompleted: boolean = getCompletedFromList(upTasks);
+          //console.log("Сохраняю данные в верхней задаче: ", allCompleted);
+
+          await sql`UPDATE tasks SET completed=${allCompleted}, items=${
             parentTasks as never
           }::jsonb WHERE id=${paramMainTask} AND userid=${user} AND isdeleted=false;`;
-
-          //Установить completed у задачи родителя
 
           //Обновить страницу
           revalidateTag(`task-${paramPage}`);
