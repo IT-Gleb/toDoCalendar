@@ -63,21 +63,57 @@ export function findTaskById(
   return result;
 }
 
+export function SetTaskById(
+  param: TTaskList,
+  paramId: string,
+  paramObj: TPartTask
+) {
+  const queue = [param];
+
+  while (queue.length > 0) {
+    let item = queue.shift();
+    if (!isValue(item)) {
+      continue;
+    }
+
+    for (let _item of item as TTaskList) {
+      if (_item.id === paramId) {
+        //console.dir(_item);
+        //console.dir(paramObj);
+        _item = Object.assign({}, paramObj);
+        //console.log(paramId, item);
+        break; //return _item as TPartTask;
+      }
+      if (isValue(_item.items) && typeof _item.items == "object") {
+        queue.push(_item.items as TTaskList);
+      }
+    }
+  }
+}
+
 //Разворачивает иеархический массив задач в плоский массив
 export function getTasksFromObject(param: TTaskList) {
   const result: TTaskList = [];
   const queue = [param];
 
   while (queue.length > 0) {
-    const item = queue.shift();
-    //console.log(item);
+    let item = queue.shift();
+
     if (isValue(item)) {
-      item?.forEach((_item) => {
-        if (isValue(_item.items) && typeof _item.items == "object") {
-          result.push(_item);
-          queue.push(_item.items as TTaskList);
-        }
-      });
+      if (Array.isArray(item)) {
+        item?.forEach((_item) => {
+          if (isValue(_item.items) && typeof _item.items == "object") {
+            result.push(_item);
+            queue.push(_item.items as TTaskList);
+          }
+        });
+        // for (let _item of item as TTaskList) {
+        //   if (isValue(_item.items) && typeof _item.items == "object") {
+        //     result.push(_item);
+        //     queue.push(_item.items as TTaskList);
+        //   }
+        // }
+      }
     } else {
       continue;
     }

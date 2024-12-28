@@ -19,6 +19,8 @@ const SbnButton = () => {
 export type TPropertyDeleteTasks = {
   userId: string | undefined | null;
   taskId: string;
+  parentId: string;
+  mainTask: string;
   paramPage: string;
   taskName: string;
   closeClick(): Promise<void>;
@@ -83,6 +85,18 @@ export const DeleteTaskForm: React.FC<TPropertyDeleteTasks> = (param) => {
             name="taskId"
             id="taskId"
             defaultValue={param.taskId}
+          />
+          <input
+            type="hidden"
+            name="parentId"
+            id="parentId"
+            defaultValue={param.parentId}
+          />
+          <input
+            type="hidden"
+            name="mainTask"
+            id="mainTask"
+            defaultValue={param.mainTask}
           />
           <input
             type="hidden"

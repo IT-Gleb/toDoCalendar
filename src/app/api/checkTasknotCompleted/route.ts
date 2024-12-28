@@ -36,7 +36,7 @@ const handler = auth(async function POST(req) {
         FROM tasks 
         WHERE isdeleted=false AND completed=false AND userid=${user_id} AND end_at::date<${
           day as string
-        } GROUP BY id ORDER BY end_at desc LIMIT ${limit as number} OFFSET ${
+        } GROUP BY id ORDER BY begin_at LIMIT ${limit as number} OFFSET ${
           offset as number
         };`;
       return NextResponse.json(data as TTaskList);

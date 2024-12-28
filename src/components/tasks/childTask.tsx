@@ -125,6 +125,8 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
             <DeleteTaskForm
               taskId={param.paramItem.id as string}
               userId={session?.user.userId}
+              parentId={param.paramItem.parent_id as string}
+              mainTask={param.paramItem.maintask as string}
               paramPage={param.paramPage}
               taskName={param.paramItem.name as string}
               closeClick={handleCloseDialog}

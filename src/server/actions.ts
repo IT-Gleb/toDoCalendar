@@ -1,6 +1,6 @@
 "use server";
 
-import { z, ZodError } from "zod";
+import { ZodError } from "zod";
 import bcrypt from "bcrypt";
 import sql from "@/clientdb/connectdb";
 import { revalidateTag } from "next/cache";
@@ -16,6 +16,7 @@ import {
   getMinBeginAtFromList,
   getTasksFromObject,
   isValue,
+  SortTaskByBeginAt,
 } from "@/utils/tasksFunctions";
 
 export async function newTaskAction(
@@ -175,9 +176,14 @@ export async function signUser(
   const userId = paramData.get(UPASS1);
   const role: TUserRole = "user";
   //console.log(name, email, id, role);
-  await signIn("credentials", { name, email, userId, role });
-  paramState = "success";
-  return paramState;
+  try {
+    await signIn("credentials", { name, email, userId, role });
+    paramState = "success";
+  } catch (err) {
+    paramState = "error";
+  } finally {
+    return paramState;
+  }
 }
 
 //Get user data from DB nickname and email
@@ -279,19 +285,62 @@ export async function DeleteTask(
 ): Promise<TFormInitState> {
   const user = param.get("userId")?.toString() ?? "";
   const task = param.get("taskId")?.toString() ?? "";
+  const parentTask = param.get("parentId")?.toString() ?? "";
+  const mainTask = param.get("mainTask")?.toString() ?? "-1";
   const page = param.get("paramPage")?.toString() ?? "";
+
+  let taskId: number =
+    typeof task == "string" && task.length > 8 ? -1 : Number(task);
+
+  let isJSONTask: boolean = taskId === -1 ? true : false;
+  const isJSONparent: boolean = parentTask === mainTask;
+
+  // console.log(mainTask, task, taskId, parentTask, isJSONTask);
 
   let userId: number = -1;
   if (user) {
     userId = parseInt(decryptId(user));
   }
-  try {
-    await sql`UPDATE tasks SET isdeleted=true WHERE id=${parseInt(
-      task
-    )} AND userid=${userId}`;
-    revalidateTag(`task-${page}`);
-    paramInit = "success";
 
+  let MainTasks: TTaskList | undefined = undefined;
+
+  //Вложенная JSON в JSON задача
+  if (isJSONTask && !isJSONparent) {
+    MainTasks = await getTaskDbJson(Number(mainTask), userId);
+    if (isValue(MainTasks) && (MainTasks as TTaskList).length > 0) {
+      let deletedValue = findTaskById(MainTasks as TTaskList, parentTask);
+      if (isValue(deletedValue)) {
+        (deletedValue as TPartTask).items = deletedValue?.items
+          ?.filter((item) => item.id !== task)
+          .sort(SortTaskByBeginAt);
+      }
+    }
+  }
+  //JSON в основную задачу из базы данных
+  if (isJSONTask && isJSONparent) {
+    //console.log("Удаляю.....");
+    MainTasks = await getTaskDbJson(Number(mainTask), userId);
+    if (isValue(MainTasks) && (MainTasks as TTaskList).length > 0) {
+      MainTasks = (MainTasks as TTaskList)
+        .filter((item) => item.id !== task)
+        .sort(SortTaskByBeginAt);
+    }
+    // console.log(MainTasks);
+  }
+
+  try {
+    //console.log(isJSONTask, isJSONparent, mainTask, taskId);
+    if (isJSONTask) {
+      await sql`UPDATE tasks SET items=${
+        MainTasks as never
+      }::jsonb WHERE isdeleted=false AND id=${mainTask} AND userid=${userId};`;
+    }
+    if (!isJSONTask) {
+      await sql`UPDATE tasks SET isdeleted=true WHERE id=${taskId} AND userid=${userId}`;
+    }
+
+    paramInit = "success";
+    revalidateTag(`task-${page}`);
     return paramInit;
   } catch (err) {
     paramInit = "error";
