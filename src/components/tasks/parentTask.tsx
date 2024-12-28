@@ -15,6 +15,7 @@ import {
 } from "@/utils/functions";
 import { AnimatePresence, motion, useAnimate } from "framer-motion";
 import { ArrowDown_SVG, ArrowRight_SVG, Plus_SVG } from "@/utils/svg-icons";
+import { DeleteTaskForm } from "./deleteTaskForm";
 
 type TParentTaskProps = {
   paramItem: Partial<TTask>;
@@ -34,6 +35,11 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
 
   const handleAddDialog = () => {
     setIsTypeDialog("addSubTask");
+    setShowModal(true);
+  };
+
+  const handleDeleteTask = () => {
+    setIsTypeDialog("deleteTask");
     setShowModal(true);
   };
 
@@ -90,6 +96,17 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
               paramClick={handleCloseDialog}
             />
           )}
+          {isTypeDialog === "deleteTask" && (
+            <DeleteTaskForm
+              userId={session?.user.userId as string}
+              taskId={param.paramItem.id as string}
+              parentId={param.paramItem.parent_id as string}
+              mainTask={param.paramItem.maintask as string}
+              taskName={param.paramItem.name as string}
+              paramPage={param.paramPage}
+              closeClick={handleCloseDialog}
+            />
+          )}
         </DialogComponent>
       )}
       <li>
@@ -143,12 +160,19 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
                 returnStrPartTwo
               )(param.paramItem.end_at as unknown as string)}
             </span>
-            <div className="flex flex-col sm:flex-row items-center justify-center p-1 min-w-[100px]">
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:gap-x-2 p-1 min-w-[100px]">
               <TskButton
                 paramBgColor={"bg-stone-400"}
                 paramTitle="Добавить подзадачу"
                 paramText={<Plus_SVG pHeight={14} pWidth={14} />}
                 paramClick={handleAddDialog}
+                paramDisabled={param.paramItem.completed === true}
+              />
+              <TskButton
+                paramBgColor={"bg-rose-300"}
+                paramTitle="Удалить задачу"
+                paramText={"--"}
+                paramClick={handleDeleteTask}
                 paramDisabled={param.paramItem.completed === true}
               />
             </div>

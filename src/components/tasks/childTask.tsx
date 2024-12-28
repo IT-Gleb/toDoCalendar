@@ -191,7 +191,7 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
         <div className="w-fit mx-auto grid grid-cols-1 md:flex items-start justify-center gap-x-2 gap-y-1 p-1">
           <TskButton
             paramText={<Selected_SVG pWidth={14} pHeight={14} />}
-            paramTitle="Пометить"
+            paramTitle={completed ? "Отменить выполнение" : "Выполнена"}
             paramBgColor={completed ? "bg-green-600" : "bg-sky-600"}
             paramClick={handleCompleted}
             paramDisabled={false}
