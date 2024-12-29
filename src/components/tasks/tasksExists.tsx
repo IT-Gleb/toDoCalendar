@@ -96,7 +96,7 @@ export const TasksExists = memo(() => {
 
   if (isLoading) {
     return (
-      <div className="w-[125px] h-[125px] mx-auto mt-10 text-sky-500">
+      <div className="w-[80px] h-[80px] mx-auto mt-10 text-sky-500">
         <Loader />
       </div>
     );

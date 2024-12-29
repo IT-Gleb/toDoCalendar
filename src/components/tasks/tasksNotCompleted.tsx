@@ -106,7 +106,7 @@ const TasksNotCompleted = memo(() => {
 
   if (isLoad) {
     return (
-      <div className="text-red-500 w-[120px] h-[120px] mx-auto">
+      <div className="text-red-500 w-[80px] h-[80px] mx-auto">
         <Loader />
       </div>
     );

@@ -143,13 +143,6 @@ export const TasksChart01 = memo(({ paramData }: { paramData: any }) => {
 
   return (
     <div className="w-auto h-auto flex flex-col p-1">
-      <button
-        type="button"
-        className="w-[70px] h-[28px] text-[0.65em] bg-slate-100 p-1 active:scale-90 self-end"
-        onClick={() => chartRef.current?.update()}
-      >
-        Обновить
-      </button>
       <Chart
         ref={chartRef}
         type="bar"
@@ -157,6 +150,16 @@ export const TasksChart01 = memo(({ paramData }: { paramData: any }) => {
         options={ChartOptions}
         plugins={[ChartPlugin]}
       />
+      <button
+        type="button"
+        className="w-[70px] h-[28px] text-[0.65em] bg-slate-100 p-1 active:scale-90 self-end"
+        onClick={() => {
+          chartRef.current?.update();
+          chartRef.current?.render();
+        }}
+      >
+        Обновить
+      </button>
     </div>
   );
 });

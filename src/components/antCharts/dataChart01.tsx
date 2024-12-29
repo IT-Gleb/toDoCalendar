@@ -138,7 +138,7 @@ export const DataChart01 = memo(() => {
 
   if (isLoad) {
     return (
-      <div className=" mx-auto w-[120px] h-[120px] text-green-400">
+      <div className=" mx-auto w-[80px] h-[80px] text-green-400">
         <Loader />
       </div>
     );

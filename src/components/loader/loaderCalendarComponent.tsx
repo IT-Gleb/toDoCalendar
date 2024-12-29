@@ -4,7 +4,7 @@ import Loader from "./loaderComp";
 export const LoaderCalendarComponent = () => {
   return (
     <div className="w-[360px] mx-auto flex flex-col animate-pulse relative">
-      <div className="w-[100px] h-[100px] text-slate-600 z-[2] absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
+      <div className="w-[80px] h-[80px] text-slate-600 z-[2] absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
         <Loader />
       </div>
       <div className="flex flex-col space-y-1 ">
