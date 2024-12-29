@@ -206,7 +206,7 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
           <TskButton
             paramText="--"
             paramTitle="Удалить подзадачу"
-            paramBgColor={"bg-red-300"}
+            paramBgColor={"bg-rose-300"}
             paramClick={handleTaskDeleteDialog}
             paramDisabled={param.paramItem.completed === true}
           />

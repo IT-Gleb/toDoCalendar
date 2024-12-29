@@ -79,16 +79,17 @@ export const CalendarNew = memo(
               </span>
             </span>
             <span>
-              {`До конца года ${
+              До конца года:&nbsp;
+              <span className="text-yellow-100 text-[0.75rem] lg:text-[1rem] font-bold font-mono">
+                {DayEndYear}
+              </span>
+              {` ${
                 lastDidgit === 0 || lastDidgit > 4
                   ? "дней"
                   : lastDidgit === 1
                   ? "день"
                   : "дня"
-              } : `}
-              <span className="text-yellow-100 text-[0.75rem] lg:text-[1rem] font-bold font-mono">
-                {DayEndYear}
-              </span>
+              }`}
             </span>
           </div>
           {/* //Footer Calendar */}
