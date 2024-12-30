@@ -76,7 +76,7 @@ const MemberPage = memo(() => {
 
   // className="bg-[radial-gradient(circle_at_top,theme(colors.white),theme(colors.slate.50),theme(colors.sky.50),theme(colors.sky.100))]"
   return (
-    <section className="bg-none bg-cover bg-center bg-no-repeat bg-fixed bg-white">
+    <section className="xl:w-[80%] 2xl:w-[70%] xl:mx-auto bg-none bg-cover bg-center bg-no-repeat bg-fixed bg-white">
       {/* Календарь с задачами */}
       <section className="p-0 md:p-2 grid grid-cols-1 auto-rows-max lg:grid-cols-2 gap-2 min-h-[60vh] mt-5">
         <div className="lg:border-r lg:border-b border-slate-200 lg:p-2">
