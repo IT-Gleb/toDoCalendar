@@ -66,31 +66,40 @@ export const CalendarNew = memo(
                 {strYear}
               </span>
             </div>
-            <span>
-              Дней в году:{" "}
-              <span className="text-yellow-100 text-[0.75rem] lg:text-[1rem] font-bold font-mono">
-                {DaysInYear_var}
-              </span>
-            </span>
-            <span>
-              Дней года прошло:{" "}
-              <span className="text-yellow-100 text-[0.75rem] lg:text-[1rem] font-bold font-mono">
-                {DaysInYear_var - DayEndYear}
-              </span>
-            </span>
-            <span>
-              До конца года:&nbsp;
-              <span className="text-yellow-100 text-[0.75rem] lg:text-[1rem] font-bold font-mono">
-                {DayEndYear}
-              </span>
-              {` ${
-                lastDidgit === 0 || lastDidgit > 4
-                  ? "дней"
-                  : lastDidgit === 1
-                  ? "день"
-                  : "дня"
-              }`}
-            </span>
+            {Number(strYear) < new Date().getFullYear() && (
+              <div className="w-fit mx-auto uppercase text-yellow-100 text-[0.75rem] lg:text-[1rem] font-bold font-mono">
+                Год закончился
+              </div>
+            )}
+            {Number(strYear) === new Date().getFullYear() && (
+              <>
+                <span>
+                  Дней в году:{" "}
+                  <span className="text-yellow-100 text-[0.75rem] lg:text-[1rem] font-bold font-mono">
+                    {DaysInYear_var}
+                  </span>
+                </span>
+                <span>
+                  Дней года прошло:{" "}
+                  <span className="text-yellow-100 text-[0.75rem] lg:text-[1rem] font-bold font-mono">
+                    {DaysInYear_var - DayEndYear}
+                  </span>
+                </span>
+                <span>
+                  До конца года:&nbsp;
+                  <span className="text-yellow-100 text-[0.75rem] lg:text-[1rem] font-bold font-mono">
+                    {DayEndYear}
+                  </span>
+                  {` ${
+                    lastDidgit === 0 || lastDidgit > 4
+                      ? "дней"
+                      : lastDidgit === 1
+                      ? "день"
+                      : "дня"
+                  }`}
+                </span>
+              </>
+            )}
           </div>
           {/* //Footer Calendar */}
         </div>

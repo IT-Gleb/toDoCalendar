@@ -219,6 +219,27 @@ function getWeekOfYear(paramDate: number): number {
   return result;
 }
 
+//Неделя в году Считает более верно. Параметр текущая дата приведенная к номеру
+function getWeekOfYear_Verno(param: number) {
+  //const tmpDt = new Date(param);
+  const date = new Date(param);
+  date.setHours(0, 0, 0, 0);
+  // Thursday in current week decides the year.
+  date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
+  // January 4 is always in week 1.
+  let week1 = new Date(date.getFullYear(), 0, 4);
+  // Adjust to Thursday in week 1 and count number of weeks from date to week1.
+  return (
+    1 +
+    Math.round(
+      ((date.getTime() - week1.getTime()) / 86400000 -
+        3 +
+        ((week1.getDay() + 6) % 7)) /
+        7
+    )
+  );
+}
+
 //Сформировать массив дней в месяце из года и месяца
 export function getMounthData(paramDate: number): TCalendarItems {
   const result: TCalendarItems = [];
@@ -229,7 +250,7 @@ export function getMounthData(paramDate: number): TCalendarItems {
   let work_Mounth = dt.getMonth() + 1;
   let work_day: number = 1; //С понедельника
 
-  let dt_now = Date.now() - 1000 * 60 * 60 * 22;
+  let dt_now = Date.now() - 1000 * 60 * 60 * 24;
 
   while (Mounth_tmp === work_Mounth) {
     dataItem = {};
@@ -240,10 +261,13 @@ export function getMounthData(paramDate: number): TCalendarItems {
     dataItem.year = dt.getFullYear();
     dataItem.mounth_str = Mounths[work_Mounth - 1];
     //dataItem.dayOfWeek = dt.getDay();
-    dataItem.dayOfWeek = getLocalDay(dt.getTime());
-    dataItem.weekOfYear = getWeekOfYear(
-      new Date(dataItem.year, dataItem.mounth - 1, dataItem.day).getTime()
-    );
+    //dataItem.dayOfWeek = getLocalDay(dt.getTime());
+    dataItem.dayOfWeek = getLocalDay(dt.valueOf());
+    dataItem.weekOfYear = getWeekOfYear_Verno(dt.getTime());
+    //Костыль для декабря 2024 года
+    if (work_Mounth === 12 && dataItem.weekOfYear < 2) {
+      dataItem.weekOfYear = 53;
+    }
 
     dataItem.weekDay = DaysOfWeek[dataItem.dayOfWeek];
     dataItem.isSelected = false;
@@ -253,7 +277,7 @@ export function getMounthData(paramDate: number): TCalendarItems {
 
     result.push(dataItem);
 
-    work_day = work_day + 1;
+    work_day++;
     dt.setDate(work_day);
     work_Mounth = dt.getMonth() + 1;
   }
@@ -281,6 +305,7 @@ export function getMounthData(paramDate: number): TCalendarItems {
   //   }
   // }
   //Вернуть результат
+  // console.log(result);
   return result;
 }
 
@@ -290,12 +315,17 @@ export function ConverMonthDataToObject(
 ): TMonthObject {
   let result: TMonthObject = {};
 
+  //console.log(paramMonth);
+
   if (paramMonth.length > 0) {
     result = paramMonth.reduce((acc: TMonthObject, curr: TCData) => {
       if (curr.id !== undefined && curr.weekOfYear !== undefined) {
         if (!acc.hasOwnProperty(curr.weekOfYear)) {
           acc[curr.weekOfYear] = [curr];
-        } else if (Array.isArray(acc[curr.weekOfYear])) {
+        } else if (
+          acc.hasOwnProperty(curr.weekOfYear) &&
+          Array.isArray(acc[curr.weekOfYear])
+        ) {
           acc[curr.weekOfYear].push(curr);
         }
       }
@@ -303,9 +333,13 @@ export function ConverMonthDataToObject(
     }, result);
   }
 
+  //console.log(result);
+
   //Добавить пустые значения в начало
   let week = Object.keys(result)[0];
+
   let daysWeek = result[week];
+
   let work_day = daysWeek[0].dayOfWeek as number;
   if (work_day > 1) {
     let ind: number = 1;
@@ -337,10 +371,11 @@ export function goMonth(paramDate: number, paramValue: number = 1): number {
 
   const dt = new Date(paramDate);
   let month: number = dt.getMonth() + num;
-  if (month >= 0 && month <= 11) {
-    if (month < 0) month = 0;
-    dt.setMonth(month);
-  }
+  // if (month >= 0 && month <= 11) {
+  //   if (month < 0) month = 0;
+  //   dt.setMonth(month);
+  // }
+  dt.setMonth(month);
 
   result = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime();
 
@@ -450,7 +485,7 @@ export function CompareDateNow(paramDate: string): boolean {
   let result: boolean = false;
 
   try {
-    result = new Date(paramDate).getTime() >= Date.now() - 1000 * 60 * 60 * 22;
+    result = new Date(paramDate).getTime() >= Date.now() - 1000 * 60 * 60 * 24;
   } catch (err) {
     console.log("Не верная дата в параметре:", paramDate);
   } finally {
@@ -551,7 +586,7 @@ export function CalculateOpacity(
   paramArrayLength: number
 ): number {
   const maxOpacity: number = 1;
-  const minOpacity: number = 0.1;
+  const minOpacity: number = 0.2;
   let result: number = maxOpacity;
 
   if (paramArrayLength < 4) {
