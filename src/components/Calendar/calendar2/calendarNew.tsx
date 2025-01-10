@@ -71,6 +71,11 @@ export const CalendarNew = memo(
                 Год закончился
               </div>
             )}
+            {Number(strYear) > new Date().getFullYear() && (
+              <div className="w-fit mx-auto uppercase text-yellow-100 text-[0.75rem] lg:text-[1rem] font-bold font-mono">
+                Год не начался
+              </div>
+            )}
             {Number(strYear) === new Date().getFullYear() && (
               <>
                 <span>

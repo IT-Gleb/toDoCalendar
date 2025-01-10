@@ -263,11 +263,16 @@ export function getMounthData(paramDate: number): TCalendarItems {
     //dataItem.dayOfWeek = dt.getDay();
     //dataItem.dayOfWeek = getLocalDay(dt.getTime());
     dataItem.dayOfWeek = getLocalDay(dt.valueOf());
-    dataItem.weekOfYear = getWeekOfYear_Verno(dt.getTime());
+
+    dataItem.weekOfYear = getWeekOfYear_Verno(dt.valueOf());
     //Костыль для декабря 2024 года
     if (work_Mounth === 12 && dataItem.weekOfYear < 2) {
       dataItem.weekOfYear = 53;
     }
+    if (work_Mounth === 1 && dataItem.weekOfYear > 50) {
+      dataItem.weekOfYear = 0;
+    }
+    //-------------------------
 
     dataItem.weekDay = DaysOfWeek[dataItem.dayOfWeek];
     dataItem.isSelected = false;
@@ -282,28 +287,6 @@ export function getMounthData(paramDate: number): TCalendarItems {
     work_Mounth = dt.getMonth() + 1;
   }
 
-  //Добавить пустые значения
-  // work_day = result[0].dayOfWeek as number;
-
-  // if (work_day && work_day > 1) {
-  //   let ind: number = 1;
-  //   while (ind < work_day) {
-  //     dataItem = {};
-  //     result.unshift(dataItem);
-  //     ind++;
-  //   }
-  // }
-
-  // let len: number = 35;
-  // if (work_day && work_day === 7) {
-  //   len = 42;
-  // }
-  // if (result.length < len) {
-  //   while (result.length < len) {
-  //     dataItem = {};
-  //     result.push(dataItem);
-  //   }
-  // }
   //Вернуть результат
   // console.log(result);
   return result;
@@ -431,10 +414,13 @@ export const fetcherSelectedDaysInMonth = async (
 
   //console.log("User id: ", paramUserId);
 
-  const url: string = `${MounthData_url}?startDay=${startDay}&endDay=${endDay}&key=${paramUserId}`;
+  //const url: string = `${MounthData_url}?startDay=${startDay}&endDay=${endDay}&key=${paramUserId}`;
+  const url: string = `${MounthData_url}`;
 
   await fetch(url, {
+    method: "POST",
     headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ startDay, endDay, key: paramUserId }),
     cache: "default",
   })
     .then((data) => data.json())

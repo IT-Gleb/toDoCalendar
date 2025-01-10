@@ -39,6 +39,8 @@ const handler = auth(async function POST(req: any) {
             return accum;
           }, {});
 
+          data.deprecatedtasks =
+            data.deprecatedtasks === null ? 0 : data.deprecatedtasks;
           //console.log(data);
 
           return NextResponse.json([data]);
