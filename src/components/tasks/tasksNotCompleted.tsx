@@ -58,46 +58,48 @@ const TasksNotCompleted = memo(() => {
   useLayoutEffect(() => {
     let isSubscribed: boolean = true;
 
-    (async function getNotCompletedTasks() {
-      const url: string = "/api/checkTasknotCompleted";
-      const params: TPostPartialParams = {
-        userid: session?.user.userId as string,
-        day: currentDate,
-        limit: TASKS_ON_PAGE,
-        offset: Offset * TASKS_ON_PAGE,
-      };
-
-      setIsLoad(true);
-      setTasks([]);
-      try {
-        const result = await fetch(url, {
-          headers: { "Content-Type": "application/json" },
-          method: "POST",
-          body: JSON.stringify(params),
-          next: { revalidate: 5 },
-        });
-        if (result.ok) {
-          const tempTasks = (await result.json()) as TTaskList;
-          if (tempTasks && tempTasks.length > 0) {
-            setTasks(tempTasks);
-            if (tempTasks && tempTasks[0].taskscount) {
-              setCountTask(tempTasks[0].taskscount);
-            }
-          } else {
-            setCountTask(0);
-            setTasks([]);
-          }
-        }
-      } catch (err) {
-        const tmp: TResponseError = {
-          status: (err as Error).name,
-          message: (err as Error).message,
+    if (isSubscribed) {
+      (async function getNotCompletedTasks() {
+        const url: string = "/api/checkTasknotCompleted";
+        const params: TPostPartialParams = {
+          userid: session?.user.userId as string,
+          day: currentDate,
+          limit: TASKS_ON_PAGE,
+          offset: Offset * TASKS_ON_PAGE,
         };
-        setTasks(tmp);
-      } finally {
-        setIsLoad(false);
-      }
-    })();
+
+        setIsLoad(true);
+        setTasks([]);
+        try {
+          const result = await fetch(url, {
+            headers: { "Content-Type": "application/json" },
+            method: "POST",
+            body: JSON.stringify(params),
+            next: { revalidate: 5 },
+          });
+          if (result.ok) {
+            const tempTasks = (await result.json()) as TTaskList;
+            if (tempTasks && tempTasks.length > 0) {
+              setTasks(tempTasks);
+              if (tempTasks && tempTasks[0].taskscount) {
+                setCountTask(tempTasks[0].taskscount);
+              }
+            } else {
+              setCountTask(0);
+              setTasks([]);
+            }
+          }
+        } catch (err) {
+          const tmp: TResponseError = {
+            status: (err as Error).name,
+            message: (err as Error).message,
+          };
+          setTasks(tmp);
+        } finally {
+          setIsLoad(false);
+        }
+      })();
+    }
 
     return () => {
       isSubscribed = false;
@@ -123,7 +125,9 @@ const TasksNotCompleted = memo(() => {
 
   return (
     <section className="max-w-[95%] mx-auto bg-white">
-      <TaskDateChange />
+      <div className="mb-8">
+        <TaskDateChange />
+      </div>
       <MobileTasksNotCompleted paramTasks={tasks} />
       {countTask > 0 && (
         <TaskTblTop paramWorkDate={currentDate} paramTasksCount={countTask} />
