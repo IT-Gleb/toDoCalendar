@@ -7,7 +7,6 @@ import dynamic from "next/dynamic";
 import TrackerDay from "@/components/tasks/trackerDay";
 import Loader from "@/components/loader/loaderComp";
 import { memo } from "react";
-import UploadFileForm from "@/components/fileUpload/uploadFileForm";
 import AudioFilesComponent from "@/components/AudioFiles/audioFilesComponent";
 //import DataChart01 from "@/components/antCharts/dataChart01";
 
@@ -80,13 +79,6 @@ const MemberPage = memo(() => {
   return (
     <section className="xl:w-[80%] 2xl:w-[75%] xl:mx-auto bg-none bg-cover bg-center bg-no-repeat bg-fixed bg-white">
       <AudioFilesComponent
-        paramUser={{
-          name: session?.user.name as string,
-          userId: session?.user.userId as string,
-        }}
-      />
-      {/*Загрузка файла на сервер */}
-      <UploadFileForm
         paramUser={{
           name: session?.user.name as string,
           userId: session?.user.userId as string,

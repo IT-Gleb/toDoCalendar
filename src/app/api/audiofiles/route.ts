@@ -19,7 +19,7 @@ const handler = auth(async function POST(req) {
       const { name, userId } = params;
       let Id = decryptId(userId);
       const userFolder = `audio/${name + Id}`;
-      const downloadFolder = join("storage/", userFolder);
+      const downloadFolder = join("public/", userFolder);
 
       let myFiles: string[] = [];
       try {
@@ -28,7 +28,7 @@ const handler = auth(async function POST(req) {
           let name = `${downloadFolder}/${tmpFiles[f]}`;
           //console.log(name);
           if (!statSync(name).isDirectory()) {
-            myFiles.push(name);
+            myFiles.push(tmpFiles[f]);
           }
         }
         if (isValue(myFiles) && myFiles.length > 1) {
@@ -36,7 +36,8 @@ const handler = auth(async function POST(req) {
         }
         return NextResponse.json(myFiles);
       } catch (err) {
-        console.error(err);
+        //console.error(err);
+        return NextResponse.json([]);
       }
     }
   }

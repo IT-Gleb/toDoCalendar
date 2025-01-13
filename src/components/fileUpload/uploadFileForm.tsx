@@ -17,7 +17,6 @@ type TResError = {
 };
 
 const UploadFileForm = ({ paramUser }: { paramUser: TParamUser }) => {
-  const [FileName, setFileName] = useState<string>("");
   const fileRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -40,7 +39,6 @@ const UploadFileForm = ({ paramUser }: { paramUser: TParamUser }) => {
           //console.log(fileRef.current.files[0] as unknown as File);
           //@ts-ignore
           const { name } = fileRef.current.files[0] as unknown as File;
-          setFileName(name);
         }
         //Отправить данные на сервер
         //@ts-ignore
@@ -90,14 +88,6 @@ const UploadFileForm = ({ paramUser }: { paramUser: TParamUser }) => {
     }
   };
 
-  const handleClear = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    if (isValue(formRef.current)) {
-      formRef.current?.reset();
-      setFileName("");
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="w-[50px] h-[50px] mx-auto text-sky-400">
@@ -114,12 +104,12 @@ const UploadFileForm = ({ paramUser }: { paramUser: TParamUser }) => {
             pError.ok ? "text-rose-600" : "text-sky-700"
           }`}
         >
-          {pError.ok ? pError.message : FileName}
+          {pError.ok ? pError.message : ""}
         </span>
         <label
           htmlFor="fileUpId"
           aria-labelledby="fileUpId"
-          className="max-w-[120px] h-[21px] sm:h-[24px] text-center overflow-hidden bg-sky-500 rounded-md text-white text-[clamp(0.55rem,2vw,0.75rem)] font-bold cursor-pointer px-2 py-1 active:scale-90"
+          className="max-w-[120px] h-[21px] sm:h-[26px] text-center overflow-hidden bg-sky-200 rounded-md text-sky-800 text-[clamp(0.55rem,2vw,0.75rem)] font-bold cursor-pointer px-2 py-1 active:scale-90"
         >
           Выбрать&nbsp;файл
         </label>
@@ -133,15 +123,6 @@ const UploadFileForm = ({ paramUser }: { paramUser: TParamUser }) => {
           className="w-0 h-0 opacity-0 hidden"
         />
       </form>
-      <button
-        type="button"
-        className={`w-[80px] h-[20px] lg:h-[24px] bg-sky-500 text-white text-[clamp(0.65rem,3vw,0.75rem)] font-semibold active:scale-90 rounded-md ${
-          FileName.length > 0 ? "mt-6" : "mt-2"
-        }`}
-        onClick={handleClear}
-      >
-        Очистить
-      </button>
     </section>
   );
 };

@@ -75,7 +75,7 @@ const handler = auth(async function POST(req) {
       const folder = JSON.parse(folderName);
       folderName = `audio/${folder.name + folder.userId}`;
 
-      const uploadDir = join(process.cwd(), "storage/", folderName);
+      const uploadDir = join(process.cwd(), "public/", folderName);
       //console.log(uploadDir);
       //--------------------------------------------
       //Создать папку если ее нет
@@ -96,7 +96,7 @@ const handler = auth(async function POST(req) {
       }
       //-------------------------
       //Записать файл в папку
-      //const file = formDataEntryValue as unknown as Blob;
+
       const fName: string = `${uploadDir}/${fileName}`;
       if (isValue(file)) {
         const buffer = Buffer.from(await (file as Blob).arrayBuffer());
