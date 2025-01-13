@@ -7,6 +7,8 @@ import dynamic from "next/dynamic";
 import TrackerDay from "@/components/tasks/trackerDay";
 import Loader from "@/components/loader/loaderComp";
 import { memo } from "react";
+import UploadFileForm from "@/components/fileUpload/uploadFileForm";
+import AudioFilesComponent from "@/components/AudioFiles/audioFilesComponent";
 //import DataChart01 from "@/components/antCharts/dataChart01";
 
 const DynamicDataChart = dynamic(
@@ -49,7 +51,7 @@ const DynamicTaskNotCompleted = dynamic(
 
 const MemberPage = memo(() => {
   // console.log(params);
-  const { status } = useSession();
+  const { status, data: session } = useSession();
 
   if (status === "loading") {
     return (
@@ -76,9 +78,22 @@ const MemberPage = memo(() => {
 
   // className="bg-[radial-gradient(circle_at_top,theme(colors.white),theme(colors.slate.50),theme(colors.sky.50),theme(colors.sky.100))]"
   return (
-    <section className="xl:w-[80%] 2xl:w-[70%] xl:mx-auto bg-none bg-cover bg-center bg-no-repeat bg-fixed bg-white">
+    <section className="xl:w-[80%] 2xl:w-[75%] xl:mx-auto bg-none bg-cover bg-center bg-no-repeat bg-fixed bg-white">
+      <AudioFilesComponent
+        paramUser={{
+          name: session?.user.name as string,
+          userId: session?.user.userId as string,
+        }}
+      />
+      {/*Загрузка файла на сервер */}
+      <UploadFileForm
+        paramUser={{
+          name: session?.user.name as string,
+          userId: session?.user.userId as string,
+        }}
+      />
       {/* Календарь с задачами */}
-      <section className="p-0 md:p-2 grid grid-cols-1 auto-rows-max lg:grid-cols-2 gap-2 min-h-[60vh] mt-5">
+      <section className="p-0 md:p-2 grid grid-cols-1 auto-rows-max gap-y-5 lg:grid-cols-2 lg:gap-2 min-h-[60vh] mt-5">
         <div className="lg:border-r lg:border-b border-slate-200 lg:p-2">
           <DynamicCalendar />
         </div>
