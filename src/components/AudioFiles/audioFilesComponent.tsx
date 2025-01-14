@@ -6,11 +6,6 @@ import { isValue } from "@/utils/tasksFunctions";
 import { decryptId } from "@/utils/functions";
 import UploadFileForm from "../fileUpload/uploadFileForm";
 
-type TParamUser = {
-  name: string;
-  userId: string;
-};
-
 const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
   const [audioFiles, setAudioFiles] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -21,19 +16,29 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
   const [click, setClick] = useState<number>(0);
 
   const audioRef = useRef<HTMLAudioElement>(null);
+  //для ссылок на radio
+  //let radioRefs = [0, 1, 2].map(() => useRef<HTMLInputElement>(null));
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { defaultValue } = event.currentTarget;
     let index: number = Number(defaultValue);
     setActiveIndex(index);
-    (audioRef.current as HTMLAudioElement).volume = 0.1;
-    if ((audioRef.current as HTMLAudioElement).played) {
-      (audioRef.current as HTMLAudioElement).pause();
-      (audioRef.current as HTMLAudioElement).src = audioFiles[index];
-      (audioRef.current as HTMLAudioElement).play();
-    } else {
-      (audioRef.current as HTMLAudioElement).src = audioFiles[index];
+    twistTrack(index);
+  };
+
+  const twistTrack = (param: number) => {
+    if (!isValue(audioRef.current)) {
+      return;
     }
+    const audio = audioRef.current as HTMLAudioElement;
+    audio.volume = 0.2;
+    if (audio.played) {
+      audio.pause();
+      audio.src = audioFiles[param];
+    } else {
+      audio.src = audioFiles[param];
+    }
+    audio.play();
   };
 
   const handleUpdate = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -45,6 +50,7 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
 
   useEffect(() => {
     let isSubscribed: boolean = true;
+    let canPlay: boolean = false;
 
     if (isSubscribed) {
       (async function getAudio() {
@@ -64,7 +70,11 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
                 tmp.push(pathOfAudio + "/" + item)
               );
 
+              canPlay = tmp.length > 0;
               setAudioFiles(tmp);
+              //Инициализировать массив ref на radio
+              //radioRefs.length = tmp.length;
+
               //console.log(tmp);
             }
           }
@@ -75,11 +85,15 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
         }
       })();
     }
-
     return () => {
       isSubscribed = false;
+      //radioRefs.length = 0;
     };
   }, [click]);
+
+  // const setCallbackRefs = (index: number) => (element: HTMLInputElement) => {
+  //   (radioRefs[index].current as HTMLInputElement) = element;
+  // };
 
   if (isLoading) {
     return (
@@ -98,6 +112,13 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
           //   muted
           preload="auto"
           className="block"
+          onEnded={(event) => {
+            let tmpIndx: number = activeIndex;
+            tmpIndx++;
+            tmpIndx = tmpIndx >= audioFiles.length ? 0 : tmpIndx++;
+            twistTrack(tmpIndx);
+            setActiveIndex(tmpIndx);
+          }}
         >
           <source src={`${audioFiles[activeIndex]}`} type="audio/mp3" />
           <source src={`${audioFiles[activeIndex]}`} type="audio/ogg" />
@@ -118,11 +139,13 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
                 className="cursor-pointer flex items-center justify-start gap-2"
               >
                 <input
+                  //ref={setCallbackRefs(index)}
                   type="radio"
                   name="audioGroup"
                   id={`treck-${index}`}
                   defaultValue={index}
                   onChange={handleChange}
+                  checked={index === activeIndex}
                   className="scale-75"
                 />
                 {item.substring(pathOfAudio.length + 1, item.length)}

@@ -106,3 +106,14 @@ declare type TResponseError = {
 
 declare type TPagination = "existsTask" | "notTasks";
 declare type TEnumForm = "addSubTask" | "deleteTask";
+
+declare type TParamUser = {
+  name: string;
+  userId: string;
+};
+
+declare type TResError = {
+  status: number;
+  message: string;
+  ok: boolean;
+};

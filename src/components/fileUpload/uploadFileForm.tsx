@@ -5,17 +5,6 @@ import { isValue } from "@/utils/tasksFunctions";
 import { useRef, useState } from "react";
 import Loader from "../loader/loaderComp";
 
-type TParamUser = {
-  name: string;
-  userId: string;
-};
-
-type TResError = {
-  status: number;
-  message: string;
-  ok: boolean;
-};
-
 const UploadFileForm = ({ paramUser }: { paramUser: TParamUser }) => {
   const fileRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
