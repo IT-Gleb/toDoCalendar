@@ -117,3 +117,5 @@ declare type TResError = {
   message: string;
   ok: boolean;
 };
+
+declare type TAudioList = string[];
