@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import Loader from "../loader/loaderComp";
 import { isValue } from "@/utils/tasksFunctions";
 import { decryptId } from "@/utils/functions";
@@ -46,6 +46,7 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
     }
     const audio = audioRef.current as HTMLAudioElement;
     audio.volume = 0.2;
+    audio.muted = false;
     if (audio.played) {
       audio.pause();
       audio.src = audioFiles[param];
@@ -112,10 +113,10 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
     <div className="w-fit mx-auto flex gap-4 items-start justify-center flex-wrap">
       {audioFiles && audioFiles.length > 0 && (
         <div className="w-fit mx-auto flex flex-col items-start justify-start gap-0 relative">
-          <div className="absolute z-10 top-9 right-0">
+          <div className="absolute z-[1] top-7 -right-1">
             <button
               type="button"
-              className="w-[18px] h-[18px] bg-sky-50 text-sky-950 active:scale-90 rounded-full"
+              className="w-[24px] h-[24px] scale-50 bg-sky-50 text-sky-950 active:scale-90 rounded-full shadow-md shadow-sky-800"
               onClick={handlerShowList}
               title={
                 showList

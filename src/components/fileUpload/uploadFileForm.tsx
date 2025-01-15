@@ -5,6 +5,8 @@ import { isValue } from "@/utils/tasksFunctions";
 import { memo, useRef, useState } from "react";
 import Loader from "../loader/loaderComp";
 
+const MAXSIZE = 10000000; //Файл не больше 10Mb
+
 const UploadFileForm = memo(
   ({
     paramUser,
@@ -34,7 +36,11 @@ const UploadFileForm = memo(
             //@ts-ignore
             //console.log(fileRef.current.files[0] as unknown as File);
             //@ts-ignore
-            const { name } = fileRef.current.files[0] as unknown as File;
+            const { size } = fileRef.current.files[0] as unknown as File;
+            //console.log(size);
+            if (size > MAXSIZE) {
+              return;
+            }
           }
           //Отправить данные на сервер
           //@ts-ignore
@@ -113,15 +119,16 @@ const UploadFileForm = memo(
           <label
             htmlFor="fileUpId"
             aria-labelledby="fileUpId"
-            className="max-w-[120px] h-[21px] sm:h-[26px] text-center overflow-hidden bg-sky-200 rounded-md text-sky-800 text-[clamp(0.55rem,2vw,0.65rem)] font-bold cursor-pointer px-2 py-1 active:scale-90"
+            className="max-w-[120px] h-[30px] sm:h-[38px] text-center overflow-hidden bg-sky-200 rounded-md text-sky-800 text-[clamp(0.55rem,2vw,0.65rem)] font-bold cursor-pointer px-2 py-1 active:scale-90"
           >
-            Добавить&nbsp;файл
+            {`Добавить файл <<10Mb`}
           </label>
           <input
             ref={fileRef}
             type="file"
             name="fileUpName"
             id="fileUpId"
+            aria-label="fileUpid"
             accept="audio/*"
             onChange={handleChange}
             className="w-0 h-0 opacity-0 hidden"
