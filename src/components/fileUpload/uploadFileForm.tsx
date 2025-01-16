@@ -62,10 +62,6 @@ const UploadFileForm = memo(
               method: "POST",
               body: FileData,
             });
-            if (isValue(paramUpdate)) {
-              //@ts-ignore
-              paramUpdate();
-            }
             if (!result.ok) {
               throw new Error("Ошибка на сервере!");
             }
@@ -83,6 +79,10 @@ const UploadFileForm = memo(
               if (data.status >= 400 && data.status <= 550) {
                 throw new Error(data.message);
               }
+            }
+            if (isValue(paramUpdate)) {
+              //@ts-ignore
+              paramUpdate();
             }
           } catch (err) {
             setPError({

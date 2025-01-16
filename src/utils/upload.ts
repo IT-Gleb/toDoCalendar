@@ -2,7 +2,7 @@
 
 export type TUploadPromise<T> = Promise<T> & { abort: () => void };
 
-export const upload = <T>(
+export const uploadFile = <T>(
   paramUrl: string,
   paramFile: File,
   paramKey: string, //Для ключа в formData

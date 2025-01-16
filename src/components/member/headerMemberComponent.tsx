@@ -11,12 +11,6 @@ export default function HeaderMemberComponent() {
   return (
     <section className="sticky top-0 z-10 w-full min-h-[3vh]  bg-sky-500 text-white text-[0.9rem]">
       <div className="flex flex-wrap-reverse items-center justify-center md:justify-between gap-x-5 gap-y-5 p-2">
-        <div className="flex items-center gap-x-4">
-          Привет,{" "}
-          <span className="uppercase text-[1.4rem] text-yellow-200 font-semibold">
-            {session?.user.name}
-          </span>
-        </div>
         <div
           className="flex items-center gap-x-3 before:content-[''] before:w-[60px] before:h-[10px] 
          before:bg-transparent before:border-double before:border-t-8 before:border-white/55
@@ -26,6 +20,12 @@ export default function HeaderMemberComponent() {
           <h2 className="text-[clamp(1.6rem,8vw,3.5rem)] font-stroke-1-white-transparent whitespace-nowrap uppercase bg-clip-text text-transparent bg-[linear-gradient(90deg,theme(colors.transparent),theme(colors.white),theme(colors.green.500),theme(colors.white),theme(colors.green.500),theme(colors.white),theme(colors.transparent))] ">
             Ваши задачи
           </h2>
+        </div>
+        <div className="flex items-center gap-x-4">
+          Привет,{" "}
+          <span className="uppercase text-[1.4rem] text-yellow-200 font-semibold">
+            {session?.user.name}
+          </span>
         </div>
         {isShow && <AuthLogOutButton />}
       </div>

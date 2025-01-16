@@ -20,6 +20,9 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const [showList, setShowList] = useState<boolean>(true);
+  const [canPlay, setCanPlay] = useState<boolean>(
+    isValue(audioFiles) && audioFiles.length > 0
+  );
   //для ссылок на radio
   //let radioRefs = [0, 1, 2].map(() => useRef<HTMLInputElement>(null));
 
@@ -97,6 +100,10 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
     };
   }, [click]);
 
+  useEffect(() => {
+    setCanPlay(isValue(audioFiles) && audioFiles.length > 0);
+  }, [audioFiles]);
+
   // const setCallbackRefs = (index: number) => (element: HTMLInputElement) => {
   //   (radioRefs[index].current as HTMLInputElement) = element;
   // };
@@ -111,7 +118,7 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
 
   return (
     <div className="w-fit mx-auto flex gap-4 items-start justify-center flex-wrap">
-      {audioFiles && audioFiles.length > 0 && (
+      {canPlay && (
         <div className="w-fit mx-auto flex flex-col items-start justify-start gap-0 relative">
           <div className="absolute z-[1] top-7 -right-1">
             <button
@@ -158,6 +165,12 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
             />
           </div>
         </div>
+      )}
+      {!canPlay && (
+        <p className="text-[clamp(0.6rem,2vw,0.8rem)] text-sky-700">
+          Для проигрывания audio загрузите файл на сервер. Размер файла не более
+          10Mb
+        </p>
       )}
       {/*Загрузка файла на сервер */}
       <UploadFileForm paramUser={paramUser} paramUpdate={handlerUpdate} />
