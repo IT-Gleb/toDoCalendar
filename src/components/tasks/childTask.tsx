@@ -31,7 +31,7 @@ export const TskButton: React.FC<TTaskButtonParams> = memo((param) => {
         param.paramBgColor !== null && param.paramBgColor.trim() !== ""
           ? param.paramBgColor
           : "bg-sky-400"
-      } text-white rounded-full scale-75 sm:scale-90 transition-shadow disabled:bg-slate-200 disabled:text-slate-100 active:scale-90 hover:shadow-[0_0_4px_rgba(0,0,0,1)] hover:shadow-black`}
+      } text-white text-[clamp(0.5rem,1vw,0.65rem)] rounded-full scale-75 sm:scale-90 transition-shadow disabled:bg-slate-200 disabled:text-slate-100 active:scale-90 hover:shadow-[0_0_4px_rgba(0,0,0,1)] hover:shadow-black`}
       title={param.paramTitle}
       disabled={param.paramDisabled}
       onClick={(e) => (param.paramClick ? param.paramClick() : null)}
@@ -93,6 +93,26 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
         await isDialogRef.current.hide();
         setCanShowDialog(false);
       }
+    }
+  };
+
+  const handleCopy = async () => {
+    type TPastTask = {
+      type: "task" | undefined;
+      data: Partial<TTask>;
+    };
+    const tmpData: TPastTask = { type: "task", data: param.paramItem };
+    const clipText: string = JSON.stringify(tmpData);
+
+    await navigator.clipboard.writeText(clipText);
+    try {
+      const txt: string = await navigator.clipboard.readText();
+      const data: TPastTask = JSON.parse(txt) as TPastTask;
+      if ("type" in data && data.type === "task") {
+        console.log(data.data);
+      }
+    } catch (err) {
+      console.error((err as Error).message);
     }
   };
 
@@ -202,6 +222,13 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
             paramBgColor={"bg-sky-400"}
             paramClick={handleAddDialog}
             paramDisabled={param.paramItem.completed === true}
+          />
+          <TskButton
+            paramText="c"
+            paramTitle="Копировать"
+            paramBgColor={"bg-purple-300"}
+            paramClick={handleCopy}
+            paramDisabled={false}
           />
           <TskButton
             paramText="--"

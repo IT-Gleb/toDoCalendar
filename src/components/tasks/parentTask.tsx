@@ -114,7 +114,7 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
           className={`${
             param.paramItem.completed
               ? "bg-green-400 even:bg-green-300 text-sky-800"
-              : "bg-rose-200 odd:bg-rose-300 text-slate-800"
+              : "bg-sky-200 odd:bg-sky-300 text-slate-800"
           } text-[0.55em] sm:text-[0.7rem] font-bold col-span-5 ${
             isOpenChild ? "" : "border-b border-b-slate-500"
           } `}

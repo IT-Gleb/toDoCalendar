@@ -121,7 +121,7 @@ const UploadFileForm = memo(
             aria-labelledby="fileUpId"
             className="max-w-[120px] h-[30px] sm:h-[38px] text-center overflow-hidden bg-sky-200 rounded-md text-sky-800 text-[clamp(0.55rem,2vw,0.65rem)] font-bold cursor-pointer px-2 py-1 active:scale-90"
           >
-            {`Добавить файл <<10Mb`}
+            {`Добавить файл 10Mb`}
           </label>
           <input
             ref={fileRef}
