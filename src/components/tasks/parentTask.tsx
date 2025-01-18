@@ -9,13 +9,17 @@ import { useSession } from "next-auth/react";
 import { isValue } from "@/utils/tasksFunctions";
 import {
   MyPipeStr,
+  PopoverUp,
   TimeZoneDateToString,
+  cryptId,
   returnStrPartOne,
   returnStrPartTwo,
 } from "@/utils/functions";
 import { AnimatePresence, motion, useAnimate } from "framer-motion";
 import { ArrowDown_SVG, ArrowRight_SVG, Plus_SVG } from "@/utils/svg-icons";
 import { DeleteTaskForm } from "./deleteTaskForm";
+import { nanoid } from "nanoid";
+import { addItemTask } from "@/server/actions";
 
 type TParentTaskProps = {
   paramItem: Partial<TTask>;
@@ -49,6 +53,63 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
         await dialogRef.current.hide();
         setShowModal(false);
       }
+    }
+  };
+
+  //Вставить из Clipboard
+  const handlePaste = async () => {
+    let txt: string = "";
+    try {
+      txt = await navigator.clipboard.readText();
+      const data: TPastTask = JSON.parse(txt) as TPastTask;
+      if ("type" in data && typeof data == "object" && data.type === "task") {
+        const task: Partial<TTask> = Object.assign({}, data.data);
+        task.parent_id = param.paramItem.id;
+        task.id = nanoid();
+        task.maintask = param.paramItem.maintask;
+        task.level = (param.paramItem.level as number) + 1;
+        task.completed = false;
+
+        const isJson: boolean =
+          typeof task.parent_id === "string" && task.parent_id.length > 5;
+
+        const taskmData = new FormData();
+        taskmData.append("maintask", task.maintask as string);
+        taskmData.append("pId", task.parent_id as string);
+        taskmData.append("taskId", task.id as string);
+        taskmData.append("user", cryptId(task.userId as unknown as string));
+        taskmData.append("nameTask", task.name as string);
+        taskmData.append("begin", task.begin_at as unknown as string);
+        taskmData.append("end", task.end_at as unknown as string);
+        taskmData.append("completed", task.completed ? "true" : "false");
+        taskmData.append("level", task.level as unknown as string);
+
+        taskmData.append("taskDay", param.paramPage as string);
+        taskmData.append("jsonTask", isJson ? "true" : "false");
+
+        //console.log(task, isJson);
+        const initRes: "init" | "success" | "error" = "init";
+        const result = await addItemTask(initRes, taskmData);
+        if (result === "error") {
+          throw new Error("Ошибка вставки данных в таблицу!");
+        }
+      } else {
+        throw new Error("Ошибка!");
+      }
+      setTimeout(() => {
+        PopoverUp({
+          param: "Задача вставлена из буфера обмена!",
+          isError: false,
+        });
+      }, 1500);
+    } catch (err) {
+      //console.error((err as Error).message);
+      PopoverUp({
+        param:
+          "Неверный формат данных! Не могу вставить задачу... 8-( " +
+          (err as Error).message,
+        isError: true,
+      });
     }
   };
 
@@ -167,6 +228,13 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
                 paramText={<Plus_SVG pHeight={14} pWidth={14} />}
                 paramClick={handleAddDialog}
                 paramDisabled={param.paramItem.completed === true}
+              />
+              <TskButton
+                paramBgColor={"bg-purple-400"}
+                paramTitle="Вставить подзадачу"
+                paramText={"p"}
+                paramClick={handlePaste}
+                paramDisabled={false}
               />
               <TskButton
                 paramBgColor={"bg-rose-300"}

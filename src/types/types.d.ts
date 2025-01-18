@@ -119,3 +119,9 @@ declare type TResError = {
 };
 
 declare type TAudioList = string[];
+
+//Для копирования/вставки в буфер обмена
+declare type TPastTask = {
+  type: "task" | undefined;
+  data: Partial<TTask> | undefined;
+};

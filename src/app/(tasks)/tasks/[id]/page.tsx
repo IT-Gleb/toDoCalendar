@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { AddFormContent } from "@/components/forms/addFormContent";
 import { AddTaskFormComponent } from "@/components/forms/addTaskFormComponent";
 import { NoAuthComponent } from "@/components/noAuthComponent";
+import PopoverComponent from "@/components/popover/popoverComponent";
 import {
   ListTableHead,
   ListTaskComponent,
@@ -101,6 +102,7 @@ export default async function TaskPage({ params }: { params: { id: string } }) {
           Вернуться
         </Link>
       </section>
+      <PopoverComponent />
     </>
   );
 }

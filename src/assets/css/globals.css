@@ -108,6 +108,9 @@ body {
       transform: scaleY(1);
     }
   }
+  .tooltip {
+    @apply text-white text-[clamp(0.7rem,2vw,0.8rem)] font-bold p-2 uppercase rounded-sm animate-dialog-open shadow-md shadow-sky-700;
+  }
 }
 
 @layer utilities {

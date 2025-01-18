@@ -8,6 +8,8 @@ import TrackerDay from "@/components/tasks/trackerDay";
 import Loader from "@/components/loader/loaderComp";
 import { memo } from "react";
 import AudioFilesComponent from "@/components/AudioFiles/audioFilesComponent";
+import PopoverComponent from "@/components/popover/popoverComponent";
+import { PopoverUp } from "@/utils/functions";
 //import DataChart01 from "@/components/antCharts/dataChart01";
 
 const DynamicDataChart = dynamic(
@@ -75,6 +77,11 @@ const MemberPage = memo(() => {
     );
   }
 
+  const handlePopoover = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    PopoverUp({ param: "dv hjkfdjskj kfjdvksj ksjkfjfv cks", isError: false });
+  };
+
   // className="bg-[radial-gradient(circle_at_top,theme(colors.white),theme(colors.slate.50),theme(colors.sky.50),theme(colors.sky.100))]"
   return (
     <section className="xl:w-[80%] 2xl:w-[75%] xl:mx-auto bg-none bg-cover bg-center bg-no-repeat bg-fixed bg-white">
@@ -105,14 +112,22 @@ const MemberPage = memo(() => {
       </section>
 
       <span className="w-fit mx-auto mt-5 block">
-        <Link
+        {/* <Link
           href={"/mainTasks"}
           scroll={false}
           className="w-[100px] h-[32px] rounded-md bg-sky-500 text-white text-[0.8rem] mt-10 cursor-pointer p-2"
         >
           К задачам
-        </Link>
+        </Link> */}
+        <button
+          type="button"
+          className="active:scale-90 bg-sky-600 text-white text-[clamp(0.6rem,4vw,0.8rem)] w-[80px] p-1 rounded-sm hover:shadow-md hover:shadow-sky-950"
+          onClick={handlePopoover}
+        >
+          OK
+        </button>
       </span>
+      <PopoverComponent />
     </section>
   );
 });

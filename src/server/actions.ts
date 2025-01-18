@@ -429,10 +429,11 @@ async function getTaskDbJson(
   paramTaskId: number,
   paramUserId: string | number
 ) {
+  //console.log(typeof paramTaskId, paramTaskId, typeof paramUserId, paramUserId);
   try {
     const childTasks =
       await sql`SELECT items::jsonb FROM tasks WHERE isdeleted=false AND id=${paramTaskId} AND userid=${paramUserId};`;
-    //console.log(childTasks[0].items);
+    // console.log(childTasks[0].items);
     if (isValue(childTasks[0].items)) {
       return childTasks[0].items as TTaskList;
     } else {
@@ -464,6 +465,8 @@ export async function addItemTask(
     pppId = parentId as string;
   }
 
+  //console.log(pppId);
+
   const addedTask: Partial<TTask> = {
     id: paramFormData.get("taskId")?.toString() ?? nanoid(),
     parent_id: pppId,
@@ -492,7 +495,7 @@ export async function addItemTask(
 
   //Получить подзадачи
   const childrenTasks: TTaskList = (await getTaskDbJson(
-    isJsonTask ? (addedTask.maintask as number) : (pppId as number),
+    isJsonTask ? Number(addedTask.maintask) : Number(pppId),
     uId as number
   )) as TTaskList;
 

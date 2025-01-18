@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid";
 import { DaysOfWeek, Mounths } from "./data";
+import { isValue } from "./tasksFunctions";
 
 // export const Base_URL: string = "http://localhost:3001/";
 export const Base_URL = process.env.NEXT_PUBLIC_BASE_APP_URL;
@@ -802,4 +803,28 @@ function groupTasks(paramTasks: TTaskList, paramGroup: "completed") {
   return Object.groupBy(paramTasks, (item) =>
     item[paramGroup] ? "Worked" : "NotWorked"
   );
+}
+
+export function PopoverUp({
+  param,
+  isError,
+}: {
+  param: string;
+  isError: boolean;
+}) {
+  const popver = document.getElementById("page-popover");
+  let timerId: number = -1;
+  if (isValue(popver)) {
+    isError
+      ? ((popver as HTMLElement).style.backgroundColor = "#F05252")
+      : ((popver as HTMLElement).style.backgroundColor = "#31C48D");
+
+    (popver as HTMLElement).innerText = param;
+    //@ts-ignore
+    popver.showPopover();
+    timerId = window.setTimeout(() => {
+      popver?.hidePopover();
+      window.clearTimeout(timerId);
+    }, 3500);
+  }
 }

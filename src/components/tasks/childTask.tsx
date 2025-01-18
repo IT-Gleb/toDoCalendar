@@ -2,12 +2,13 @@
 
 import {
   MyPipeStr,
+  PopoverUp,
   TimeZoneDateToString,
   returnStrPartOne,
   returnStrPartTwo,
 } from "@/utils/functions";
 import { Selected_SVG } from "@/utils/svg-icons";
-import React, { memo, useEffect, useMemo, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { DialogComponent, IDialog } from "../dialog/dialogComponent";
 import { AddChildTaskForm } from "./addChildTaskForm";
 import { DeleteTaskForm } from "./deleteTaskForm";
@@ -97,23 +98,13 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
   };
 
   const handleCopy = async () => {
-    type TPastTask = {
-      type: "task" | undefined;
-      data: Partial<TTask>;
+    const tmpData: TPastTask = {
+      type: "task",
+      data: param.paramItem,
     };
-    const tmpData: TPastTask = { type: "task", data: param.paramItem };
     const clipText: string = JSON.stringify(tmpData);
-
     await navigator.clipboard.writeText(clipText);
-    try {
-      const txt: string = await navigator.clipboard.readText();
-      const data: TPastTask = JSON.parse(txt) as TPastTask;
-      if ("type" in data && data.type === "task") {
-        console.log(data.data);
-      }
-    } catch (err) {
-      console.error((err as Error).message);
-    }
+    PopoverUp({ param: "Задача скопирована в буфер обмена!", isError: false });
   };
 
   useEffect(() => {
@@ -226,7 +217,7 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
           <TskButton
             paramText="c"
             paramTitle="Копировать"
-            paramBgColor={"bg-purple-300"}
+            paramBgColor={"bg-purple-400"}
             paramClick={handleCopy}
             paramDisabled={false}
           />
