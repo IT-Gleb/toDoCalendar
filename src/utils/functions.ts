@@ -804,6 +804,12 @@ function groupTasks(paramTasks: TTaskList, paramGroup: "completed") {
     item[paramGroup] ? "Worked" : "NotWorked"
   );
 }
+//Проверка на допустимые символы в имени
+export function hasNoLatinSymbols(param: string): boolean {
+  //Определить символы не латинницы
+  let textStr = new RegExp(`[^\dA-Za-z0-9]`, "giu");
+  return textStr.test(param);
+}
 
 export function PopoverUp({
   param,
@@ -815,6 +821,7 @@ export function PopoverUp({
   const popver = document.getElementById("page-popover");
   let timerId: number = -1;
   if (isValue(popver)) {
+    (popver as HTMLElement).style.top = `${window.innerHeight - 200}px`;
     isError
       ? ((popver as HTMLElement).style.backgroundColor = "#F05252")
       : ((popver as HTMLElement).style.backgroundColor = "#31C48D");

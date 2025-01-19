@@ -1,5 +1,6 @@
 import { NICKNAME } from "@/utils/data";
-import { useState, useRef, forwardRef } from "react";
+import { hasNoLatinSymbols } from "@/utils/functions";
+import { useState, forwardRef } from "react";
 
 const MINLENGTH: number = 4;
 const MAXLENGTH: number = 32;
@@ -7,10 +8,16 @@ const MAXLENGTH: number = 32;
 export const AuthNickNameComponent = forwardRef((_, paramRef: any) => {
   const [strLength, setStrLength] = useState<number>(0);
   const [isActive, setIsActive] = useState<boolean>(false);
+  const [nickText, setNickText] = useState<string>("");
   //const nickRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStrLength(event.currentTarget.value.length);
+    const { value } = event.currentTarget;
+    setStrLength(value.length);
+    //console.log(hasNoLatinSymbols(value));
+    if (!hasNoLatinSymbols(value)) {
+      setNickText(value);
+    }
   };
 
   const handleBlur = () => {
@@ -51,16 +58,18 @@ export const AuthNickNameComponent = forwardRef((_, paramRef: any) => {
         maxLength={MAXLENGTH}
         minLength={MINLENGTH}
         placeholder="Как к Вам обращаться..."
+        value={nickText}
         onChange={handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
         className=" md:w-[80%] py-2 pl-2 pr-6 outline-none border-b border-b-slate-600 text-[0.85rem] bg-transparent focus:border-b-2 focus:border-b-slate-600 placeholder:text-[0.8rem] placeholder:text-slate-400 "
       />
-      <span className="text-[0.7rem] text-slate-500">
+      <span className="text-[clamp(0.5rem,2vw,0.7rem)] text-slate-500">
         {`Введено ${strLength} из (${MINLENGTH}-${MAXLENGTH})`}
         {strLength >= MINLENGTH ? (
-          <span className="text-[1rem]">&#128578;</span>
+          <span className="text-[clamp(0.5rem,2vw,1rem)]">&#128578;</span>
         ) : null}
+        . Только латинские символы
       </span>
       {strLength > 0 && (
         <button

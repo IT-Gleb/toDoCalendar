@@ -61,11 +61,11 @@ export const AddChildTaskForm: React.FC<TChildTaskFormParam> = memo((param) => {
         </button>
       </div>
       <article className="p-2 min-h-[2vh] bg-[url('../../assets/images/svg/back02.svg')] bg-no-repeat bg-cover bg-center relative flex-auto">
-        <p>
+        {/* <p>
           {param.paramItem.id} <span>{param.paramItem.level}</span>
           {"          "}
           <span>{isJsonTask ? "true" : "false"}</span>
-        </p>
+        </p> */}
 
         <form action={formAction} className="mt-5">
           <div className="w-full text-center p-2 min-h-[5vh] flex flex-col items-start">
