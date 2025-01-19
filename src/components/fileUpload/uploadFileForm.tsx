@@ -1,6 +1,6 @@
 "use client";
 
-import { decryptId } from "@/utils/functions";
+import { decryptId, PopoverUp } from "@/utils/functions";
 import { isValue } from "@/utils/tasksFunctions";
 import { memo, useRef, useState } from "react";
 import Loader from "../loader/loaderComp";
@@ -39,6 +39,10 @@ const UploadFileForm = memo(
             const { size } = fileRef.current.files[0] as unknown as File;
             //console.log(size);
             if (size > MAXSIZE) {
+              PopoverUp({
+                param: "Размер выбранного файла больше 10Mb.",
+                isError: false,
+              });
               return;
             }
           }
