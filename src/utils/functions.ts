@@ -818,19 +818,26 @@ export function PopoverUp({
   param: string;
   isError: boolean;
 }) {
-  const popver = document.getElementById("page-popover");
+  const popover = document.getElementById("page-popover");
   let timerId: number = -1;
-  if (isValue(popver)) {
-    (popver as HTMLElement).style.top = `${window.innerHeight - 200}px`;
+  if (isValue(popover)) {
     isError
-      ? ((popver as HTMLElement).style.backgroundColor = "#F05252")
-      : ((popver as HTMLElement).style.backgroundColor = "#31C48D");
+      ? ((popover as HTMLElement).style.backgroundColor = "#F05252")
+      : ((popover as HTMLElement).style.backgroundColor = "#31C48D");
 
-    (popver as HTMLElement).innerText = param;
+    (popover as HTMLElement).innerText = param;
+    const maxHeight = window.innerHeight; //высота экрана
+    //const pop2 = document.getElementById("page-popover");
+    const popHeight =
+      popover?.offsetHeight !== undefined
+        ? Math.max(100, popover.offsetHeight, 120)
+        : 100;
+    //    console.log(maxHeight, popHeight, pop2);
+    (popover as HTMLElement).style.top = `${maxHeight - popHeight}px`;
     //@ts-ignore
-    popver.showPopover();
+    popover.showPopover();
     timerId = window.setTimeout(() => {
-      popver?.hidePopover();
+      popover?.hidePopover();
       window.clearTimeout(timerId);
     }, 3500);
   }
