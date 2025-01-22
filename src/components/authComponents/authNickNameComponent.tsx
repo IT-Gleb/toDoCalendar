@@ -32,6 +32,7 @@ export const AuthNickNameComponent = forwardRef((_, paramRef: any) => {
     if (paramRef.current) {
       paramRef.current.value = "";
       setStrLength(0);
+      setNickText("");
     }
     paramRef.current?.focus();
   };

@@ -7,6 +7,7 @@ export const Base_URL = process.env.NEXT_PUBLIC_BASE_APP_URL;
 const MounthData_url: string = "/api/monthdata/";
 export const CookieUserId: string = "u_value"; //Для cookie userId
 export const TASKS_ON_PAGE: number = 10;
+export const POPOVER: string = "page-popover";
 
 //Количество дней до конца года
 export function DaysToEndOfYear(): number {
@@ -807,7 +808,7 @@ function groupTasks(paramTasks: TTaskList, paramGroup: "completed") {
 //Проверка на допустимые символы в имени
 export function hasNoLatinSymbols(param: string): boolean {
   //Определить символы не латинницы
-  let textStr = new RegExp(`[^\dA-Za-z0-9]`, "giu");
+  let textStr = new RegExp(`[^\dA-Za-z0-9@._]`, "giu");
   return textStr.test(param);
 }
 
@@ -818,7 +819,7 @@ export function PopoverUp({
   param: string;
   isError: boolean;
 }) {
-  const popover = document.getElementById("page-popover");
+  const popover = document.getElementById(POPOVER);
   let timerId: number = -1;
   if (isValue(popover)) {
     isError

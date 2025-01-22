@@ -1,4 +1,5 @@
 import { UEMAIL } from "@/utils/data";
+import { hasNoLatinSymbols } from "@/utils/functions";
 import { useState, useRef, forwardRef } from "react";
 
 const MINLENGTH: number = 8;
@@ -7,6 +8,7 @@ const MAXLENGTH: number = 32;
 export const EmailInputComponent = forwardRef((_, paramRef: any) => {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [strLength, setStrLength] = useState<number>(0);
+  const [emailValue, setEmailValue] = useState<string>("");
   //const emailRef = useRef<HTMLInputElement>(null);
 
   const handleFocus = () => {
@@ -17,7 +19,11 @@ export const EmailInputComponent = forwardRef((_, paramRef: any) => {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStrLength(event.currentTarget.value.length);
+    const { value } = event.currentTarget;
+    setStrLength(value.length);
+    if (!hasNoLatinSymbols(value)) {
+      setEmailValue(value);
+    }
   };
 
   const handleClearClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -25,6 +31,7 @@ export const EmailInputComponent = forwardRef((_, paramRef: any) => {
     if (paramRef.current) {
       paramRef.current.value = "";
       setStrLength(0);
+      setEmailValue("");
     }
     paramRef.current?.focus();
   };
@@ -47,6 +54,7 @@ export const EmailInputComponent = forwardRef((_, paramRef: any) => {
         placeholder="temp@thesite.primer.com"
         minLength={MINLENGTH}
         maxLength={MAXLENGTH}
+        value={emailValue}
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChange={handleChange}
@@ -71,6 +79,7 @@ export const EmailInputComponent = forwardRef((_, paramRef: any) => {
         paramRef.current?.value.includes(".") ? (
           <span className="text-[1rem]">📧</span>
         ) : null}
+        <span>. Только латинские символы</span>
       </span>
     </label>
   );
