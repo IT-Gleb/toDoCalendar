@@ -87,8 +87,9 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
         taskmData.append("taskDay", param.paramPage as string);
         taskmData.append("jsonTask", isJson ? "true" : "false");
 
-        //console.log(task, isJson);
+        //console.log(taskmData, isJson);
         const initRes: "init" | "success" | "error" = "init";
+
         const result = await addItemTask(initRes, taskmData);
         if (result === "error") {
           throw new Error("Ошибка вставки данных в таблицу!");

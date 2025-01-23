@@ -44,7 +44,7 @@ export const ModifyChildTaskForm: React.FC<TChildTaskFormParam> = memo(
         <div className="bg-sky-400 text-sky-800 min-h-[2vh] p-2 flex items-start gap-x-1 justify-between">
           <span className="line-clamp-3">
             Изменить подзадачу ::
-            <p className="text-[0.85] font bold text-yellow-50 line-clamp-2 indent-2">
+            <p className="text-[clamp(0.6rem,2vw,0.9rem)] font bold text-yellow-50 line-clamp-2 indent-2">
               {param.paramItem.name}
             </p>
           </span>
@@ -73,7 +73,7 @@ export const ModifyChildTaskForm: React.FC<TChildTaskFormParam> = memo(
             <div className="w-full text-center p-2 min-h-[5vh] flex flex-col items-start">
               <label
                 title="Задача"
-                className=" w-full text-[0.8rem] relative before:content-[attr(title)] before:text-[0.7rem] before:bg-white before:p-1 before:absolute before:left-0 before:top-[-1.2rem] focus-within:before:font-bold focus-within:before:text-sky-700 focus-within:before:animate-pulse"
+                className=" w-full text-[clamp(0.6rem,2vw,0.8rem)] relative before:content-[attr(title)] before:text-[0.7rem] before:bg-white before:p-1 before:absolute before:left-0 before:top-[-1.2rem] focus-within:before:font-bold focus-within:before:text-sky-700 focus-within:before:animate-pulse"
               >
                 <input
                   type="text"

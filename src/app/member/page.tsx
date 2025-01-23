@@ -22,10 +22,11 @@ const DynamicDataChart = dynamic(
 
 const DynamicCalendar = dynamic(
   () =>
-    import("@/components/Calendar/calendar2/calendarWithMashine").then(
-      (component) => component.CalendarWithMashine
-    ),
+    import("@/components/Calendar/calendar2/calendarWithMashine")
+      .then((component) => component.CalendarWithMashine)
+      .catch(),
   {
+    ssr: false,
     loading: () => <LoaderCalendarComponent />,
   }
 );
@@ -36,6 +37,7 @@ const DynamicTasksExists = dynamic(
       (component) => component.default
     ),
   {
+    ssr: false,
     loading: () => <Loader />,
   }
 );
@@ -45,9 +47,7 @@ const DynamicTaskNotCompleted = dynamic(
     import("@/components/tasks/tasksNotCompleted").then(
       (component) => component.default
     ),
-  {
-    loading: () => <Loader />,
-  }
+  { ssr: false, loading: () => <Loader /> }
 );
 
 const MemberPage = memo(() => {
@@ -79,7 +79,7 @@ const MemberPage = memo(() => {
 
   const handlePopoover = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    PopoverUp({ param: "dv hjkfdjskj kfjdvksj ksjkfjfv cks", isError: false });
+    PopoverUp({ param: "Проверочное сообщение", isError: false });
   };
 
   // className="bg-[radial-gradient(circle_at_top,theme(colors.white),theme(colors.slate.50),theme(colors.sky.50),theme(colors.sky.100))]"
