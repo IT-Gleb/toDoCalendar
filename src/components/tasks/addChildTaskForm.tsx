@@ -23,12 +23,12 @@ const BtnAddTask: React.FC = () => {
   );
 };
 
-type TChildTaskFormParam = {
-  paramItem: Partial<TTask>;
-  paramUser: string;
-  paramTaskDay: string;
-  paramClick(): Promise<void>;
-};
+// type TChildTaskFormParam = {
+//   paramItem: Partial<TTask>;
+//   paramUser: string;
+//   paramTaskDay: string;
+//   paramClick(): Promise<void>;
+// };
 
 const initAdd: "init" | "success" | "error" = "init";
 
@@ -52,7 +52,11 @@ export const AddChildTaskForm: React.FC<TChildTaskFormParam> = memo((param) => {
         </span>
         <button
           type="button"
-          onClick={async () => await param.paramClick()}
+          onClick={async () => {
+            if (param.paramClick) {
+              await param.paramClick();
+            }
+          }}
           className="w-[24px] h-[20px] bg-pink-500 text-yellow-50 px-2 py-[2px] text-[0.6rem] font-bold "
           title="Закрыть"
           tabIndex={-1}
@@ -68,7 +72,7 @@ export const AddChildTaskForm: React.FC<TChildTaskFormParam> = memo((param) => {
         </p> */}
 
         <form action={formAction} className="mt-5">
-          <div className="w-full text-center p-2 min-h-[5vh] flex flex-col items-start">
+          <div className="w-full text-center p-2 min-h-[5vh] flex flex-col items-start flex-wrap md:flex-nowrap">
             <label
               title="Задача"
               className=" w-full text-[0.8rem] relative before:content-[attr(title)] before:text-[0.7rem] before:bg-white before:p-1 before:absolute before:left-0 before:top-[-1.2rem] focus-within:before:font-bold focus-within:before:text-sky-700 focus-within:before:animate-pulse"
@@ -177,7 +181,7 @@ export const AddChildTaskForm: React.FC<TChildTaskFormParam> = memo((param) => {
               id="jsonTask"
               defaultValue={isJsonTask ? "true" : "false"}
             />
-            <div className="self-end">
+            <div className="mt-4 md:mt-0 self-end">
               <BtnAddTask />
             </div>
           </div>

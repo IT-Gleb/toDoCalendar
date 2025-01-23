@@ -176,7 +176,7 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
             param.paramItem.completed
               ? "bg-green-400 even:bg-green-300 text-sky-800"
               : "bg-sky-200 odd:bg-sky-300 text-slate-800"
-          } text-[0.55em] sm:text-[0.7rem] font-bold col-span-5 ${
+          } text-[0.6em] sm:text-[0.7rem] font-bold col-span-5 ${
             isOpenChild ? "" : "border-b border-b-slate-500"
           } `}
           style={{
@@ -188,13 +188,6 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
           }}
         >
           <div className="pl-2 align-middle first-letter:uppercase flex items-center justify-between gap-x-2 gap-y-1 ">
-            <TskButton
-              paramBgColor={"bg-stone-400"}
-              paramTitle="Открыть/Закрыть"
-              paramText={isOpenChild ? <ArrowDown_SVG /> : <ArrowRight_SVG />}
-              paramClick={handleOpenClose}
-              paramDisabled={false}
-            />
             <span className=" line-clamp-2 max-w-[300px]">
               {param.paramItem.name?.trim()}
             </span>
@@ -222,6 +215,13 @@ export const ParentTask: React.FC<TParentTaskProps> = memo((param) => {
               )(param.paramItem.end_at as unknown as string)}
             </span>
             <div className="flex flex-col sm:flex-row items-center justify-center sm:gap-x-2 p-1 min-w-[100px]">
+              <TskButton
+                paramBgColor={"bg-stone-400"}
+                paramTitle="Открыть/Закрыть"
+                paramText={isOpenChild ? <ArrowDown_SVG /> : <ArrowRight_SVG />}
+                paramClick={handleOpenClose}
+                paramDisabled={false}
+              />
               <TskButton
                 paramBgColor={"bg-stone-400"}
                 paramTitle="Добавить подзадачу"

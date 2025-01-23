@@ -54,6 +54,7 @@ export const AddFormContent = memo(({ paramDay }: { paramDay: string }) => {
         formRef.current?.reset();
         setFormStatus(InitialState);
       }}
+      className="bg-[radial-gradient(circle_at_left_top,theme(colors.white),theme(colors.white),theme(colors.sky.50),theme(colors.sky.100),theme(colors.sky.200))]"
     >
       <fieldset className=" w-full p-4 flex flex-col gap-y-6 mb-10 border border-slate-300">
         <legend className="uppercase my-2 p-1">Задача верхнего уровня</legend>

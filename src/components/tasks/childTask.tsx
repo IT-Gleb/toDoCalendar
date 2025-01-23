@@ -15,6 +15,7 @@ import { DeleteTaskForm } from "./deleteTaskForm";
 import { useSession } from "next-auth/react";
 import { ChangeCompleted } from "@/server/actions";
 import { isValue } from "@/utils/tasksFunctions";
+import { ModifyChildTaskForm } from "./modifyChildTaskForm";
 
 type TTaskButtonParams = {
   paramText: string | React.JSX.Element;
@@ -32,7 +33,7 @@ export const TskButton: React.FC<TTaskButtonParams> = memo((param) => {
         param.paramBgColor !== null && param.paramBgColor.trim() !== ""
           ? param.paramBgColor
           : "bg-sky-400"
-      } text-white text-[clamp(0.5rem,1vw,0.65rem)] rounded-full scale-75 sm:scale-90 transition-shadow disabled:bg-slate-200 disabled:text-slate-100 active:scale-90 hover:shadow-[0_0_4px_rgba(0,0,0,1)] hover:shadow-black`}
+      } text-white text-[clamp(0.5rem,1vw,0.65rem)] rounded-full scale-75 sm:scale-90 transition-shadow disabled:bg-slate-200 disabled:text-slate-100 active:scale-50 hover:shadow-[0_0_4px_rgba(0,0,0,1)] hover:shadow-black`}
       title={param.paramTitle}
       disabled={param.paramDisabled}
       onClick={(e) => (param.paramClick ? param.paramClick() : null)}
@@ -80,6 +81,11 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
 
   const handleAddDialog = () => {
     setIsAddDelete("addSubTask");
+    setCanShowDialog(true);
+  };
+
+  const handleModify = () => {
+    setIsAddDelete("modifySubTask");
     setCanShowDialog(true);
   };
 
@@ -132,6 +138,14 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
               paramClick={handleCloseDialog}
             />
           )}
+          {isAddelete === "modifySubTask" && (
+            <ModifyChildTaskForm
+              paramItem={param.paramItem}
+              paramUser={session?.user.userId as string}
+              paramTaskDay={param.paramPage}
+              paramClick={handleCloseDialog}
+            />
+          )}
           {isAddelete === "deleteTask" && (
             <DeleteTaskForm
               taskId={param.paramItem.id as string}
@@ -149,8 +163,8 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
         className={`grid grid-cols-5 gap-x-2 p-1 ${
           completed
             ? "bg-green-100 odd:bg-green-50"
-            : "bg-slate-100 odd:bg-slate-50"
-        }  text-[0.55em] sm:text-[0.75em]/[1rem] ${
+            : "bg-[linear-gradient(90deg,theme(colors.white),theme(colors.white),theme(colors.purple.200))]"
+        }  text-[clamp(0.55rem,2vw,0.75rem)]  ${
           (param.paramItem.level as number) > 0
             ? "border-l border-b border-slate-500"
             : ""
@@ -163,34 +177,34 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
               : 0,
         }}
       >
-        <span className="align-middle p-1 line-clamp-4 first-letter:uppercase">
+        <span className="align-middle line-clamp-4 first-letter:uppercase">
           {param.paramItem.name}
         </span>
-        <span className="align-middle p-1 overflow-hidden whitespace-nowrap">
+        <span className="align-middle overflow-hidden whitespace-nowrap">
           {completed ? "Завершена" : "Не завершена"}
         </span>
-        <span className=" text-[0.7rem] align-middle p-1">
+        <span className=" text-[clamp(0.55rem,2vw,0.7rem)] align-middle">
           <span className=" whitespace-nowrap">
             {MyPipeStr(
               TimeZoneDateToString,
               returnStrPartOne
             )(param.paramItem.begin_at as unknown as string)}
           </span>{" "}
-          <span className=" text-[0.8rem] font-bold align-middle p-1">
+          <span className=" text-[clamp(0.6rem,2vw,0.8rem)] font-bold align-middle">
             {MyPipeStr(
               TimeZoneDateToString,
               returnStrPartTwo
             )(param.paramItem.begin_at as unknown as string)}
           </span>
         </span>
-        <span className=" text-[0.7rem] align-middle p-1">
+        <span className=" text-[clamp(0.55rem,2vw,0.7rem)] align-middle">
           <span className=" whitespace-nowrap">
             {MyPipeStr(
               TimeZoneDateToString,
               returnStrPartOne
             )(param.paramItem.end_at as unknown as string)}
           </span>{" "}
-          <span className=" text-[0.8rem] font-bold align-middle p-1">
+          <span className=" text-[clamp(0.6rem,2vw,0.8rem)] font-bold align-middle">
             {MyPipeStr(
               TimeZoneDateToString,
               returnStrPartTwo
@@ -199,7 +213,7 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
         </span>
 
         {/* Кнопки добавить удалить */}
-        <div className="w-fit mx-auto grid grid-cols-1 md:flex items-start justify-center gap-x-2 gap-y-1 p-1">
+        <div className="w-fit mx-auto grid grid-cols-1 md:flex items-start justify-center gap-x-2 gap-y-1">
           <TskButton
             paramText={<Selected_SVG pWidth={14} pHeight={14} />}
             paramTitle={completed ? "Отменить выполнение" : "Выполнена"}
@@ -213,6 +227,13 @@ export const ChildTask: React.FC<TChildTaskProps> = memo((param) => {
             paramBgColor={"bg-sky-400"}
             paramClick={handleAddDialog}
             paramDisabled={param.paramItem.completed === true}
+          />
+          <TskButton
+            paramText="m"
+            paramTitle="Изменить"
+            paramBgColor="bg-stone-500"
+            paramDisabled={param.paramItem.completed === true}
+            paramClick={handleModify}
           />
           <TskButton
             paramText="c"

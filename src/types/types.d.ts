@@ -105,7 +105,7 @@ declare type TResponseError = {
 };
 
 declare type TPagination = "existsTask" | "notTasks";
-declare type TEnumForm = "addSubTask" | "deleteTask";
+declare type TEnumForm = "addSubTask" | "modifySubTask" | "deleteTask";
 
 declare type TParamUser = {
   name: string;
@@ -124,4 +124,12 @@ declare type TAudioList = string[];
 declare type TPastTask = {
   type: "task" | undefined;
   data: Partial<TTask> | undefined;
+};
+
+//Параметры в компонентах добавить/модифицировать задачу ChildTask
+declare type TChildTaskFormParam = {
+  paramItem: Partial<TTask>;
+  paramUser: string;
+  paramTaskDay: string;
+  paramClick?: () => Promise<void>;
 };
