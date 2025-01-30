@@ -109,7 +109,7 @@ body {
     }
   }
   .tooltip {
-    @apply text-white text-[clamp(0.7rem,2vw,0.9rem)] font-bold p-2 uppercase rounded-sm animate-dialog-open shadow-md shadow-sky-700;
+    @apply w-full text-white text-[clamp(0.7rem,2vw,0.9rem)] text-center font-bold p-2 uppercase rounded-sm animate-dialog-open shadow-md shadow-sky-700;
   }
 }
 

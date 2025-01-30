@@ -573,3 +573,10 @@ export async function addItemTask(
   }
 }
 //---------------------------------
+
+export async function ModifyItemTask(
+  paramInit: "init" | "success" | "error",
+  paramFormData: FormData
+): Promise<"init" | "success" | "error"> {
+  return "error";
+}

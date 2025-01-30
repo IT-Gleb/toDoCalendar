@@ -1,28 +1,15 @@
-import { addItemTask } from "@/server/actions";
-import { formatDateToInput, getNowYear } from "@/utils/functions";
+import { ModifyItemTask } from "@/server/actions";
+import { formatDateToInput, getNowYear, PopoverUp } from "@/utils/functions";
 import { isValue } from "@/utils/tasksFunctions";
-import { memo, useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
-
-const BtnAddTask: React.FC = () => {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      className="w-[80px] h-[32px] rounded-sm bg-sky-500 transition-colors hover:shadow-md hover:bg-sky-600 hover:shadow-sky-800 text-white text-[0.75rem] active:scale-90 p-2 disabled:bg-slate-50 disabled:text-slate-200"
-      title="Добавить подзадачу"
-      disabled={pending}
-    >
-      Добавить
-    </button>
-  );
-};
+import { memo, useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { BtnAddTask } from "./formBtnComponent";
 
 const initAdd: "init" | "success" | "error" = "init";
 
 export const ModifyChildTaskForm: React.FC<TChildTaskFormParam> = memo(
   (param) => {
-    const [state, formAction] = useFormState(addItemTask, initAdd);
+    const [state, formAction] = useFormState(ModifyItemTask, initAdd);
     const [isJsonTask] = useState<boolean>(
       (param.paramItem.level as number) > 0 &&
         typeof param.paramItem.id == "string" &&
@@ -38,6 +25,14 @@ export const ModifyChildTaskForm: React.FC<TChildTaskFormParam> = memo(
       //console.log(value);
       setCompletedValue(value === "true" ? true : false);
     };
+
+    useEffect(() => {
+      switch (state) {
+        case "error":
+          PopoverUp({ param: "Задача не изменена! Ошибка!", isError: true });
+          break;
+      }
+    }, [state]);
 
     return (
       <div className="w-[90%] sm:w-[80%] md:w-[75%] lg:w-[60%] flex flex-col mx-auto border-4 border-slate-100 rounded-sm lg:rounded-lg bg-white overflow-hidden text-[0.75rem]">
@@ -188,7 +183,7 @@ export const ModifyChildTaskForm: React.FC<TChildTaskFormParam> = memo(
                 defaultValue={isJsonTask ? "true" : "false"}
               />
               <div className="mt-8 md:mt-0 self-end">
-                <BtnAddTask />
+                <BtnAddTask text="Изменить" />
               </div>
             </div>
           </form>
