@@ -65,11 +65,13 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
   // };
 
   useEffect(() => {
-    //    const audio = audioRef.current as HTMLAudioElement;
+    const audio = audioRef.current as HTMLAudioElement;
     //console.log(filesActiveIndex);
     setActiveIndex(filesActiveIndex);
-    if (filesActiveIndex > -1) {
-      twistTrack(filesActiveIndex);
+    if (audio.ended || audio.paused) {
+      if (filesActiveIndex > -1) {
+        twistTrack(filesActiveIndex);
+      }
     }
   }, [filesActiveIndex]);
 
