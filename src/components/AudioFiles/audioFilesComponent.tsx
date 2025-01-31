@@ -1,28 +1,22 @@
 "use client";
 
-import { memo, useCallback, useEffect, useRef, useState } from "react";
-import Loader from "../loader/loaderComp";
+import { memo, useEffect, useRef, useState } from "react";
 import { isValue } from "@/utils/tasksFunctions";
-import { decryptId } from "@/utils/functions";
 import UploadFileForm from "../fileUpload/uploadFileForm";
 import AudioFilesList from "./audioFilesList";
 import { ArrowDown_SVG, ArrowUp_SVG } from "@/utils/svg-icons";
+import { useAudioFiles } from "@/store/audioFilesStore";
+import { Wait } from "@/utils/functions";
 
 const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
-  const [activeIndex, setActiveIndex] = useState<number>(0);
-
-  const [audioFiles, setAudioFiles] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const pathOfAudio: string = `audio/${
-    paramUser.name + decryptId(paramUser.userId)
-  }`;
-  const [click, setClick] = useState<number>(0);
+  const filesActiveIndex: number = useAudioFiles((state) => state.activeIndex);
+  const setListActiveIndex = useAudioFiles((state) => state.setListActiveIndex);
+  const [activeIndex, setActiveIndex] = useState<number>(filesActiveIndex);
+  const files = useAudioFiles((state) => state.files);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const [showList, setShowList] = useState<boolean>(true);
-  const [canPlay, setCanPlay] = useState<boolean>(
-    isValue(audioFiles) && audioFiles.length > 0
-  );
+
   //для ссылок на radio
   //let radioRefs = [0, 1, 2].map(() => useRef<HTMLInputElement>(null));
 
@@ -31,149 +25,134 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
     setShowList((prev) => (prev = !prev));
   };
 
-  const handlerUpdate = () => {
-    setClick((prev) => (prev = prev + 1));
-    setActiveIndex(0);
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.MouseEvent<HTMLInputElement>
+  ) => {
     const { defaultValue } = event.currentTarget;
     let index: number = Number(defaultValue);
     setActiveIndex(index);
+    setListActiveIndex(index);
     twistTrack(index);
   };
 
-  const twistTrack = (param: number) => {
-    if (!isValue(audioRef.current)) {
+  const twistTrack = async (param: number) => {
+    if (!isValue(audioRef.current || param < 0)) {
       return;
     }
     const audio = audioRef.current as HTMLAudioElement;
     audio.volume = 0.2;
     audio.muted = false;
-    if (audio.played) {
-      audio.pause();
-      audio.src = audioFiles[param];
-    } else {
-      audio.src = audioFiles[param];
+    // if (audio.played) {
+    //   audio.pause();
+    //   audio.src = files[param];
+    // } else {
+    //   audio.src = files[param];
+    // }
+    audio.pause();
+    audio.src = files[param];
+    await Wait(800);
+    try {
+      await audio.play();
+    } catch (err) {
+      //console.log((err as Error).message);
     }
-    audio.play();
   };
-
-  useEffect(() => {
-    let isSubscribed: boolean = true;
-
-    if (isSubscribed) {
-      (async function getAudio() {
-        setIsLoading(true);
-        try {
-          const url = "api/audiofiles";
-          const request = await fetch(url, {
-            headers: { "Content-Type": "application/json" },
-            method: "POST",
-            body: JSON.stringify(paramUser),
-          });
-          if (request.ok) {
-            const result = await request.json();
-            if (isValue(result)) {
-              const tmp: string[] = [];
-              result.forEach((item: string) =>
-                tmp.push(pathOfAudio + "/" + item)
-              );
-
-              setAudioFiles(tmp);
-              //Инициализировать массив ref на radio
-              //radioRefs.length = tmp.length;
-
-              //console.log(tmp);
-            }
-          }
-        } catch (err) {
-          console.error(err);
-        } finally {
-          setIsLoading(false);
-        }
-      })();
-    }
-    return () => {
-      isSubscribed = false;
-      //radioRefs.length = 0;
-    };
-  }, [click]);
-
-  useEffect(() => {
-    setCanPlay(isValue(audioFiles) && audioFiles.length > 0);
-  }, [audioFiles]);
 
   // const setCallbackRefs = (index: number) => (element: HTMLInputElement) => {
   //   (radioRefs[index].current as HTMLInputElement) = element;
   // };
 
-  if (isLoading) {
-    return (
-      <div className="w-[40px] h-[40px] mx-auto text-gray-600">
-        <Loader />
-      </div>
-    );
-  }
+  useEffect(() => {
+    //    const audio = audioRef.current as HTMLAudioElement;
+    //console.log(filesActiveIndex);
+    setActiveIndex(filesActiveIndex);
+    if (filesActiveIndex > -1) {
+      twistTrack(filesActiveIndex);
+    }
+  }, [filesActiveIndex]);
 
   return (
-    <div className="w-fit mx-auto flex gap-4 items-start justify-center flex-wrap">
-      {canPlay && (
-        <div className="w-fit mx-auto flex flex-col items-start justify-start gap-0 relative">
-          <div className="absolute z-[1] top-7 -right-1">
-            <button
-              type="button"
-              className="w-[24px] h-[24px] scale-50 bg-sky-50 text-sky-950 active:scale-90 rounded-full shadow-md shadow-sky-800"
-              onClick={handlerShowList}
-              title={
-                showList
-                  ? "Скрыть список воспроизведения"
-                  : "Показать список воспроизведения"
-              }
-            >
-              {showList ? <ArrowUp_SVG /> : <ArrowDown_SVG />}
-            </button>
-          </div>
-          <audio
-            ref={audioRef}
-            controls
-            //   muted
-            preload="auto"
-            className="block w-[270px] text-[clamp(0.5rem,2vw,0.6rem)]"
-            onEnded={(event) => {
-              let tmpIndx: number = activeIndex;
-              tmpIndx++;
-              tmpIndx = tmpIndx >= audioFiles.length ? 0 : tmpIndx++;
-              twistTrack(tmpIndx);
-              setActiveIndex(tmpIndx);
-            }}
+    <div
+      className={`w-fit mx-auto grid ${
+        showList
+          ? "grid-cols-[280px] md:grid-cols-[280px_120px]"
+          : "grid-cols-[280px]"
+      } gap-x-2 `}
+    >
+      <div className="w-fit mx-auto flex flex-col items-start justify-start gap-0 relative">
+        <div className="absolute z-[1] top-7 -right-1">
+          <button
+            type="button"
+            className="w-[24px] h-[24px] scale-50 bg-sky-50 text-sky-950 active:scale-90 rounded-full shadow-md shadow-sky-800"
+            onClick={handlerShowList}
+            title={
+              showList
+                ? "Скрыть список воспроизведения"
+                : "Показать список воспроизведения"
+            }
           >
-            <source src={`${audioFiles[activeIndex]}`} type="audio/mp3" />
-            <source src={`${audioFiles[activeIndex]}`} type="audio/ogg" />
-            <p>Браузер не поддерживает встроенное audio</p>
-          </audio>
-          <div
-            className={`${
-              showList ? "h-20 opacity-100" : "h-0 opacity-0"
-            } transition-all overflow-y-auto overflow-x-hidden`}
-          >
-            <AudioFilesList
-              paramDir={pathOfAudio}
-              param={audioFiles}
-              paramIndex={activeIndex}
-              paramHandleChange={handleChange}
-            />
-          </div>
+            {showList ? <ArrowUp_SVG /> : <ArrowDown_SVG />}
+          </button>
         </div>
-      )}
-      {!canPlay && (
-        <p className="text-[clamp(0.6rem,2vw,0.8rem)] text-sky-700">
-          Для проигрывания audio загрузите файл на сервер. Размер файла не более
-          10Mb
+        <audio
+          ref={audioRef}
+          controls
+          //   muted
+          preload="auto"
+          className="block w-[270px] text-[clamp(0.5rem,2vw,0.6rem)]"
+          onEnded={(event) => {
+            let tmpIndx: number = activeIndex;
+            tmpIndx++;
+            tmpIndx = tmpIndx >= files.length ? 0 : tmpIndx;
+            setListActiveIndex(tmpIndx);
+            //setActiveIndex(tmpIndx);
+            //twistTrack(tmpIndx);
+          }}
+        >
+          <source
+            // src={`${
+            //   files.length > 0 && activeIndex > -1 ? files[activeIndex] : ""
+            // }`}
+            type="audio/mp3"
+          />
+          <source
+            // src={`${
+            //   files.length > 0 && activeIndex > -1 ? files[activeIndex] : ""
+            // }`}
+            type="audio/ogg"
+          />
+          <p>Браузер не поддерживает встроенное audio</p>
+        </audio>
+      </div>
+      {/*Загрузка файла на сервер */}
+      <div
+        className={`transition-all ${
+          showList
+            ? "row-span-1 order-1 md:order-[0] sm:row-span-2 h-auto opacity-100"
+            : "row-span-1 h-0 opacity-0"
+        }`}
+      >
+        <UploadFileForm paramUser={paramUser} />
+      </div>
+      <div
+        className={`${
+          showList ? "h-20 opacity-100" : "h-0 opacity-0"
+        } transition-all overflow-y-auto overflow-x-hidden`}
+      >
+        <AudioFilesList
+          paramUser={paramUser}
+          paramIndex={activeIndex}
+          paramHandleChange={handleChange}
+        />
+      </div>
+      {showList && (
+        <p className="bg-sky-50 text-[clamp(0.5rem,2vw,0.65rem)] text-sky-700 p-1 col-span-1 md:col-span-2">
+          Для проигрывания audio, загрузите файл на сервер. Размер файла не
+          более 15Mb
         </p>
       )}
-      {/*Загрузка файла на сервер */}
-      <UploadFileForm paramUser={paramUser} paramUpdate={handlerUpdate} />
     </div>
   );
 });

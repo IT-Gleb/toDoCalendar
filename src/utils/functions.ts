@@ -843,3 +843,10 @@ export function PopoverUp({
     }, 3500);
   }
 }
+
+//функция ожидания в миллисекундах!
+export async function Wait(param: number): Promise<void> {
+  return new Promise((resolve) => window.setTimeout(resolve, param));
+}
+
+//Проверка на тип TypeGuard

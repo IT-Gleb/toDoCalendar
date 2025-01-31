@@ -85,12 +85,14 @@ const MemberPage = memo(() => {
   // className="bg-[radial-gradient(circle_at_top,theme(colors.white),theme(colors.slate.50),theme(colors.sky.50),theme(colors.sky.100))]"
   return (
     <section className="xl:w-[80%] 2xl:w-[75%] xl:mx-auto bg-none bg-cover bg-center bg-no-repeat bg-fixed bg-white">
-      <AudioFilesComponent
-        paramUser={{
-          name: session?.user.name as string,
-          userId: session?.user.userId as string,
-        }}
-      />
+      <div className="mb-5 sm:mb-2 md:mb-0">
+        <AudioFilesComponent
+          paramUser={{
+            name: session?.user.name as string,
+            userId: session?.user.userId as string,
+          }}
+        />
+      </div>
       {/* Календарь с задачами */}
       <section className="p-0 md:p-2 grid grid-cols-1 auto-rows-max gap-y-5 lg:grid-cols-2 lg:gap-2 min-h-[60vh] mt-1">
         <div className="lg:border-r lg:border-b border-slate-200 lg:p-2">
