@@ -1,4 +1,4 @@
-import { decryptId } from "@/utils/functions";
+import { Base_URL, decryptId } from "@/utils/functions";
 import { isValue } from "@/utils/tasksFunctions";
 import { create } from "zustand";
 
@@ -8,6 +8,7 @@ type TAudioState = {
   pathOfAudio: string;
   count: number;
   activeIndex: number;
+  audioCurrentPosition: number;
 };
 
 type TAudioActions = {
@@ -15,6 +16,7 @@ type TAudioActions = {
   addToStore: (param: string) => void;
   checkAudioFiles: () => Promise<boolean>;
   setListActiveIndex: (param: number) => void;
+  setAudioCurrentPosition: (param: number) => void;
 };
 
 export const useAudioFiles = create<TAudioState & TAudioActions>(
@@ -24,10 +26,13 @@ export const useAudioFiles = create<TAudioState & TAudioActions>(
     pathOfAudio: "",
     count: 0,
     activeIndex: -1,
+    audioCurrentPosition: -1,
     setUser: (param: TParamUser) => {
       set({ user: param });
       const tUser = get().user;
-      set({ pathOfAudio: `audio/${tUser.name + decryptId(tUser.userId)}` });
+      set({
+        pathOfAudio: `${Base_URL}audio/${tUser.name + decryptId(tUser.userId)}`,
+      });
     },
     addToStore: (param: string) => {
       const tmp: string[] = get().files;
@@ -50,7 +55,7 @@ export const useAudioFiles = create<TAudioState & TAudioActions>(
     },
     checkAudioFiles: async () => {
       try {
-        const url = "api/audiofiles";
+        const url = `${Base_URL}api/audiofiles`;
         const request = await fetch(url, {
           headers: { "Content-Type": "application/json" },
           method: "POST",
@@ -78,6 +83,9 @@ export const useAudioFiles = create<TAudioState & TAudioActions>(
     },
     setListActiveIndex: (param: number) => {
       set({ activeIndex: param });
+    },
+    setAudioCurrentPosition: (param: number) => {
+      set({ audioCurrentPosition: param });
     },
   })
 );

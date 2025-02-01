@@ -13,6 +13,10 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
   const setListActiveIndex = useAudioFiles((state) => state.setListActiveIndex);
   const [activeIndex, setActiveIndex] = useState<number>(filesActiveIndex);
   const files = useAudioFiles((state) => state.files);
+  const setCurrAudioPos = useAudioFiles(
+    (state) => state.setAudioCurrentPosition
+  );
+  const currentAudioPos = useAudioFiles((state) => state.audioCurrentPosition);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const [showList, setShowList] = useState<boolean>(true);
@@ -32,6 +36,10 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
   ) => {
     const { defaultValue } = event.currentTarget;
     let index: number = Number(defaultValue);
+    //console.log(index);
+    if (!isValue(index)) {
+      index = filesActiveIndex;
+    }
     setActiveIndex(index);
     setListActiveIndex(index);
     twistTrack(index);
@@ -42,7 +50,7 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
       return;
     }
     const audio = audioRef.current as HTMLAudioElement;
-    audio.volume = 0.2;
+    //audio.volume = 0.2;
     audio.muted = false;
     // if (audio.played) {
     //   audio.pause();
@@ -55,6 +63,11 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
     await Wait(800);
     try {
       await audio.play();
+      if (currentAudioPos !== -1 && currentAudioPos < audio.duration) {
+        audio.currentTime = currentAudioPos;
+      }
+      //audio.currentTime = randomInteger(10, 45);
+      // console.log((audio.duration / 60).toFixed(2));
     } catch (err) {
       //console.log((err as Error).message);
     }
@@ -66,9 +79,32 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
 
   useEffect(() => {
     const audio = audioRef.current as HTMLAudioElement;
+    setActiveIndex(filesActiveIndex);
+    if (filesActiveIndex > -1) {
+      audio.src = files[filesActiveIndex];
+    }
+
+    function AudioClick() {
+      if (audio.played) {
+        setCurrAudioPos(audio.currentTime);
+        //console.log(audio.currentTime);
+      }
+      if (audio.paused) {
+        setCurrAudioPos(-1);
+      }
+    }
+
+    document.addEventListener("click", AudioClick);
+    return () => {
+      document.removeEventListener("click", AudioClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current as HTMLAudioElement;
     //console.log(filesActiveIndex);
     setActiveIndex(filesActiveIndex);
-    if (audio.ended || audio.paused) {
+    if ((audio.ended || audio.paused) && currentAudioPos !== -1) {
       if (filesActiveIndex > -1) {
         twistTrack(filesActiveIndex);
       }
@@ -105,6 +141,7 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
           preload="auto"
           className="block w-[270px] text-[clamp(0.5rem,2vw,0.6rem)]"
           onEnded={(event) => {
+            setCurrAudioPos(0);
             let tmpIndx: number = activeIndex;
             tmpIndx++;
             tmpIndx = tmpIndx >= files.length ? 0 : tmpIndx;

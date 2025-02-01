@@ -27,6 +27,9 @@ export default function AudioFilesList({
   useEffect(() => {
     let isSubscribed: boolean = true;
     if (isSubscribed) {
+      if (files.length > 0) {
+        return;
+      }
       (async function getFiles() {
         if (!isValue(paramUser)) {
           return;
