@@ -80,11 +80,24 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
   useEffect(() => {
     const audio = audioRef.current as HTMLAudioElement;
     setActiveIndex(filesActiveIndex);
-    if (filesActiveIndex > -1) {
+    if (filesActiveIndex > -1 && files.length > 0) {
       audio.src = files[filesActiveIndex];
     }
 
-    function AudioClick() {
+    function AudioClick(event: MouseEvent) {
+      const obj = event.target as HTMLElement;
+
+      //console.log(obj.tagName);
+      const canSetPos: boolean =
+        obj.tagName === "A" ||
+        obj.tagName === "DIV" ||
+        obj.tagName === "LABEL" ||
+        obj.tagName === "INPUT";
+      //console.log(canSetPos);
+      if (!canSetPos) {
+        return;
+      }
+
       if (audio.played) {
         setCurrAudioPos(audio.currentTime);
         //console.log(audio.currentTime);
@@ -94,9 +107,9 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
       }
     }
 
-    document.addEventListener("click", AudioClick);
+    document.addEventListener("click", AudioClick, false);
     return () => {
-      document.removeEventListener("click", AudioClick);
+      document.removeEventListener("click", AudioClick, false);
     };
   }, []);
 
