@@ -2,14 +2,17 @@ import { useAudioFiles } from "@/store/audioFilesStore";
 import React, { useEffect, useState } from "react";
 import Loader from "../loader/loaderComp";
 import { isValue } from "@/utils/tasksFunctions";
+import { AudioFileItem } from "./audioFileItem";
 
 export default function AudioFilesList({
   paramUser,
   paramIndex,
+  paramInView = false,
   paramHandleChange,
 }: {
   paramUser: TParamUser;
   paramIndex: number;
+  paramInView: boolean;
   paramHandleChange: (
     event:
       | React.ChangeEvent<HTMLInputElement>
@@ -27,7 +30,8 @@ export default function AudioFilesList({
   useEffect(() => {
     let isSubscribed: boolean = true;
     if (isSubscribed) {
-      if (files.length > 0) {
+      //Если уже есть список файлов
+      if (count > 0) {
         return;
       }
       (async function getFiles() {
@@ -65,33 +69,15 @@ export default function AudioFilesList({
           </div>
           <ul>
             {files.map((item, index) => (
-              <li
-                className={`max-w-[270px] p-1 text-[clamp(0.55rem,3vw,0.75rem)] text-sky-700 ${
-                  index % 2 === 0 ? "bg-sky-50" : "bg-sky-100"
-                }`}
-                key={index}
-              >
-                <label
-                  htmlFor={`treck-${index}`}
-                  className="cursor-pointer flex items-center justify-start gap-2"
-                >
-                  <span>{index + 1}.</span>
-                  <input
-                    //ref={setCallbackRefs(index)}
-                    type="radio"
-                    name="audioGroup"
-                    id={`treck-${index}`}
-                    defaultValue={index}
-                    onChange={paramHandleChange}
-                    onClick={paramHandleChange}
-                    checked={index === paramIndex}
-                    className="scale-75"
-                  />
-                  <div className="line-clamp-1">
-                    {item.substring(pathDir.length + 1, item.length)}
-                  </div>
-                </label>
-              </li>
+              <AudioFileItem
+                key={item + index}
+                pathDir={pathDir}
+                item={item}
+                index={index}
+                activeIndex={paramIndex}
+                handleChange={paramHandleChange}
+                canView={paramInView}
+              />
             ))}
           </ul>
         </div>

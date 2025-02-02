@@ -1,12 +1,13 @@
 "use client";
 
-import { decryptId, PopoverUp } from "@/utils/functions";
+import { Base_URL, decryptId, PopoverUp } from "@/utils/functions";
 import { isValue } from "@/utils/tasksFunctions";
 import { memo, useRef, useState } from "react";
 import Loader from "../loader/loaderComp";
 import { useAudioFiles } from "@/store/audioFilesStore";
 
-const MAXSIZE = 15000000; //Файл не больше 15Mb
+const MAXSIZE: number = 15000000; //Файл не больше 15Mb
+export const MAXSIZEMB: number = Math.round(MAXSIZE / 1024 / 1000);
 
 const UploadFileForm = memo(({ paramUser }: { paramUser: TParamUser }) => {
   const fileRef = useRef<HTMLInputElement>(null);
@@ -37,9 +38,7 @@ const UploadFileForm = memo(({ paramUser }: { paramUser: TParamUser }) => {
           //console.log(size, name);
           if (size > MAXSIZE) {
             PopoverUp({
-              param: `Размер выбранного файла больше ${Math.round(
-                MAXSIZE / 1024 / 1000
-              )}Mb.`,
+              param: `Размер выбранного файла больше ${MAXSIZEMB}Mb.`,
               isError: false,
             });
             return;
@@ -56,7 +55,7 @@ const UploadFileForm = memo(({ paramUser }: { paramUser: TParamUser }) => {
         setPError({ status: 0, message: "", ok: false });
         try {
           setIsLoading(true);
-          const result = await fetch("api/upload", {
+          const result = await fetch(`${Base_URL}api/upload`, {
             //headers: { "Content-Type": "multipart/form-data" },
             //headers: { "Content-Type": "application/json" },
             // headers: {
@@ -123,7 +122,7 @@ const UploadFileForm = memo(({ paramUser }: { paramUser: TParamUser }) => {
           aria-labelledby="fileUpId"
           className="max-w-[120px] h-[30px] sm:h-[38px] text-center overflow-hidden bg-sky-200 rounded-md text-sky-800 text-[clamp(0.55rem,2vw,0.65rem)] font-bold cursor-pointer px-2 py-1 transition-shadow hover:shadow-md hover:shadow-sky-700 active:scale-90"
         >
-          {`Добавить файл ${Math.round(MAXSIZE / 1024 / 1000)}Mb`}
+          {`Добавить файл ${MAXSIZEMB}Mb`}
         </label>
         <input
           ref={fileRef}

@@ -2,11 +2,11 @@
 
 import { memo, useEffect, useRef, useState } from "react";
 import { isValue } from "@/utils/tasksFunctions";
-import UploadFileForm from "../fileUpload/uploadFileForm";
+import UploadFileForm, { MAXSIZEMB } from "../fileUpload/uploadFileForm";
 import AudioFilesList from "./audioFilesList";
 import { ArrowDown_SVG, ArrowUp_SVG } from "@/utils/svg-icons";
 import { useAudioFiles } from "@/store/audioFilesStore";
-import { Wait } from "@/utils/functions";
+import { randomInteger, Wait } from "@/utils/functions";
 
 const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
   const filesActiveIndex: number = useAudioFiles((state) => state.activeIndex);
@@ -42,6 +42,7 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
     }
     setActiveIndex(index);
     setListActiveIndex(index);
+    setCurrAudioPos(0);
     twistTrack(index);
   };
 
@@ -50,7 +51,7 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
       return;
     }
     const audio = audioRef.current as HTMLAudioElement;
-    //audio.volume = 0.2;
+    audio.volume = 0.5;
     audio.muted = false;
     // if (audio.played) {
     //   audio.pause();
@@ -60,6 +61,7 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
     // }
     audio.pause();
     audio.src = files[param];
+    audio.playbackRate = 1.1;
     await Wait(800);
     try {
       await audio.play();
@@ -136,7 +138,7 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
         <div className="absolute z-[1] top-7 -right-1">
           <button
             type="button"
-            className="w-[24px] h-[24px] scale-50 bg-sky-50 text-sky-950 active:scale-90 rounded-full shadow-md shadow-sky-800"
+            className="w-[24px] h-[24px] scale-50 bg-sky-50 text-sky-950 active:scale-75 rounded-full shadow-md shadow-sky-800"
             onClick={handlerShowList}
             title={
               showList
@@ -196,13 +198,14 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
         <AudioFilesList
           paramUser={paramUser}
           paramIndex={activeIndex}
+          paramInView={showList}
           paramHandleChange={handleChange}
         />
       </div>
       {showList && (
         <p className="bg-sky-50 text-[clamp(0.5rem,2vw,0.65rem)] text-sky-700 p-1 col-span-1 md:col-span-2">
-          Для проигрывания audio, загрузите файл на сервер. Размер файла не
-          более 15Mb
+          {`Для проигрывания audio, загрузите файл на сервер. Размер файла не
+          более ${MAXSIZEMB}Mb`}
         </p>
       )}
     </div>
