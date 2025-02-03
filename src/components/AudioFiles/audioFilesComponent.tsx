@@ -6,7 +6,7 @@ import UploadFileForm, { MAXSIZEMB } from "../fileUpload/uploadFileForm";
 import AudioFilesList from "./audioFilesList";
 import { ArrowDown_SVG, ArrowUp_SVG } from "@/utils/svg-icons";
 import { useAudioFiles } from "@/store/audioFilesStore";
-import { randomInteger, Wait } from "@/utils/functions";
+import { Wait } from "@/utils/functions";
 
 const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
   const filesActiveIndex: number = useAudioFiles((state) => state.activeIndex);
@@ -194,6 +194,7 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
         className={`${
           showList ? "h-20 opacity-100" : "h-0 opacity-0"
         } transition-all overflow-y-auto overflow-x-hidden`}
+        style={{ scrollbarWidth: "none" }}
       >
         <AudioFilesList
           paramUser={paramUser}
