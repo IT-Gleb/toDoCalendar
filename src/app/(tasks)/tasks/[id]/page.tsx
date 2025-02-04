@@ -4,6 +4,7 @@ import { AddFormContent } from "@/components/forms/addFormContent";
 import { AddTaskFormComponent } from "@/components/forms/addTaskFormComponent";
 import { NoAuthComponent } from "@/components/noAuthComponent";
 import PopoverComponent from "@/components/popover/popoverComponent";
+import { CheckDomainWithRegExpComponent } from "@/components/tasks/checkDomainWithRegExp";
 import { ListTaskComponent } from "@/components/tasks/listTaskComponent";
 import { Base_URL, getStringFromDate } from "@/utils/functions";
 
@@ -81,6 +82,7 @@ export default async function TaskPage({ params }: { params: { id: string } }) {
         <span className="mt-5 text-[1rem] font-bold first-letter:uppercase text-sky-800">
           {getStringFromDate(params.id)}
         </span>
+        <CheckDomainWithRegExpComponent />
         <AudioFilesComponent
           paramUser={{
             name: session?.user.name as string,

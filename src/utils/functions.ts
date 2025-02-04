@@ -740,6 +740,30 @@ function CheckDateFormatYYYY(paramDate: string): boolean {
   return dateStr.test(paramDate);
 }
 
+//Проверить строку на domain
+export function hasDomain(paramUrl: string): boolean | string {
+  const res = new RegExp(`^(https|http)?:\\/\\/(www\.)?([^\\/]+)`, "gi");
+  // const res = new RegExp(
+  //   `^(https)?:\\/\\/(www\\.)?([a-z\\/]+)\\.([a-z]{2,3})$`,
+  //   "gi"
+  // ); //Фильтрует по расширению, точка и две или три буквы в конце
+  let tmp = res.exec(paramUrl);
+  //console.log(tmp);
+  if (!isValue(tmp)) {
+    return false;
+  }
+  // //@ts-ignore
+  // if (!isValue(tmp[1]) && !isValue(tmp[2])) {
+  //   return false;
+  // }
+
+  //@ts-ignore
+  return tmp[3] === undefined || tmp[3] === null
+    ? false
+    : //@ts-ignore
+      tmp[3].trim();
+}
+
 //Реализация pipe
 export const MyPipeStr =
   (...fns: any[]) =>

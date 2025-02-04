@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { LoaderCalendarComponent } from "@/components/loader/loaderCalendarComponent";
+// import { LoaderCalendarComponent } from "@/components/loader/loaderCalendarComponent";
 import dynamic from "next/dynamic";
 import TrackerDay from "@/components/tasks/trackerDay";
 import Loader from "@/components/loader/loaderComp";
@@ -10,6 +10,7 @@ import { memo } from "react";
 import AudioFilesComponent from "@/components/AudioFiles/audioFilesComponent";
 import PopoverComponent from "@/components/popover/popoverComponent";
 import { PopoverUp } from "@/utils/functions";
+import { CalendarWithMashine } from "@/components/Calendar/calendar2/calendarWithMashine";
 //import DataChart01 from "@/components/antCharts/dataChart01";
 
 const DynamicDataChart = dynamic(
@@ -20,16 +21,16 @@ const DynamicDataChart = dynamic(
   { loading: () => <Loader /> }
 );
 
-const DynamicCalendar = dynamic(
-  () =>
-    import("@/components/Calendar/calendar2/calendarWithMashine")
-      .then((component) => component.CalendarWithMashine)
-      .catch(),
-  {
-    ssr: false,
-    loading: () => <LoaderCalendarComponent />,
-  }
-);
+// const DynamicCalendar = dynamic(
+//   () =>
+//     import("@/components/Calendar/calendar2/calendarWithMashine")
+//       .then((component) => component.CalendarWithMashine)
+//       .catch(),
+//   {
+//     ssr: false,
+//     loading: () => <LoaderCalendarComponent />,
+//   }
+// );
 
 const DynamicTasksExists = dynamic(
   () =>
@@ -96,7 +97,7 @@ const MemberPage = memo(() => {
       {/* Календарь с задачами */}
       <section className="p-0 md:p-2 grid grid-cols-1 auto-rows-max gap-y-5 lg:grid-cols-2 lg:gap-2 min-h-[60vh] mt-1">
         <div className="lg:border-r lg:border-b border-slate-200 lg:p-2">
-          <DynamicCalendar />
+          <CalendarWithMashine />
         </div>
 
         <div className="p-1 border-t lg:border-l lg:border-t-0 lg:border-b border-slate-200 md:p-2 min-h-[20vh] lg:p-4 w-full lg:mx-auto">
