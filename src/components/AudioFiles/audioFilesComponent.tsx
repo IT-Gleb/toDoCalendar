@@ -7,26 +7,32 @@ import AudioFilesList from "./audioFilesList";
 import { ArrowDown_SVG, ArrowUp_SVG } from "@/utils/svg-icons";
 import { useAudioFiles } from "@/store/audioFilesStore";
 import { Wait } from "@/utils/functions";
+import { useShallow } from "zustand/shallow";
 
 const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
-  const filesActiveIndex: number = useAudioFiles((state) => state.activeIndex);
-  const setListActiveIndex = useAudioFiles((state) => state.setListActiveIndex);
-  const [activeIndex, setActiveIndex] = useState<number>(filesActiveIndex);
-  const files = useAudioFiles((state) => state.files);
-  const setCurrAudioPos = useAudioFiles(
-    (state) => state.setAudioCurrentPosition
+  const filesActiveIndex: number = useAudioFiles(
+    useShallow((state) => state.activeIndex)
   );
-  const currentAudioPos = useAudioFiles((state) => state.audioCurrentPosition);
+  const [activeIndex, setActiveIndex] = useState<number>(filesActiveIndex);
+  const {
+    files,
+    showList,
+    setShowList,
+    setAudioCurrentPosition: setCurrAudioPos,
+    audioCurrentPosition: currentAudioPos,
+    setListActiveIndex,
+  } = useAudioFiles(useShallow((state) => state));
 
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [showList, setShowList] = useState<boolean>(true);
 
   //для ссылок на radio
   //let radioRefs = [0, 1, 2].map(() => useRef<HTMLInputElement>(null));
 
   const handlerShowList = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    setShowList((prev) => (prev = !prev));
+    const canList: boolean = !showList;
+
+    setShowList(canList);
   };
 
   const handleChange = (

@@ -6,7 +6,7 @@ export const CheckDomainWithRegExpComponent = () => {
   const values: string[] = [
     "https://www.google.com",
     "https://www.mail.ru/path",
-    "http://www.what_is_this.com/about/name",
+    "http://www.fastapi.tiangolo.com/about/name",
     "http://localhost:3001/tasks/2025-02-04",
     "www.smurf.ru",
     "https://www.mozilla.org/about",

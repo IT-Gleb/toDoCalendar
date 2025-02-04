@@ -9,6 +9,7 @@ type TAudioState = {
   count: number;
   activeIndex: number;
   audioCurrentPosition: number;
+  showList: boolean;
 };
 
 type TAudioActions = {
@@ -17,6 +18,7 @@ type TAudioActions = {
   checkAudioFiles: () => Promise<boolean>;
   setListActiveIndex: (param: number) => void;
   setAudioCurrentPosition: (param: number) => void;
+  setShowList: (param: boolean) => void;
 };
 
 export const useAudioFiles = create<TAudioState & TAudioActions>(
@@ -27,6 +29,7 @@ export const useAudioFiles = create<TAudioState & TAudioActions>(
     count: 0,
     activeIndex: -1,
     audioCurrentPosition: -1,
+    showList: true,
     setUser: (param: TParamUser) => {
       set({ user: param });
       const tUser = get().user;
@@ -86,6 +89,9 @@ export const useAudioFiles = create<TAudioState & TAudioActions>(
     },
     setAudioCurrentPosition: (param: number) => {
       set({ audioCurrentPosition: param });
+    },
+    setShowList: (param: boolean) => {
+      set({ showList: param });
     },
   })
 );
