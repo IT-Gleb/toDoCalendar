@@ -836,6 +836,21 @@ export function hasNoLatinSymbols(param: string): boolean {
   return textStr.test(param);
 }
 
+//Проверка на скрипт в сообщении
+function checkScriptString(param: string): string {
+  const reg = new RegExp(`^(<script .+[>$])?([^<]+)(</script>)?$`, "giu");
+  let resultArray = reg.exec(param);
+
+  //console.log(resultArray);
+  let result: string = "";
+  //@ts-ignore
+  if (isValue(resultArray) && resultArray?.length > 0) {
+    //@ts-ignore
+    result = resultArray[2];
+  }
+  return result;
+}
+
 export function PopoverUp({
   param,
   isError,
@@ -850,7 +865,15 @@ export function PopoverUp({
       ? ((popover as HTMLElement).style.backgroundColor = "#F05252")
       : ((popover as HTMLElement).style.backgroundColor = "#31C48D");
 
-    (popover as HTMLElement).innerText = param;
+    let msg: string = checkScriptString(param).trim();
+    let isNull: boolean = msg === "";
+
+    if (isNull) {
+      return;
+    }
+
+    (popover as HTMLElement).innerText = msg;
+
     const maxHeight = window.innerHeight; //высота экрана
     //const pop2 = document.getElementById("page-popover");
     const popHeight =
