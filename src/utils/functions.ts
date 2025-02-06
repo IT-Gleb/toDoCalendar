@@ -744,9 +744,9 @@ function CheckDateFormatYYYY(paramDate: string): boolean {
 export function hasDomain(paramUrl: string): boolean | string {
   const res = new RegExp(`^(https|http)?:\\/\\/(www\.)?([^\\/]+)`, "gi");
   // const res = new RegExp(
-  //   `^(https)?:\\/\\/(www\\.)?([a-z\\/]+)\\.([a-z]{2,3})$`,
+  //   `^(https)?:\\/\\/(www\\.)?([a-z\\/]+)\\.([a-z]{2,4})$`,
   //   "gi"
-  // ); //Фильтрует по расширению, точка и две или три буквы в конце
+  // ); //Фильтрует по расширению, точка и две или четыре буквы в конце
   let tmp = res.exec(paramUrl);
   //console.log(tmp);
   if (!isValue(tmp)) {

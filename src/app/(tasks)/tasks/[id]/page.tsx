@@ -77,7 +77,7 @@ export default async function TaskPage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className=" min-h-[100vh] bg-[radial-gradient(ellipse_at_left_top,theme(colors.white),theme(colors.white),theme(colors.rose.100),theme(colors.sky.200))]">
+    <div className="min-h-[100vh] bg-[radial-gradient(ellipse_at_left_top,theme(colors.white),theme(colors.white),theme(colors.rose.100),theme(colors.sky.200))]">
       <section className="flex flex-col w-fit mx-auto items-start space-y-5">
         <span className="mt-5 text-[1rem] font-bold first-letter:uppercase text-sky-800">
           {getStringFromDate(params.id)}

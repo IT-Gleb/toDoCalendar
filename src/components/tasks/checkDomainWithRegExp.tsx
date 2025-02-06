@@ -35,35 +35,43 @@ export const CheckDomainWithRegExpComponent = () => {
     }, []);
 
   return (
-    <ul className="flex items-start justify-center flex-wrap gap-x-2 gap-y-2 text-[clamp(0.5rem,4vw,0.8rem)] p-1 font-mono">
-      {domains.length > 0 &&
-        domains.sort().map((item, index) => {
-          return (
-            <li
-              key={index}
-              className={`p-1 rounded-md ${
-                index % 2 === 0
-                  ? "bg-sky-500 text-sky-50"
-                  : "bg-sky-700 text-yellow-300"
-              }`}
-            >
-              <Link
-                href={`${
-                  item.includes("localhost")
-                    ? "http://" + item
-                    : "https://" + item
+    <details className="w-full xl:min-w-[1000px] group">
+      <summary className="text-[clamp(0.6rem,4vw,0.8rem)] flex items-center gap-x-2 cursor-pointer">
+        <span className="font-materialSymbolsOutlined text-[clamp(0.8rem,4vw,1.2rem)] order-1 place-self-end transition-transform group-open:rotate-[90deg]">
+          left_panel_open
+        </span>
+        <span>Некоторые ссылки</span>
+      </summary>
+      <ul className="ml-2 flex items-start justify-center flex-wrap gap-x-2 gap-y-2 text-[clamp(0.5rem,4vw,0.8rem)] p-1 font-mono group-open:animate-dialog-open goup">
+        {domains.length > 0 &&
+          domains.sort().map((item, index) => {
+            return (
+              <li
+                key={index}
+                className={`p-1 rounded-md ${
+                  index % 2 === 0
+                    ? "bg-sky-500 text-sky-50"
+                    : "bg-sky-700 text-yellow-300"
                 }`}
-                target="_blank"
-                className="flex flex-col items-start gap-x-1"
               >
-                <span>{item}</span>
-                <span className="text-[clamp(0.5rem,4vw,0.7rem)]">
-                  {item.length}
-                </span>
-              </Link>
-            </li>
-          );
-        })}
-    </ul>
+                <Link
+                  href={`${
+                    item.includes("localhost")
+                      ? "http://" + item
+                      : "https://" + item
+                  }`}
+                  target="_blank"
+                  className="flex flex-col items-start gap-x-1"
+                >
+                  <span className="font-materialSymbolsOutlined text-[clamp(0.75rem,4vw,1rem)]">
+                    tooltip
+                  </span>
+                  <span>{item}</span>
+                </Link>
+              </li>
+            );
+          })}
+      </ul>
+    </details>
   );
 };
