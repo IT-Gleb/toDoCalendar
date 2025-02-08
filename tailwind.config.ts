@@ -10,7 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         matrix: ["Matrix"],
-        materialSymbolsOutlined: ["Material Symbols Outlined"],
+        materialSymbolsOutlined: ["'Material Symbols Outlined'"],
       },
       colors: {
         background: "var(--background)",
