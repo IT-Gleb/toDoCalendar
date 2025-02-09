@@ -131,10 +131,10 @@ export const CheckDomainWithRegExpComponent = memo(() => {
     >
       <summary
         className="w-[324px] md:w-[656px] lg:w-[976px] text-[clamp(0.6rem,4vw,0.8rem)] rounded-xl 
-      bg-sky-100 px-[6px] py-[1px] flex items-center justify-between gap-x-2 cursor-pointer border border-sky-200 transition-all
+      bg-sky-100 px-[4px] flex items-center justify-between gap-x-2 cursor-pointer border border-sky-200 transition-all
        hover:bg-[linear-gradient(to_left,theme(colors.sky.300),theme(colors.sky.200),theme(colors.sky.50))]"
       >
-        <span className="font-materialSymbolsOutlined text-[clamp(1rem,4vw,1.5rem)] order-2 select-none place-self-end transition-transform group-open:rotate-[90deg]">
+        <span className="font-materialSymbolsOutlined text-[clamp(1rem,4vw,1.5rem)]/[clamp(1rem,4vw,1.5rem)] order-2 select-none place-self-end transition-transform group-open:rotate-[90deg]">
           arrow_right_alt
         </span>
         <span>Некоторые ссылки</span>
@@ -143,7 +143,7 @@ export const CheckDomainWithRegExpComponent = memo(() => {
 
       <button
         type="button"
-        className="w-[clamp(36px,42px,48px)] h-[clamp(36px,42px,48px)] rounded-full bg-white/50 border-4 border-sky-600 select-none font-materialSymbolsOutlined 
+        className="w-[clamp(36px,42px,48px)] h-[clamp(36px,42px,48px)] rounded-lg bg-white/50 border-4 border-sky-600 select-none font-materialSymbolsOutlined 
         text-[clamp(1rem,2rem,2.5rem)]/[clamp(1rem,2rem,2.5rem)] transition-transform
         text-sky-700 overflow-hidden absolute z-[2] left-0 top-[50%] translate-y-[-50%] cursor-pointer 
         opacity-50 active:scale-90 focus:opacity-100 hover:scale-105 hover:opacity-100"
@@ -154,7 +154,7 @@ export const CheckDomainWithRegExpComponent = memo(() => {
       </button>
       <button
         type="button"
-        className="w-[clamp(36px,42px,48px)] h-[clamp(36px,42px,48px)] rounded-full bg-white/50 border-4 border-sky-600 select-none font-materialSymbolsOutlined 
+        className="w-[clamp(36px,42px,48px)] h-[clamp(36px,42px,48px)] rounded-lg bg-white/50 border-4 border-sky-600 select-none font-materialSymbolsOutlined 
         text-[clamp(1rem,2rem,2.5rem)]/[clamp(1rem,2rem,2.5rem)] transition-transform 
         text-sky-700 overflow-hidden absolute z-[2] lg:-right-3 right-0 top-[50%] translate-y-[-50%] cursor-pointer 
         opacity-50 active:scale-90 focus:opacity-100 hover:scale-105 hover:opacity-100"
@@ -223,16 +223,16 @@ export const CheckDomainWithRegExpComponent = memo(() => {
           </ul>
         )}
       </div>
-      <ul className="mt-2 w-fit mx-auto flex gap-x-2">
+      <ul className="mt-2 w-fit mx-auto flex gap-x-2 md:gap-x-3">
         {domains.length > 0 &&
           domains.map((item, index) => {
             return (
               <button
                 key={index + "-" + item.url}
-                className={`w-[10px] h-[10px] rounded-full ${
+                className={`w-[12px] h-[12px] md:w-[15px] md:h-[15px] rounded-full ${
                   index === activeIndex
                     ? "bg-amber-400 animate-pulse"
-                    : "bg-sky-400"
+                    : "bg-transparent border border-sky-500"
                 } active:scale-75`}
                 onClick={() => handleDot(index)}
               >
