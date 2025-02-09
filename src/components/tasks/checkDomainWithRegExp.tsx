@@ -1,45 +1,50 @@
 "use client";
 
-import { hasDomain } from "@/utils/functions";
+import { hasDomain, randomInteger } from "@/utils/functions";
 import { isValue } from "@/utils/tasksFunctions";
+import Image from "next/image";
 import Link from "next/link";
-import React, { useRef, useState } from "react";
+import React, { memo, useLayoutEffect, useRef, useState } from "react";
 
-export const CheckDomainWithRegExpComponent = () => {
-  const values: string[] = [
-    "https://www.google.com",
-    "https://www.mail.ru/path",
-    "http://www.fastapi.tiangolo.com/about/name",
-    "http://localhost:3001/tasks/2025-02-04",
-    "www.smurf.ru",
-    "https://www.mozilla.org/about",
-    "url-my-url",
-    "https://anekdotov.net",
-    "://www.anekdot.ru",
-    "https://www.fishki.net",
-    "https://www.habr.ru",
-    "jdh jdhf kjfk sjd ",
-    "fdfdfdf",
-    "https://www.pikabu.ru",
-    "https://www.oper.ru",
-    "burbick-fat",
-    "://gmail.com",
-  ];
-  let domains: string[] = values
-    .map((item) => {
-      let domain = hasDomain(item);
-      return typeof domain === "string" ? domain : "";
-    })
-    .reduce((acc, current) => {
-      if (current !== "") {
-        acc = [...acc, current as never];
-      }
-      return acc;
-    }, []);
+type TUrlImage = {
+  url: string;
+  img: string;
+};
+
+const dataIndex: string = "data-index";
+const values: TUrlImage[] = [
+  { url: "https://www.google.com", img: getImagePath() },
+  { url: "https://www.mail.ru/path", img: getImagePath() },
+  { url: "http://www.fastapi.tiangolo.com/about/name", img: getImagePath() },
+  { url: "http://localhost:3001/tasks/2025-02-04", img: getImagePath() },
+  { url: "www.smurf.ru", img: getImagePath() },
+  { url: "url-my-url", img: getImagePath() },
+  { url: "https://anekdotov.net", img: getImagePath() },
+  { url: "://www.anekdot.ru", img: getImagePath() },
+  { url: "https://www.fishki.net", img: getImagePath() },
+  { url: "https://www.habr.ru", img: getImagePath() },
+  { url: "jdh jdhf kjfk sjd ", img: getImagePath() },
+  { url: "fdfdfdf", img: getImagePath() },
+  { url: "https://www.pikabu.ru", img: getImagePath() },
+  { url: "https://www.oper.ru", img: getImagePath() },
+  { url: "burbick-fat", img: getImagePath() },
+  { url: "://gmail.com", img: getImagePath() },
+  { url: "https://lern.javascript.ru", img: getImagePath() },
+];
+
+function getImagePath(): string {
+  let result: string = "";
+  let indx: number = randomInteger(1, 5);
+  result = `/images/massage/massage-${indx}.jpg`;
+
+  return result;
+}
+
+export const CheckDomainWithRegExpComponent = memo(() => {
+  const [domains, setDomains] = useState<TUrlImage[]>([]);
 
   const detailsRef = useRef<HTMLDetailsElement>(null);
   const ulRef = useRef<HTMLUListElement>(null);
-  const leftBtnRef = useRef<HTMLDivElement>(null);
 
   const [hasOpen, setOpen] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState<number>(
@@ -66,7 +71,7 @@ export const CheckDomainWithRegExpComponent = () => {
     let elem: HTMLElement | undefined = undefined;
     if (ulRef.current) {
       for (const child of ulRef.current.children) {
-        let indx = (child as HTMLElement).getAttribute("data-index");
+        let indx = (child as HTMLElement).getAttribute(dataIndex);
         if (Number(indx) === paramIndex) {
           elem = child as HTMLElement;
           setActiveIndex(Number(indx));
@@ -82,6 +87,31 @@ export const CheckDomainWithRegExpComponent = () => {
       }
     }
   };
+
+  useLayoutEffect(() => {
+    let tmp_domains: TUrlImage[] = [];
+    tmp_domains = values
+      .map((item) => {
+        const tmp: TUrlImage = Object.assign({}, item);
+        let domain = hasDomain(item.url);
+        tmp.url = typeof domain === "string" ? domain : "";
+        return tmp;
+      })
+      .reduce((acc, current) => {
+        if (current.url !== "") {
+          acc = [...acc, current as never];
+        }
+        return acc;
+      }, []);
+
+    if (tmp_domains.length > 0) {
+      setDomains(tmp_domains);
+      setActiveIndex(0);
+    }
+    //console.log(domains);
+  }, []);
+
+  //return null;
 
   return (
     <details
@@ -101,20 +131,28 @@ export const CheckDomainWithRegExpComponent = () => {
         <span>В процессе</span>
       </summary>
 
-      <div
-        className="w-[clamp(36px,42px,48px)] h-[clamp(36px,42px,48px)] rounded-full bg-white/50 border-4 border-sky-600 select-none font-materialSymbolsOutlined text-[clamp(1rem,2rem,2.5rem)]/[clamp(1rem,2rem,2.5rem)] text-sky-700 overflow-hidden absolute z-[2] left-0 top-[50%] translate-y-[-50%] cursor-pointer opacity-50 hover:opacity-100"
+      <button
+        type="button"
+        className="w-[clamp(36px,42px,48px)] h-[clamp(36px,42px,48px)] rounded-full bg-white/50 border-4 border-sky-600 select-none font-materialSymbolsOutlined 
+        text-[clamp(1rem,2rem,2.5rem)]/[clamp(1rem,2rem,2.5rem)] transition-transform
+        text-sky-700 overflow-hidden absolute z-[2] left-0 top-[50%] translate-y-[-50%] cursor-pointer 
+        opacity-50 active:scale-90 focus:opacity-100 hover:scale-105 hover:opacity-100"
         onClick={() => handleDivClick(domains.length, -1)}
         title="Назад"
       >
         keyboard_double_arrow_left
-      </div>
-      <div
-        className="w-[clamp(36px,42px,48px)] h-[clamp(36px,42px,48px)] rounded-full bg-white/50 border-4 border-sky-600 select-none font-materialSymbolsOutlined text-[clamp(1rem,2rem,2.5rem)]/[clamp(1rem,2rem,2.5rem)] text-sky-700 overflow-hidden absolute z-[2] -right-3 top-[50%] translate-y-[-50%] cursor-pointer opacity-50 hover:opacity-100"
+      </button>
+      <button
+        type="button"
+        className="w-[clamp(36px,42px,48px)] h-[clamp(36px,42px,48px)] rounded-full bg-white/50 border-4 border-sky-600 select-none font-materialSymbolsOutlined 
+        text-[clamp(1rem,2rem,2.5rem)]/[clamp(1rem,2rem,2.5rem)] transition-transform 
+        text-sky-700 overflow-hidden absolute z-[2] lg:-right-3 right-0 top-[50%] translate-y-[-50%] cursor-pointer 
+        opacity-50 active:scale-90 focus:opacity-100 hover:scale-105 hover:opacity-100"
         onClick={() => handleDivClick(domains.length, 1)}
         title="Вперед"
       >
         keyboard_double_arrow_right
-      </div>
+      </button>
 
       <div
         className="w-[324px] md:w-[656px] lg:w-[976px] h-[256px] overflow-y-hidden overflow-x-scroll relative"
@@ -127,8 +165,10 @@ export const CheckDomainWithRegExpComponent = () => {
               hasOpen ? " opacity-100 animate-dialog-open" : "opacity-0"
             }`}
           >
-            {domains.sort().map((item, index) => {
-              const testAttr = { "data-index": index.toString() };
+            {domains.map((item, index) => {
+              const testAttr: { [index: string]: string } = {
+                "data-index": index.toString(),
+              };
               return (
                 <li
                   key={index}
@@ -145,9 +185,9 @@ export const CheckDomainWithRegExpComponent = () => {
                 >
                   <Link
                     href={`${
-                      item.includes("localhost")
-                        ? "http://" + item
-                        : "https://" + item
+                      item.url.includes("localhost")
+                        ? "http://" + item.url
+                        : "https://" + item.url
                     }`}
                     target="_blank"
                     className="flex flex-col items-start gap-x-1 p-1"
@@ -155,7 +195,16 @@ export const CheckDomainWithRegExpComponent = () => {
                     <span className="font-materialSymbolsOutlined text-[clamp(0.75rem,4vw,1rem)]">
                       tooltip
                     </span>
-                    <span>{item}</span>
+                    <span>{item.url}</span>
+                    <Image
+                      src={item.img}
+                      alt={item.url}
+                      width={320}
+                      height={180}
+                      priority={false}
+                      //placeholder="blur"
+                      quality={60}
+                    />
                   </Link>
                 </li>
               );
@@ -168,7 +217,7 @@ export const CheckDomainWithRegExpComponent = () => {
           domains.map((item, index) => {
             return (
               <button
-                key={index + "-" + item}
+                key={index + "-" + item.url}
                 className={`w-[10px] h-[10px] rounded-full ${
                   index === activeIndex
                     ? "bg-amber-400 animate-pulse"
@@ -183,4 +232,4 @@ export const CheckDomainWithRegExpComponent = () => {
       </ul>
     </details>
   );
-};
+});

@@ -5,18 +5,25 @@ import { isValue } from "@/utils/tasksFunctions";
 import UploadFileForm, { MAXSIZEMB } from "../fileUpload/uploadFileForm";
 import AudioFilesList from "./audioFilesList";
 import { ArrowDown_SVG, ArrowUp_SVG } from "@/utils/svg-icons";
-import { useAudioFiles } from "@/store/audioFilesStore";
+import { useAudioFiles, useAudioStore } from "@/store/audioFilesStore";
 import { Wait } from "@/utils/functions";
 import { useShallow } from "zustand/shallow";
 
 const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
-  const filesActiveIndex: number = useAudioFiles(
+  const filesActiveIndex = useAudioStore(
+    useAudioFiles,
     useShallow((state) => state.activeIndex)
   );
-  const [activeIndex, setActiveIndex] = useState<number>(filesActiveIndex);
+
+  const [activeIndex, setActiveIndex] = useState<number | undefined>(
+    filesActiveIndex
+  );
+  const showList = useAudioStore(
+    useAudioFiles,
+    useShallow((state) => state.showList)
+  );
   const {
     files,
-    showList,
     setShowList,
     setAudioCurrentPosition: setCurrAudioPos,
     audioCurrentPosition: currentAudioPos,
@@ -44,7 +51,7 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
     let index: number = Number(defaultValue);
     //console.log(index);
     if (!isValue(index)) {
-      index = filesActiveIndex;
+      index = filesActiveIndex as number;
     }
     setActiveIndex(index);
     setListActiveIndex(index);
@@ -88,8 +95,8 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
   useEffect(() => {
     const audio = audioRef.current as HTMLAudioElement;
     setActiveIndex(filesActiveIndex);
-    if (filesActiveIndex > -1 && files.length > 0) {
-      audio.src = files[filesActiveIndex];
+    if (Number(filesActiveIndex) > -1 && files.length > 0) {
+      audio.src = files[Number(filesActiveIndex)];
     }
 
     function AudioClick(event: MouseEvent) {
@@ -126,8 +133,8 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
     //console.log(filesActiveIndex);
     setActiveIndex(filesActiveIndex);
     if ((audio.ended || audio.paused) && currentAudioPos !== -1) {
-      if (filesActiveIndex > -1) {
-        twistTrack(filesActiveIndex);
+      if (Number(filesActiveIndex) > -1) {
+        twistTrack(Number(filesActiveIndex));
       }
     }
   }, [filesActiveIndex]);
@@ -163,7 +170,7 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
           className="block w-[270px] text-[clamp(0.5rem,2vw,0.6rem)]"
           onEnded={(event) => {
             setCurrAudioPos(0);
-            let tmpIndx: number = activeIndex;
+            let tmpIndx: number = Number(activeIndex);
             tmpIndx++;
             tmpIndx = tmpIndx >= files.length ? 0 : tmpIndx;
             setListActiveIndex(tmpIndx);
@@ -204,8 +211,8 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
       >
         <AudioFilesList
           paramUser={paramUser}
-          paramIndex={activeIndex}
-          paramInView={showList}
+          paramIndex={Number(activeIndex)}
+          paramInView={Boolean(showList)}
           paramHandleChange={handleChange}
         />
       </div>
