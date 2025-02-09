@@ -39,6 +39,8 @@ export const CheckDomainWithRegExpComponent = () => {
 
   const detailsRef = useRef<HTMLDetailsElement>(null);
   const ulRef = useRef<HTMLUListElement>(null);
+  const leftBtnRef = useRef<HTMLDivElement>(null);
+
   const [hasOpen, setOpen] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState<number>(
     domains.length > 0 ? 0 : -1
@@ -50,6 +52,14 @@ export const CheckDomainWithRegExpComponent = () => {
       setOpen(isOpen);
       // console.log(isOpen);
     }
+  };
+
+  const handleDivClick = (paramMax: number, paramBy: number) => {
+    let indx = activeIndex;
+    indx += paramBy;
+    indx = indx < 0 ? 0 : indx;
+    indx = indx >= paramMax ? paramMax - 1 : indx;
+    handleDot(indx);
   };
 
   const handleDot = (paramIndex: number) => {
@@ -76,7 +86,7 @@ export const CheckDomainWithRegExpComponent = () => {
   return (
     <details
       ref={detailsRef}
-      className="w-full xl:max-w-[960px] group"
+      className="w-full xl:max-w-[960px] group relative"
       onToggle={handlerToggle}
     >
       <summary
@@ -84,12 +94,27 @@ export const CheckDomainWithRegExpComponent = () => {
       bg-sky-100 px-[6px] py-[1px] flex items-center justify-between gap-x-2 cursor-pointer border border-sky-200 transition-all
        hover:bg-[linear-gradient(to_left,theme(colors.sky.300),theme(colors.sky.200),theme(colors.sky.50))]"
       >
-        <span className="font-materialSymbolsOutlined text-[clamp(1rem,4vw,1.5rem)] order-2 place-self-end transition-transform group-open:rotate-[90deg]">
+        <span className="font-materialSymbolsOutlined text-[clamp(1rem,4vw,1.5rem)] order-2 select-none place-self-end transition-transform group-open:rotate-[90deg]">
           arrow_right_alt
         </span>
         <span>Некоторые ссылки</span>
         <span>В процессе</span>
       </summary>
+
+      <div
+        className="w-[clamp(36px,42px,48px)] h-[clamp(36px,42px,48px)] rounded-full bg-white/50 border-4 border-sky-600 select-none font-materialSymbolsOutlined text-[clamp(1rem,2rem,2.5rem)]/[clamp(1rem,2rem,2.5rem)] text-sky-700 overflow-hidden absolute z-[2] left-0 top-[50%] translate-y-[-50%] cursor-pointer opacity-50 hover:opacity-100"
+        onClick={() => handleDivClick(domains.length, -1)}
+        title="Назад"
+      >
+        keyboard_double_arrow_left
+      </div>
+      <div
+        className="w-[clamp(36px,42px,48px)] h-[clamp(36px,42px,48px)] rounded-full bg-white/50 border-4 border-sky-600 select-none font-materialSymbolsOutlined text-[clamp(1rem,2rem,2.5rem)]/[clamp(1rem,2rem,2.5rem)] text-sky-700 overflow-hidden absolute z-[2] -right-3 top-[50%] translate-y-[-50%] cursor-pointer opacity-50 hover:opacity-100"
+        onClick={() => handleDivClick(domains.length, 1)}
+        title="Вперед"
+      >
+        keyboard_double_arrow_right
+      </div>
 
       <div
         className="w-[324px] md:w-[656px] lg:w-[976px] h-[256px] overflow-y-hidden overflow-x-scroll relative"
