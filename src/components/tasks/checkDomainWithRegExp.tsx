@@ -102,7 +102,17 @@ export const CheckDomainWithRegExpComponent = memo(() => {
           acc = [...acc, current as never];
         }
         return acc;
-      }, []);
+      }, [])
+      .sort((a, b) => {
+        if (
+          (a as TUrlImage).url.toLowerCase() >
+          (b as TUrlImage).url.toLowerCase()
+        ) {
+          return 1;
+        } else {
+          return -1;
+        }
+      });
 
     if (tmp_domains.length > 0) {
       setDomains(tmp_domains);
@@ -197,10 +207,11 @@ export const CheckDomainWithRegExpComponent = memo(() => {
                     </span>
                     <span>{item.url}</span>
                     <Image
+                      className="aspect-auto md:aspect-video"
                       src={item.img}
                       alt={item.url}
                       width={320}
-                      height={180}
+                      height={240}
                       priority={false}
                       //placeholder="blur"
                       quality={60}

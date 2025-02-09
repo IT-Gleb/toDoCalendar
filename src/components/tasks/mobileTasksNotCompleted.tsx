@@ -10,7 +10,7 @@ import Link from "next/link";
 function MobileTopTable() {
   return (
     <div className="sticky left-0 z-[2] grid grid-cols-[30px_60px] auto-rows-[35px] uppercase text-[0.6rem] font-semibold">
-      <div className=" row-span-4 bg-red-300 text-black text-[0.7rem] vertical-text p-2 align-middle text-center tracking-[0.085em]">
+      <div className=" row-span-4 bg-red-300 text-black text-[clamp(0.55rem,0.65rem,0.75rem)] vertical-text p-2 align-middle text-center tracking-[0.085em]">
         Просроченные
       </div>
       <div className="bg-red-500 text-white p-1 border-b border-b-white align-middle">

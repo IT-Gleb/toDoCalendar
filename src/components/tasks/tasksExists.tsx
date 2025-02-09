@@ -29,7 +29,7 @@ const TaskTblTop = memo(function TaskTblTop({
   return (
     <div className="hidden sticky top-0 z-[2] sm:grid grid-cols-[25px_1fr_120px_120px] gap-x-2 uppercase text-[0.75rem] text-slate-500 font-bold text-center bg-gradient-to-b from-sky-400 to-sky-50">
       <div className=" col-span-4 p-1 flex flex-wrap items-center justify-center gap-x-2">
-        Незавершенные текущие задачи, от даты:{" "}
+        Запланированные текущие задачи, от даты:{" "}
         <span className="text-[1rem] text-slate-700">{paramWorkDate}</span>
         <span>({paramTasksCount})</span>
       </div>
@@ -114,7 +114,7 @@ export const TasksExists = memo(() => {
   if (!tasks || tasks.length < 1) {
     return (
       <div className="w-fit mx-auto p-2 text-[1.1rem] text-sky-500 uppercase font-bold">
-        У Вас нет незавершенных задач
+        У Вас нет запланированных задач
       </div>
     );
   }
