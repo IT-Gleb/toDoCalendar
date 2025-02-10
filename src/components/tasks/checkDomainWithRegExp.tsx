@@ -141,28 +141,32 @@ export const CheckDomainWithRegExpComponent = memo(() => {
         <span>В процессе</span>
       </summary>
 
-      <button
-        type="button"
-        className="w-[clamp(36px,42px,48px)] h-[clamp(36px,42px,48px)] rounded-lg bg-white/50 border-4 border-sky-600 select-none font-materialSymbolsOutlined 
+      {domains.length > 0 && (
+        <>
+          <button
+            type="button"
+            className="w-[clamp(36px,42px,48px)] h-[clamp(36px,42px,48px)] rounded-lg bg-white/50 border-4 border-sky-600 select-none font-materialSymbolsOutlined 
         text-[clamp(1rem,2rem,2.5rem)]/[clamp(1rem,2rem,2.5rem)] transition-transform
         text-sky-700 overflow-hidden absolute z-[2] left-0 top-[50%] translate-y-[-50%] cursor-pointer 
         opacity-50 active:scale-90 focus:opacity-100 hover:scale-105 hover:opacity-100"
-        onClick={() => handleDivClick(domains.length, -1)}
-        title="Назад"
-      >
-        keyboard_double_arrow_left
-      </button>
-      <button
-        type="button"
-        className="w-[clamp(36px,42px,48px)] h-[clamp(36px,42px,48px)] rounded-lg bg-white/50 border-4 border-sky-600 select-none font-materialSymbolsOutlined 
+            onClick={() => handleDivClick(domains.length, -1)}
+            title="Назад"
+          >
+            keyboard_double_arrow_left
+          </button>
+          <button
+            type="button"
+            className="w-[clamp(36px,42px,48px)] h-[clamp(36px,42px,48px)] rounded-lg bg-white/50 border-4 border-sky-600 select-none font-materialSymbolsOutlined 
         text-[clamp(1rem,2rem,2.5rem)]/[clamp(1rem,2rem,2.5rem)] transition-transform 
         text-sky-700 overflow-hidden absolute z-[2] lg:-right-3 right-0 top-[50%] translate-y-[-50%] cursor-pointer 
         opacity-50 active:scale-90 focus:opacity-100 hover:scale-105 hover:opacity-100"
-        onClick={() => handleDivClick(domains.length, 1)}
-        title="Вперед"
-      >
-        keyboard_double_arrow_right
-      </button>
+            onClick={() => handleDivClick(domains.length, 1)}
+            title="Вперед"
+          >
+            keyboard_double_arrow_right
+          </button>
+        </>
+      )}
 
       <div
         className="w-[324px] md:w-[656px] lg:w-[976px] h-[256px] overflow-y-hidden overflow-x-scroll relative"

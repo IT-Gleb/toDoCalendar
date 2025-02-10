@@ -22,6 +22,12 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
     useAudioFiles,
     useShallow((state) => state.showList)
   );
+
+  const count = useAudioStore(
+    useAudioFiles,
+    useShallow((state) => state.count)
+  );
+
   const {
     files,
     setShowList,
@@ -95,6 +101,9 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
   useEffect(() => {
     const audio = audioRef.current as HTMLAudioElement;
     setActiveIndex(filesActiveIndex);
+    if (!isValue(audio)) {
+      return;
+    }
     if (Number(filesActiveIndex) > -1 && files.length > 0) {
       audio.src = files[Number(filesActiveIndex)];
     }
@@ -132,6 +141,9 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
     const audio = audioRef.current as HTMLAudioElement;
     //console.log(filesActiveIndex);
     setActiveIndex(filesActiveIndex);
+    if (!isValue(audio)) {
+      return;
+    }
     if ((audio.ended || audio.paused) && currentAudioPos !== -1) {
       if (Number(filesActiveIndex) > -1) {
         twistTrack(Number(filesActiveIndex));
@@ -148,50 +160,54 @@ const AudioFilesComponent = memo(({ paramUser }: { paramUser: TParamUser }) => {
       } gap-x-2 `}
     >
       <div className="w-fit mx-auto flex flex-col items-start justify-start gap-0 relative">
-        <div className="absolute z-[1] top-7 -right-1">
-          <button
-            type="button"
-            className="w-[24px] h-[24px] scale-50 bg-sky-50 text-sky-950 active:scale-75 rounded-full shadow-md shadow-sky-800"
-            onClick={handlerShowList}
-            title={
-              showList
-                ? "Скрыть список воспроизведения"
-                : "Показать список воспроизведения"
-            }
-          >
-            {showList ? <ArrowUp_SVG /> : <ArrowDown_SVG />}
-          </button>
-        </div>
-        <audio
-          ref={audioRef}
-          controls
-          //   muted
-          preload="auto"
-          className="block w-[270px] text-[clamp(0.5rem,2vw,0.6rem)]"
-          onEnded={(event) => {
-            setCurrAudioPos(0);
-            let tmpIndx: number = Number(activeIndex);
-            tmpIndx++;
-            tmpIndx = tmpIndx >= files.length ? 0 : tmpIndx;
-            setListActiveIndex(tmpIndx);
-            //setActiveIndex(tmpIndx);
-            //twistTrack(tmpIndx);
-          }}
-        >
-          <source
-            // src={`${
-            //   files.length > 0 && activeIndex > -1 ? files[activeIndex] : ""
-            // }`}
-            type="audio/mp3"
-          />
-          <source
-            // src={`${
-            //   files.length > 0 && activeIndex > -1 ? files[activeIndex] : ""
-            // }`}
-            type="audio/ogg"
-          />
-          <p>Браузер не поддерживает встроенное audio</p>
-        </audio>
+        {count !== undefined && count > 0 && (
+          <>
+            <div className="absolute z-[1] top-7 -right-1">
+              <button
+                type="button"
+                className="w-[24px] h-[24px] scale-50 bg-sky-50 text-sky-950 active:scale-75 rounded-full shadow-md shadow-sky-800"
+                onClick={handlerShowList}
+                title={
+                  showList
+                    ? "Скрыть список воспроизведения"
+                    : "Показать список воспроизведения"
+                }
+              >
+                {showList ? <ArrowUp_SVG /> : <ArrowDown_SVG />}
+              </button>
+            </div>
+            <audio
+              ref={audioRef}
+              controls
+              //   muted
+              preload="auto"
+              className="block w-[270px] text-[clamp(0.5rem,2vw,0.6rem)]"
+              onEnded={(event) => {
+                setCurrAudioPos(0);
+                let tmpIndx: number = Number(activeIndex);
+                tmpIndx++;
+                tmpIndx = tmpIndx >= files.length ? 0 : tmpIndx;
+                setListActiveIndex(tmpIndx);
+                //setActiveIndex(tmpIndx);
+                //twistTrack(tmpIndx);
+              }}
+            >
+              <source
+                // src={`${
+                //   files.length > 0 && activeIndex > -1 ? files[activeIndex] : ""
+                // }`}
+                type="audio/mp3"
+              />
+              <source
+                // src={`${
+                //   files.length > 0 && activeIndex > -1 ? files[activeIndex] : ""
+                // }`}
+                type="audio/ogg"
+              />
+              <p>Браузер не поддерживает встроенное audio</p>
+            </audio>
+          </>
+        )}
       </div>
       {/*Загрузка файла на сервер */}
       <div
