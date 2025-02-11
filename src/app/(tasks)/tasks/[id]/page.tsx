@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import AudioFilesComponent from "@/components/AudioFiles/audioFilesComponent";
+import { BackButton } from "@/components/buttons/backButton";
 import { AddFormContent } from "@/components/forms/addFormContent";
 import { AddTaskFormComponent } from "@/components/forms/addTaskFormComponent";
 import { NoAuthComponent } from "@/components/noAuthComponent";
@@ -100,13 +101,7 @@ export default async function TaskPage({ params }: { params: { id: string } }) {
         <ListTaskComponent paramList={TaskData} paramPage={id} />
       </section>
       <section className="w-fit mx-auto mt-5">
-        <Link
-          href={"/"}
-          scroll={true}
-          className="w-[120px] min-h-[20px] p-1 bg-slate-500 text-white"
-        >
-          Вернуться
-        </Link>
+        <BackButton />
       </section>
       <PopoverComponent />
     </div>

@@ -1,11 +1,17 @@
+"use client";
+
+import { useHeaderMemberHeight } from "@/store/headeMemberStore";
 import Link from "next/link";
 import React from "react";
 
 export const SubMenu = () => {
+  const topHeight = useHeaderMemberHeight((state) => state.memberHeight);
+
   return (
     <nav
       role="list"
-      className="p-1 bg-sky-500 lg:max-w-[300px] h-fit overflow-hidden"
+      className="sticky z-[2] p-1 bg-sky-500 lg:max-w-[300px] h-fit overflow-hidden rounded-ee-md"
+      style={{ top: `${topHeight}px` }}
     >
       <ul
         role="navigation"

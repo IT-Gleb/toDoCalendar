@@ -1,7 +1,7 @@
 import Link from "next/link";
-import React from "react";
+import React, { memo } from "react";
 
-export const BackButton = () => {
+export const BackButton = memo(() => {
   return (
     <Link
       href={"/"}
@@ -15,4 +15,4 @@ export const BackButton = () => {
       Вернуться
     </Link>
   );
-};
+});

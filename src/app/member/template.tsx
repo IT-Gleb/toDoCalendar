@@ -13,7 +13,7 @@ export default async function MemberTemplate({
       <div className="flex flex-col">
         <HeaderMemberComponent />
 
-        <section className="min-h-[80vh] flex-auto flex flex-col lg:grid lg:grid-cols-[12%_1fr]">
+        <section className="min-h-[80vh] flex-auto flex flex-col lg:grid lg:grid-cols-[12%_1fr] relative">
           <SubMenu />
           {children}
         </section>
