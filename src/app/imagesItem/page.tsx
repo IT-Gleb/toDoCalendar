@@ -1,6 +1,8 @@
 "use client";
 
 import { BackButton } from "@/components/buttons/backButton";
+import { AddImageFileComp } from "@/components/listImages/addImageFileComp";
+import { ListImagesComp } from "@/components/listImages/listImagesComp";
 import Loader from "@/components/loader/loaderComp";
 import PopoverComponent from "@/components/popover/popoverComponent";
 import { useSession } from "next-auth/react";
@@ -8,7 +10,7 @@ import Link from "next/link";
 import React from "react";
 
 const Page = () => {
-  const { status, data: session } = useSession();
+  const { status } = useSession();
 
   if (status === "loading") {
     return (
@@ -34,10 +36,19 @@ const Page = () => {
   }
 
   return (
-    <div className="w-fit mx-auto">
-      <BackButton />
+    <>
+      <div className="w-fit mx-auto mt-20 space-y-20">
+        <div className="grid grid-cols-2">
+          <span></span>
+          <AddImageFileComp />
+        </div>
+        <ListImagesComp />
+      </div>
+      <div className="w-fit mt-10 mx-auto">
+        <BackButton />
+      </div>
       <PopoverComponent />
-    </div>
+    </>
   );
 };
 
