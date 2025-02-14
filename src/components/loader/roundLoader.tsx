@@ -22,7 +22,7 @@ export const RoundLoader = ({ percent }: { percent: number }) => {
         background: `conic-gradient(${loadColor} 0deg ${position}deg, transparent ${position}deg 360deg)`,
       }}
     >
-      <div className="absolute w-[24px] h-[24px] rounded-full text-[clamp(0.4rem,4vw,0.5rem)] pt-[6px] text-center bg-white text-sky-700 left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] overflow-hidden">
+      <div className="absolute w-[24px] h-[24px] rounded-full text-[clamp(0.4rem,4vw,0.5rem)] content-center text-center bg-white text-sky-700 left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] overflow-hidden">
         {percent}%
       </div>
     </div>

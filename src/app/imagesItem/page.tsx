@@ -38,7 +38,7 @@ const Page = () => {
   }
 
   return (
-    <>
+    <main>
       <div className="w-fit mx-auto mt-20 space-y-20">
         <AddImageFileComp />
         <ListImagesComp update={updateListCount} />
@@ -47,7 +47,7 @@ const Page = () => {
         <BackButton />
       </div>
       <PopoverComponent />
-    </>
+    </main>
   );
 };
 

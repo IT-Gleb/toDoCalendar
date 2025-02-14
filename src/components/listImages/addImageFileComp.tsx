@@ -86,10 +86,15 @@ export const AddImageFileComp = memo(() => {
           )}Mb`}
       </span>
       {progress !== 0 && (
-        <div className="flex items-start gap-x-2">
+        <div className="flex items-center gap-x-2">
           <RoundLoader percent={progress} />
-          <button type="button" onClick={() => abort()} className="border p-1">
-            отменить
+          <button
+            type="button"
+            title="Отменить загрузку"
+            onClick={() => abort()}
+            className="w-[20px] h-[20px] border-2 border-slate-500  content-center font-materialSymbolsOutlined font-semibold text-[clamp(0.5rem,4vw,0.65rem)]/[clamp(0.5rem,4vw,0.65rem)] text-red-600 active:scale-90 overflow-hidden"
+          >
+            close
           </button>
         </div>
       )}
