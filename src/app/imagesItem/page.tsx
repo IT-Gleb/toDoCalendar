@@ -5,12 +5,14 @@ import { AddImageFileComp } from "@/components/listImages/addImageFileComp";
 import { ListImagesComp } from "@/components/listImages/listImagesComp";
 import Loader from "@/components/loader/loaderComp";
 import PopoverComponent from "@/components/popover/popoverComponent";
+import { useImagesUpdateStore } from "@/store/imagesUpdateStore";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 
 const Page = () => {
   const { status } = useSession();
+  const updateListCount = useImagesUpdateStore((state) => state.updateCount);
 
   if (status === "loading") {
     return (
@@ -38,11 +40,8 @@ const Page = () => {
   return (
     <>
       <div className="w-fit mx-auto mt-20 space-y-20">
-        <div className="grid grid-cols-2">
-          <span></span>
-          <AddImageFileComp />
-        </div>
-        <ListImagesComp />
+        <AddImageFileComp />
+        <ListImagesComp update={updateListCount} />
       </div>
       <div className="w-fit mt-10 mx-auto">
         <BackButton />

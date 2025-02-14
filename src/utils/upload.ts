@@ -5,8 +5,8 @@ export type TUploadPromise<T> = Promise<T> & { abort: () => void };
 export const uploadFile = <T>(
   paramUrl: string,
   paramFile: File,
-  paramKey: string, //Для ключа в formData
-  options?: { onProgress?: (progress: number) => void }
+  paramKey: string, //Для ключа файла в formData
+  options?: { onProgress?: (progress: number) => void; path?: string }
 ): TUploadPromise<T> => {
   // Вытащили xhr из Promise, чтобы прокинуть abort
   const xhr = new XMLHttpRequest();
@@ -32,6 +32,9 @@ export const uploadFile = <T>(
 
     const myData = new FormData();
     myData.append(paramKey, paramFile);
+    if (options?.path && options.path !== "") {
+      myData.append("path", options.path);
+    }
 
     xhr.send(myData);
   }) as TUploadPromise<T>;

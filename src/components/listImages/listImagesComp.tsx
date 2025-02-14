@@ -20,7 +20,7 @@ type TErrorData = {
   message: string;
 };
 
-export const ListImagesComp = () => {
+export const ListImagesComp = ({ update }: { update: number }) => {
   const [listImages, setListImages] = useState<string[]>([]);
   const [imagesPath, setImagesPath] = useState<string>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -39,6 +39,7 @@ export const ListImagesComp = () => {
         //        console.log("Попытка=", count);
         if (count > 3) {
           setIsLoading(false);
+          setError({ status: 503, message: "Сервис недоступен." });
           return;
         }
         try {
@@ -50,11 +51,11 @@ export const ListImagesComp = () => {
               abortRequestTimeOut * (click < 3 ? click + 1 : 3)
             ),
             body: JSON.stringify({ imgPath: scanDir }),
-            next: { tags: ["images-Files"] },
+            next: { tags: ["images-Files"], revalidate: 20 },
           });
 
           if (result.ok) {
-            const data = await result.json();
+            const data = (await result.json()) as TImagesData;
             if (isValue(data)) {
               setImagesPath((data as TImagesData).path);
               setListImages((data as TImagesData).files);
@@ -66,7 +67,7 @@ export const ListImagesComp = () => {
           }
           setIsLoading(false);
         } catch (err) {
-          //console.log((err as Error).name);
+          console.log((err as Error).name);
           setIsLoading(false);
 
           setError({
@@ -83,6 +84,13 @@ export const ListImagesComp = () => {
               break;
 
             default:
+              setError({
+                status: 503,
+                message:
+                  (err as Error).message +
+                  "  Время отклика превышено. Сервер недоступен! Попробуйте повторить запрос позже...",
+              });
+
               break;
           }
           //          console.log((err as Error).name);
@@ -93,7 +101,7 @@ export const ListImagesComp = () => {
     return () => {
       isSubscaribed = false;
     };
-  }, [click]);
+  }, [click, update]);
 
   if (isLoading) {
     return (
@@ -120,7 +128,7 @@ export const ListImagesComp = () => {
   }
 
   return (
-    <section className="p-2">
+    <section className="p-1 sm:p-2">
       <div className="flex items-start gap-x-3 border-b-[6px] border-double border-b-slate-300">
         <span className=" font-materialSymbolsOutlined">folder</span>
         <h3 className="uppercase font-semibold text-[clamp(1rem,4vw,1.6rem)]/[clamp(1rem,4vw,1.6rem)]">
@@ -129,7 +137,7 @@ export const ListImagesComp = () => {
       </div>
       <div className="w-fit mx-auto mt-2 border-b-2 border-b-slate-300">
         {listImages && listImages.length > 0 && (
-          <div className="p-1 grid grid-cols-[320px] md:grid-cols-[280px_280px] lg:grid-cols-[280px_280px_280px] xl:grid-cols-[220px_220px_220px_220px_220px] gap-x-2">
+          <div className="sm:p-1 grid grid-cols-[320px] md:grid-cols-[280px_280px] lg:grid-cols-[280px_280px_280px] xl:grid-cols-[220px_220px_220px_220px_220px] gap-x-2">
             {listImages.map((item, index) => (
               <ImageItem
                 key={index}
