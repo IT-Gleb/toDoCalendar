@@ -21,9 +21,12 @@ import { decryptId } from "@/utils/functions";
 //   return NextResponse.json(data);
 // }
 
-export const handler = async (request: NextRequest) => {
-  if (request.method === "POST") {
-    const body = await request.json();
+export const handler = auth(async (req) => {
+  if (!req.auth) {
+    return NextResponse.json({ status: 403, message: "Не авторизован!" });
+  }
+  if (req.method === "POST") {
+    const body = await req.json();
     if (body) {
       //console.log(body);
       const { day, limit, offset, userid } = body;
@@ -52,6 +55,6 @@ export const handler = async (request: NextRequest) => {
       message: "Ошибка получения данных!",
     });
   }
-};
+}) as never;
 
-export { handler as GET, handler as POST };
+export { handler as POST };

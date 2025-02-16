@@ -33,7 +33,7 @@ export const uploadFile = <T>(
     const myData = new FormData();
     myData.append(paramKey, paramFile);
     if (options?.path && options.path !== "") {
-      myData.append("path", options.path);
+      myData.append("folder", options.path);
     }
 
     xhr.send(myData);

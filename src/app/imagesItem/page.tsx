@@ -9,10 +9,13 @@ import { useImagesUpdateStore } from "@/store/imagesUpdateStore";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
+import { useShallow } from "zustand/shallow";
 
 const Page = () => {
   const { status } = useSession();
-  const updateListCount = useImagesUpdateStore((state) => state.updateCount);
+  const updateListCount = useImagesUpdateStore(
+    useShallow((state) => state.updateCount)
+  );
 
   if (status === "loading") {
     return (
@@ -40,7 +43,7 @@ const Page = () => {
   return (
     <main>
       <div className="w-fit mx-auto mt-20 space-y-20">
-        <AddImageFileComp />
+        <AddImageFileComp maskFiles={"image/jpeg, image/png, image/webp"} />
         <ListImagesComp update={updateListCount} />
       </div>
       <div className="w-fit mt-10 mx-auto">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 
 const loadColor: string = "#31C48D";
 
@@ -8,7 +8,7 @@ function setPercent(param: number) {
   return current;
 }
 
-export const RoundLoader = ({ percent }: { percent: number }) => {
+export const RoundLoader = memo(({ percent }: { percent: number }) => {
   const [position, setPosition] = useState<number>(percent);
 
   useEffect(() => {
@@ -27,4 +27,4 @@ export const RoundLoader = ({ percent }: { percent: number }) => {
       </div>
     </div>
   );
-};
+});

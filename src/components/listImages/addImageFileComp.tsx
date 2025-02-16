@@ -13,7 +13,7 @@ type TFileInfo = {
   fileSize: number;
 };
 
-export const AddImageFileComp = memo(() => {
+export const AddImageFileComp = memo(({ maskFiles }: { maskFiles: string }) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
   const abortUploading = useRef<() => void>();
 
@@ -98,41 +98,43 @@ export const AddImageFileComp = memo(() => {
           </button>
         </div>
       )}
-      <form>
-        <label
-          title="Загрузить файл"
-          htmlFor="imgFile"
-          className=" inline-block cursor-pointer text-center p-1 overflow-hidden bg-sky-400 text-slate-100 rounded-sm
-         text-[clamp(0.8rem,4vw,1rem)]/[clamp(0.8rem,4vw,1rem)] hover:bg-sky-600 hover:shadow-md active:scale-90"
-        >
-          <span
+      {progress === 0 && canUpload === "idle" && (
+        <form>
+          <label
             title="Загрузить файл"
-            className=" inline-block w-[20px] h-[20px] text-[clamp(0.8rem,4vw,1.1rem)]/[clamp(0.8rem,4vw,1.1rem)] font-materialSymbolsOutlined"
+            htmlFor="imgFile"
+            className=" inline-block cursor-pointer text-center p-1 overflow-hidden bg-sky-400 text-slate-100 rounded-sm
+       text-[clamp(0.8rem,4vw,1rem)]/[clamp(0.8rem,4vw,1rem)] hover:bg-sky-600 hover:shadow-md active:scale-90"
           >
-            list
-          </span>
-        </label>
-        <input
-          ref={inputFileRef}
-          type="file"
-          name="imgFile"
-          id="imgFile"
-          onChange={() => {
-            //console.log(inputFileRef.current?.files);
-            const filesObj = inputFileRef.current?.files as FileList;
-            if (isValue(filesObj) && filesObj.length > 0) {
-              setcurrentFile(filesObj[0] as File);
-              setFileInfo({
-                fileName: (filesObj[0] as File).name,
-                fileSize: (filesObj[0] as File).size,
-              });
-              setCanUpload("upload");
-            }
-          }}
-          accept="image/jpeg, image/png, image/webp"
-          className="w-0 h-0 opacity-0 border-none outline-none"
-        />
-      </form>
+            <span
+              title="Загрузить файл"
+              className=" inline-block w-[20px] h-[20px] text-[clamp(0.8rem,4vw,1.1rem)]/[clamp(0.8rem,4vw,1.1rem)] font-materialSymbolsOutlined"
+            >
+              list
+            </span>
+          </label>
+          <input
+            ref={inputFileRef}
+            type="file"
+            name="imgFile"
+            id="imgFile"
+            onChange={() => {
+              //console.log(inputFileRef.current?.files);
+              const filesObj = inputFileRef.current?.files as FileList;
+              if (isValue(filesObj) && filesObj.length > 0) {
+                setcurrentFile(filesObj[0] as File);
+                setFileInfo({
+                  fileName: (filesObj[0] as File).name,
+                  fileSize: (filesObj[0] as File).size,
+                });
+                setCanUpload("upload");
+              }
+            }}
+            accept={maskFiles}
+            className="w-0 h-0 opacity-0 border-none outline-none"
+          />
+        </form>
+      )}
     </div>
   );
 });

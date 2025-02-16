@@ -16,8 +16,8 @@ const handler = auth(async function POST(req) {
     try {
       const body = await req.formData();
 
-      let uploadDir = body.get("path")
-        ? body.get("path")?.toString()
+      let uploadDir = body.get("folder")
+        ? body.get("folder")?.toString()
         : "images/massage";
 
       const file = body.get("file") as File;

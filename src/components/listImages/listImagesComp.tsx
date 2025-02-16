@@ -22,7 +22,7 @@ type TErrorData = {
 
 export const ListImagesComp = ({ update }: { update: number }) => {
   const [listImages, setListImages] = useState<string[]>([]);
-  const [imagesPath, setImagesPath] = useState<string>();
+  const [imgPath, setImagesPath] = useState<string>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [exError, setError] = useState<TErrorData>({ status: 0, message: "" });
   const [click, setClick] = useState<number>(0);
@@ -43,7 +43,7 @@ export const ListImagesComp = ({ update }: { update: number }) => {
           return;
         }
         try {
-          const url = `${Base_URL}api/images`;
+          const url = `/api/images`;
           const result = await fetch(url, {
             headers: { "Content-Type": "application/json" },
             method: "POST",

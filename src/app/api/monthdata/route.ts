@@ -47,6 +47,6 @@ export const handler = auth(async function GET(req) {
     SELECT DISTINCT _day, num as t_count FROM month_data ORDER BY _day;`;
 
   return NextResponse.json(data);
-});
+}) as never;
 
 export { handler as GET, handler as POST };

@@ -3,6 +3,9 @@ import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 import { decryptId } from "@/utils/functions";
 
+export const dynamic = "force-dynamic";
+export const maxDuration = 8;
+
 //export const dynamic = "force-dynamic";
 
 // export const GET = async (req: NextRequest) => {
@@ -24,16 +27,16 @@ import { decryptId } from "@/utils/functions";
 //   return Response.json(items);
 // };
 // Review if we need this, and why
-function stripContentEncoding(result: Response) {
-  const responseHeaders = new Headers(result.headers);
-  responseHeaders.delete("content-encoding");
+// function stripContentEncoding(result: Response) {
+//   const responseHeaders = new Headers(result.headers);
+//   responseHeaders.delete("content-encoding");
 
-  return new Response(result.body, {
-    status: result.status,
-    statusText: result.statusText,
-    headers: responseHeaders,
-  });
-}
+//   return new Response(result.body, {
+//     status: result.status,
+//     statusText: result.statusText,
+//     headers: responseHeaders,
+//   });
+// }
 
 // async function handler(req: NextRequest) {
 //   const session = await auth();
@@ -80,9 +83,6 @@ export const handler = auth(async function POST(req) {
     });
   }
   return NextResponse.json({ message: "User not auth", status: 401 });
-}) as any;
-
-export const dynamic = "force-dynamic";
-export const maxDuration = 8;
+}) as never;
 
 export { handler as GET, handler as POST };

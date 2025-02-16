@@ -8,8 +8,9 @@
   "scripts": {
     "dev": "next dev -p 3001",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start -p 3001",
+    "lint": "next lint",
+    "start2": "node .next/standalone/server.js"
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",
