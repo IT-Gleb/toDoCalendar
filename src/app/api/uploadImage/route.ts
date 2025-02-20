@@ -1,9 +1,8 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 import { join } from "path";
-import { writeFile } from "fs/promises";
-import { Stream } from "stream";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { writeFile, stat, mkdir } from "node:fs/promises";
+//import { chmod } from "node:fs";
 
 const handler = auth(async function POST(req) {
   if (!req.auth) {
@@ -20,11 +19,29 @@ const handler = auth(async function POST(req) {
         ? body.get("folder")?.toString()
         : "images/massage";
 
-      const file = body.get("file") as File;
+      uploadDir = join(process.cwd(), "storage", uploadDir as string);
+      //Если нет создать каталог
+      try {
+        await stat(uploadDir);
+      } catch (err: any) {
+        if (err.code === "ENOENT") {
+          await mkdir(uploadDir, { recursive: true });
+        } else {
+          console.error(
+            "Ошибка при попытке создать каталог при загрузке файла\n"
+          );
+        }
+      }
 
-      uploadDir = join(process.cwd(), "public", uploadDir as string);
-      const buffer = Buffer.from(await (file as Blob).arrayBuffer());
-      await writeFile(`${uploadDir}/${file.name}`, buffer as unknown as Stream);
+      let fileMode = "0o777";
+
+      const file = body.get("file") as File;
+      const fileArrayBuffer = await file.arrayBuffer();
+      const buffer = new Uint8Array(fileArrayBuffer);
+
+      //await writeFile(`${uploadDir}/${file.name}`, buffer, { mode: fileMode });
+      await writeFile(`${uploadDir}/${file.name}`, buffer);
+      //chmod(`${uploadDir}/${file.name}`, fileMode, (err) => console.log(err));
 
       return NextResponse.json({
         path: uploadDir,

@@ -16,6 +16,7 @@ export const uploadFile = <T>(
 
   const promise = new Promise((resolve, reject) => {
     xhr.open("POST", paramUrl);
+    xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
 
     xhr.upload.onprogress = (event) => {
       let total: number = event.total;

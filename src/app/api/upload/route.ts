@@ -1,9 +1,8 @@
 import { join } from "path";
-import { stat, mkdir, writeFile } from "fs/promises";
+import { stat, mkdir, writeFile } from "node:fs/promises";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { isValue } from "@/utils/tasksFunctions";
-import { Stream } from "stream";
 
 // export async function POST(request: NextRequest) {
 //   const formData = await request.formData();
@@ -70,7 +69,7 @@ const handler = auth(async function POST(req) {
       //Получить данные
       const data = await req.formData();
       const fileName = (data.get("fileUpName") as File).name ?? "_no_file";
-      const file = data.get("fileUpName") as Blob | null;
+      const file = data.get("fileUpName") as File | null;
       let folderName: string = data.get("folder")?.toString() ?? "_no";
       const folder = JSON.parse(folderName);
       folderName = `audio/${folder.name + folder.userId}`;
@@ -99,8 +98,11 @@ const handler = auth(async function POST(req) {
 
       const fName: string = `${uploadDir}/${fileName}`;
       if (isValue(file)) {
-        const buffer = Buffer.from(await (file as Blob).arrayBuffer());
-        await writeFile(fName, buffer as unknown as Stream);
+        const fileArrayBuffer = await file?.arrayBuffer();
+        if (fileArrayBuffer) {
+          const buffer = new Uint8Array(fileArrayBuffer);
+          await writeFile(fName, buffer);
+        }
       }
       //---------------------
 

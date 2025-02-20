@@ -82,7 +82,10 @@ export const useAudioFiles = create<TAudioState & TAudioActions>()(
         try {
           const url = `/api/audiofiles`;
           const request = await fetch(url, {
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+            },
             method: "POST",
             body: JSON.stringify(get().user),
             signal: AbortSignal.timeout(3000),

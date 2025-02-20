@@ -56,7 +56,7 @@ export const AddImageFileComp = memo(({ maskFiles }: { maskFiles: string }) => {
         setUdateListImages(randomInteger(1, 100)); //Обновить список изображений
       };
 
-      const url = `${Base_URL}api/uploadImage`;
+      const url = `/api/uploadImage`;
       (function fileOnServer() {
         const filePromise = uploadFile(url, currentFile as File, "file", {
           onProgress: (progress: number) => setProgress(progress),

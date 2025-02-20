@@ -12,7 +12,7 @@ const abortRequestTimeOut: number = 1500;
 
 type TImagesData = {
   path: string;
-  files: string[];
+  files: { name: string; url: string }[];
 };
 
 type TErrorData = {
@@ -21,7 +21,9 @@ type TErrorData = {
 };
 
 export const ListImagesComp = ({ update }: { update: number }) => {
-  const [listImages, setListImages] = useState<string[]>([]);
+  const [listImages, setListImages] = useState<{ name: string; url: string }[]>(
+    []
+  );
   const [imgPath, setImagesPath] = useState<string>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [exError, setError] = useState<TErrorData>({ status: 0, message: "" });
@@ -47,15 +49,19 @@ export const ListImagesComp = ({ update }: { update: number }) => {
           const result = await fetch(url, {
             headers: { "Content-Type": "application/json" },
             method: "POST",
+            mode: "no-cors",
             signal: AbortSignal.timeout(
               abortRequestTimeOut * (click < 3 ? click + 1 : 3)
             ),
             body: JSON.stringify({ imgPath: scanDir }),
-            next: { tags: ["images-Files"], revalidate: 20 },
+            next: { tags: ["images-Files"], revalidate: 3600 },
           });
 
           if (result.ok) {
             const data = (await result.json()) as TImagesData;
+
+            console.log(data);
+
             if (isValue(data)) {
               setImagesPath((data as TImagesData).path);
               setListImages((data as TImagesData).files);
@@ -141,8 +147,8 @@ export const ListImagesComp = ({ update }: { update: number }) => {
             {listImages.map((item, index) => (
               <ImageItem
                 key={index}
-                srcImage={`/${scanDir}/${item}`}
-                nameImage={item}
+                srcImage={`/${scanDir}/${item.name}`}
+                Img={item}
               />
             ))}
           </div>

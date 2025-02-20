@@ -6,7 +6,7 @@ import { NextResponse, NextRequest } from "next/server";
 export const maxDuration: number = 8;
 export const dynamic = "force-dynamic";
 
-export const handler = auth(async function GET(req) {
+const handler = auth(async function GET(req) {
   if (!req.auth) {
     return NextResponse.json({
       status: 401,
@@ -47,6 +47,6 @@ export const handler = auth(async function GET(req) {
     SELECT DISTINCT _day, num as t_count FROM month_data ORDER BY _day;`;
 
   return NextResponse.json(data);
-}) as never;
+});
 
 export { handler as GET, handler as POST };

@@ -1,7 +1,7 @@
 import sql from "@/clientdb/connectdb";
 import { auth } from "@/auth";
 
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 import { decryptId } from "@/utils/functions";
 
@@ -21,12 +21,17 @@ import { decryptId } from "@/utils/functions";
 //   return NextResponse.json(data);
 // }
 
-export const handler = auth(async (req) => {
+const handler = auth(async function POST(req) {
   if (!req.auth) {
     return NextResponse.json({ status: 403, message: "Не авторизован!" });
   }
+  if (req.method === "GET") {
+    return NextResponse.json({ message: "GET запрос" });
+  }
   if (req.method === "POST") {
+    //console.log("api here!....");
     const body = await req.json();
+    //console.log(body);
     if (body) {
       //console.log(body);
       const { day, limit, offset, userid } = body;
@@ -34,6 +39,8 @@ export const handler = auth(async (req) => {
       if (userId !== "-1" && userId.trim().length > 5) {
         userId = decryptId(userId);
       }
+
+      //     console.log(day, limit, offset, userid);
 
       let data: TTaskList | TResponseError = [];
       try {
@@ -55,6 +62,6 @@ export const handler = auth(async (req) => {
       message: "Ошибка получения данных!",
     });
   }
-}) as never;
+});
 
-export { handler as POST };
+export { handler as POST, handler as GET };

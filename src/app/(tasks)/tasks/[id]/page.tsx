@@ -1,109 +1,176 @@
-import { auth } from "@/auth";
-import AudioFilesComponent from "@/components/AudioFiles/audioFilesComponent";
+"use client";
+
 import { BackButton } from "@/components/buttons/backButton";
 import { AddFormContent } from "@/components/forms/addFormContent";
 import { AddTaskFormComponent } from "@/components/forms/addTaskFormComponent";
+import Loader from "@/components/loader/loaderComp";
 import { NoAuthComponent } from "@/components/noAuthComponent";
 import PopoverComponent from "@/components/popover/popoverComponent";
 import { CheckDomainWithRegExpComponent } from "@/components/tasks/checkDomainWithRegExp";
 import { ListTaskComponent } from "@/components/tasks/listTaskComponent";
-import { Base_URL, getStringFromDate } from "@/utils/functions";
+import { getStringFromDate } from "@/utils/functions";
 
-import Link from "next/link";
+import { useSession } from "next-auth/react";
+import React, { Suspense, useEffect, useState } from "react";
 
-export const dynamic = "force-dynamic";
+//export const revalidate = 3600;
+//export const dynamic = "force-dynamic";
 
-async function getData(
-  params: TPostPartialParams
-): Promise<TTaskList | TResponseError> {
-  const url: string = `${Base_URL}api/tasks`;
-  //console.log(url);
-  const result = await fetch(
-    //`${Base_URL}api/tasks/?day=${params.id}&limit=${params.limit}&offset=${params.offset}&key=${paramUserId}`,
-    url,
-    {
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-      body: JSON.stringify(params),
-      next: { tags: [`task-${params.day}`], revalidate: 5 },
-    }
-  );
-  let res: TTaskList | TResponseError = {
-    status: "500",
-    message: "Ошибка получения данных!",
-  };
+// export async function generateMetadata({
+//   params,
+// }: {
+//   params: { id: string };
+// }): Promise<Metadata> {
+//   return {
+//     title: `[${params.id}]-Страница`,
+//     description: `Страница с данными за ${params.id}`,
+//   };
+// }
 
-  //console.log(result);
-  if (result.ok) {
-    res = await result.json();
+type TRequestError = {
+  ok: boolean;
+  status: number;
+  message: string;
+};
+
+export default function Page({ params }: { params: { id: string } }) {
+  const { status, data: session } = useSession();
+  if (status !== "loading" && status === "unauthenticated") {
+    return (
+      <Suspense fallback={<Loader />}>
+        <NoAuthComponent />
+      </Suspense>
+    );
   }
 
-  return res;
-}
+  const [reqError, setReqError] = useState<TRequestError>({
+    ok: false,
+    status: 0,
+    message: "",
+  });
 
-export default async function TaskPage({ params }: { params: { id: string } }) {
-  //Авторизация
-  const session = await auth();
-  if (!session) {
-    return <NoAuthComponent />;
-  }
-
-  const { id } = params;
-  let uId: string = session.user.userId as string;
-  const pageParams: TPostPartialParams = {
-    userid: uId,
-    day: id,
+  const [paramPage, setParamPage] = useState<TPostPartialParams>({
+    day: params.id,
     limit: 20,
     offset: 0,
-  };
+    userid: session?.user.userId as string,
+  });
 
-  const TaskData: TTaskList | TResponseError = await getData(pageParams);
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [tasks, setTasks] = useState<TTaskList>([]);
 
-  if (!Array.isArray(TaskData) && "status" in TaskData) {
+  useEffect(() => {
+    let isSubscribed: boolean = true;
+
+    setParamPage({
+      day: params.id,
+      limit: 20,
+      offset: 0,
+      userid: session?.user.userId as string,
+    });
+
+    if (isSubscribed) {
+      (async function getData() {
+        setReqError({ ok: false, status: 0, message: "" });
+        setLoading(true);
+        const url: string = "/api/tsk";
+        try {
+          const request = await fetch(url, {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify(paramPage),
+            signal: AbortSignal.timeout(3000),
+            next: { tags: [`task-${params.id}`], revalidate: 10 },
+            cache: "force-cache",
+          });
+          let data: TTaskList = [];
+          if (!request.ok) {
+            throw new Error(
+              "Ошибка при получении данных из источника - " + url
+            );
+          }
+          if (request.ok) {
+            data = await request.json();
+          }
+          if (data) {
+            setTasks(data);
+          }
+        } catch (err) {
+          if (
+            (err as Error).name === "AbortError" ||
+            (err as Error).name === "TimeoutError"
+          ) {
+            getData();
+          }
+          setReqError({
+            ok: true,
+            status: 503,
+            message: (err as Error).message,
+          });
+
+          console.log(err);
+        } finally {
+          setLoading(false);
+        }
+      })();
+    }
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [params.id]);
+
+  if (isLoading) {
     return (
-      <div className="w-fit mx-auto mt-5 text-red-500 text-[0.9rem]">
-        <div>{TaskData.status}</div>
-        <div>{TaskData.message}</div>
-        <div className="mt-10">
-          <Link
-            href={{ pathname: "/member" }}
-            scroll={false}
-            className="bg-sky-600 text-white text-[0.8rem] p-2 rounded-md"
-          >
-            Вернуться
-          </Link>
-        </div>
+      <div className=" w-[50px] h-[50px] mx-auto text-sky-500 ">
+        <Loader />
+      </div>
+    );
+  }
+
+  if (reqError.ok) {
+    return (
+      <div className="text-[clamp(0.7rem,4vw,0.8rem)] text-red-600">
+        <span className="font-bold">Ошибка - {reqError.status}</span>
+        <p>{reqError.message}</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-[100vh] bg-[radial-gradient(ellipse_at_left_top,theme(colors.white),theme(colors.white),theme(colors.rose.100),theme(colors.sky.200))]">
+    <>
       <section className="flex flex-col w-fit mx-auto items-start space-y-5">
         <span className="mt-5 text-[1rem] font-bold first-letter:uppercase text-sky-800">
           {getStringFromDate(params.id)}
         </span>
-        <CheckDomainWithRegExpComponent />
-        <AudioFilesComponent
-          paramUser={{
-            name: session?.user.name as string,
-            userId: session?.user.userId as string,
-          }}
-        />
+        <Suspense>
+          <CheckDomainWithRegExpComponent />
+        </Suspense>
       </section>
+
       <section className="w-[96%] md:w-[60%] xl:w-[40%] mx-auto mt-5">
-        <AddTaskFormComponent paramDate={id}>
-          <AddFormContent paramDay={id} />
-        </AddTaskFormComponent>
+        <Suspense>
+          <AddTaskFormComponent paramDate={params.id}>
+            <AddFormContent paramDay={params.id} />
+          </AddTaskFormComponent>
+        </Suspense>
       </section>
       <section className="w-fit mx-auto mt-5 p-0 sm:p-1 lg:p-2 xl:p-4 max-h-[80vh] overflow-y-auto overflow-x-hidden">
         {/* <ListTableHead /> */}
-        <ListTaskComponent paramList={TaskData} paramPage={id} />
+        <Suspense>
+          <ListTaskComponent paramList={tasks} paramPage={params.id} />
+        </Suspense>
       </section>
-      <section className="w-fit mx-auto mt-5">
-        <BackButton />
-      </section>
-      <PopoverComponent />
-    </div>
+
+      <div className="w-fit mx-auto">
+        <Suspense>
+          <PopoverComponent />
+          <BackButton />
+        </Suspense>
+      </div>
+    </>
   );
 }

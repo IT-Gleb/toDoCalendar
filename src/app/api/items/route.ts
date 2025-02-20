@@ -61,7 +61,7 @@ export const maxDuration = 8;
 //   return Response.json([]);
 // }
 
-export const handler = auth(async function POST(req) {
+const handler = auth(async function POST(req) {
   let data: any = null;
   if (req.auth) {
     if (req.body) {
@@ -83,6 +83,6 @@ export const handler = auth(async function POST(req) {
     });
   }
   return NextResponse.json({ message: "User not auth", status: 401 });
-}) as never;
+});
 
 export { handler as GET, handler as POST };

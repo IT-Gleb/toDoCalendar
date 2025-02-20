@@ -6,7 +6,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import TrackerDay from "@/components/tasks/trackerDay";
 import Loader from "@/components/loader/loaderComp";
-import { memo } from "react";
+import { memo, Suspense } from "react";
 import AudioFilesComponent from "@/components/AudioFiles/audioFilesComponent";
 import PopoverComponent from "@/components/popover/popoverComponent";
 import { PopoverUp } from "@/utils/functions";
@@ -90,30 +90,40 @@ const MemberPage = memo(() => {
   return (
     <section className="xl:w-[80%] 2xl:w-[75%] xl:mx-auto bg-none bg-cover bg-center bg-no-repeat bg-fixed bg-white">
       <div className="mb-5 sm:mb-2 md:mb-0">
-        <AudioFilesComponent
-          paramUser={{
-            name: session?.user.name as string,
-            userId: session?.user.userId as string,
-          }}
-        />
+        <Suspense>
+          <AudioFilesComponent
+            paramUser={{
+              name: session?.user.name as string,
+              userId: session?.user.userId as string,
+            }}
+          />
+        </Suspense>
       </div>
       {/* Календарь с задачами */}
       <section className="p-0 md:p-2 grid grid-cols-1 auto-rows-max gap-y-5 lg:grid-cols-2 lg:gap-2 min-h-[60vh] mt-1">
         <div className="lg:border-r lg:border-b border-slate-200 lg:p-2">
-          <CalendarWithMashine />
+          <Suspense>
+            <CalendarWithMashine />
+          </Suspense>
         </div>
 
         <div className="p-1 border-t lg:border-l lg:border-t-0 lg:border-b border-slate-200 md:p-2 min-h-[20vh] lg:p-4 w-full lg:mx-auto">
-          <DynamicDataChart />
+          <Suspense fallback={<Loader />}>
+            <DynamicDataChart />
+          </Suspense>
         </div>
 
         <div className="border-t lg:border-r border-slate-200 p-2">
-          <TrackerDay />
-          <DynamicTasksExists />
+          <Suspense>
+            <TrackerDay />
+            <DynamicTasksExists />
+          </Suspense>
         </div>
 
         <div className="p-0 border-t lg:border-l border-slate-200 md:p-2 min-h-[20vh]">
-          <DynamicTaskNotCompleted />
+          <Suspense>
+            <DynamicTaskNotCompleted />
+          </Suspense>
         </div>
       </section>
 
@@ -133,7 +143,9 @@ const MemberPage = memo(() => {
           OK
         </button>
       </span>
-      <PopoverComponent />
+      <Suspense>
+        <PopoverComponent />
+      </Suspense>
     </section>
   );
 });

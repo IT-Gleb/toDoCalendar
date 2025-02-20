@@ -34,6 +34,8 @@ export const CalendarItemComponent = memo(
       )
     );
 
+    //console.log(paramDay);
+
     const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
       event.preventDefault();
 
@@ -46,8 +48,9 @@ export const CalendarItemComponent = memo(
 
     useEffect(() => {
       if (paramDay.id) {
-        const tmpStr: string = ("/tasks/" +
-          NumberFromString(paramDay, true)) as string;
+        const tmpStr: string = `/tasks/${
+          NumberFromString(paramDay, true) as string
+        }`;
         setItemHref(tmpStr);
       }
     }, [paramDay]);

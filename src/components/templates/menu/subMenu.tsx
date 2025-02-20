@@ -39,6 +39,18 @@ export const SubMenu = () => {
                   </span>
                 </Link>
               </li>
+              <li className="border-b border-b-slate-200 p-1">
+                <Link
+                  href={"/testPage"}
+                  scroll={false}
+                  className="flex items-start gap-x-1 hover:text-white"
+                >
+                  <span className=" font-materialSymbolsOutlined">list</span>
+                  <span className="group-open:animate-dialog-open">
+                    Test Page
+                  </span>
+                </Link>
+              </li>
             </ul>
           </details>
         </li>
